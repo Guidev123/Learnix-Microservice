@@ -365,3 +365,4 @@ FodyWeavers.xsd
 /src/Services/Subscriptions/Subscriptions.WebApi/appsettings.Development.json
 /src/Services/Learning/Learning.WebApi/appsettings.Development.json
 /src/Services/Courses/Courses.WebApi/appsettings.Development.json
+/docker-compose.yml
