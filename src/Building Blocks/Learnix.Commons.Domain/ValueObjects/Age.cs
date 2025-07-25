@@ -23,16 +23,20 @@ namespace Learnix.Commons.Domain.ValueObjects
         public override string ToString() => $"{DateTime.Today.Year - BirthDate.Year -
             (DateTime.Today < BirthDate.AddYears(DateTime.Today.Year - BirthDate.Year) ? 1 : 0)}";
 
-        protected override void Validate()
+        public static bool BeAtLeastMinAgeYearsOld(DateTime birthDate)
         {
             var today = DateTime.Today;
+            var age = today.Year - birthDate.Year;
 
-            AssertionConcern.EnsureTrue(BirthDate <= today, ValueObjectErrors.BirthDateCannotBeInFuture.Description);
+            if (birthDate.Date > today.AddYears(-age))
+                age--;
 
-            var age = today.Year - BirthDate.Year;
-            if (today < BirthDate.AddYears(age)) age--;
-
-            AssertionConcern.EnsureInRange(age, MinAge, MaxAge, ValueObjectErrors.AgeOutOfRange.Description);
+            return age >= MinAge;
+        }
+        protected override void Validate()
+        {
+            AssertionConcern.EnsureTrue(BirthDate <= DateTime.UtcNow.AddYears(-MaxAge), ValueObjectErrors.BirthDateCannotBeInFuture.Description);
+            AssertionConcern.EnsureTrue(BeAtLeastMinAgeYearsOld(BirthDate), ValueObjectErrors.AgeOutOfRange.Description);
         }
     }
 }

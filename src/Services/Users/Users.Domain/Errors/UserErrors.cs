@@ -27,5 +27,33 @@ namespace Users.Domain.Errors
         public static readonly Error SomethingHasFailedDuringSavingChanges = Error.Problem(
             "Users.SomethingHasFailedDuringSavingChanges",
             "Something has failed during saving changes of user");
+
+        public static readonly Error PasswordIsRequired = Error.Problem(
+            "Users.PasswordIsRequired",
+            "The password field cannot be empty");
+
+        public static readonly Error PasswordTooShort = Error.Problem(
+            "Users.PasswordTooShort",
+            "The password must be at least 8 characters long");
+
+        public static readonly Error PasswordMissingUpperCase = Error.Problem(
+            "Users.PasswordMissingUpperCase",
+            "The password must contain at least one uppercase letter");
+
+        public static readonly Error PasswordMissingLowerCase = Error.Problem(
+            "Users.PasswordMissingLowerCase",
+            "The password must contain at least one lowercase letter");
+
+        public static readonly Error PasswordMissingDigit = Error.Problem(
+            "Users.PasswordMissingDigit",
+            "The password must contain at least one digit");
+
+        public static readonly Error PasswordMissingSpecialChar = Error.Problem(
+            "Users.PasswordMissingSpecialChar",
+            "The password must contain at least one special character (!@#$%^&* etc.)");
+
+        public static readonly Error PasswordsDoNotMatch = Error.Problem(
+            "Users.PasswordsDoNotMatch",
+            "The passwords do not match");
     }
 }

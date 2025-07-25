@@ -1,10 +1,10 @@
 ﻿using Learnix.Commons.Domain.Abstractions;
+using Learnix.Commons.Infrastructure;
 using Learnix.Commons.Infrastructure.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
-using MidR.MemoryQueue.DependencyInjection;
 using OpenTelemetry.Resources;
 using OpenTelemetry.Trace;
 using Users.Application;
@@ -21,8 +21,8 @@ namespace Users.Infrastructure
         public static IServiceCollection AddInfrastructureModule(this IServiceCollection services, IConfiguration configuration)
         {
             services
+                .AddCommonInfrastructure(AssemblyReference.Assembly)
                 .AddTracing()
-                .AddMediator()
                 .AddDataAccess(configuration)
                 .AddHttpClientServices(configuration);
 
@@ -59,13 +59,6 @@ namespace Users.Infrastructure
             .AddResilienceHandler(nameof(ResiliencePipelineExtensions), pipeline => pipeline.ConfigureResilience());
 
             services.AddTransient<IIdentityProviderService, IdentityProviderService>();
-
-            return services;
-        }
-
-        private static IServiceCollection AddMediator(this IServiceCollection services)
-        {
-            services.AddMidR(AssemblyReference.Assembly);
 
             return services;
         }

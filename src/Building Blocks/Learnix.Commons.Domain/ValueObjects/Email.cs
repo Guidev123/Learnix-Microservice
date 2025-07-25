@@ -1,9 +1,12 @@
 ﻿using Learnix.Commons.Domain.DomainObjects;
+using System.Text.RegularExpressions;
 
 namespace Learnix.Commons.Domain.ValueObjects
 {
     public sealed record Email : ValueObject
     {
+        public const int MaxEmailLength = 160;
+
         private Email(string address)
         {
             Address = address;
@@ -17,10 +20,13 @@ namespace Learnix.Commons.Domain.ValueObjects
 
         public static implicit operator Email(string address) => new(address);
 
+        public static bool IsEmailValid(string address) => Regex.IsMatch(@"^[^@\s]+@[^@\s]+\.[^@\s]+$", address);
+
         protected override void Validate()
         {
+            AssertionConcern.EnsureMaxLength(Address, MaxEmailLength, ValueObjectErrors.EmailOutOfRange.Description);
             AssertionConcern.EnsureNotEmpty(Address, ValueObjectErrors.EmailMustBeNotEmpty.Description);
-            AssertionConcern.EnsureMatchesPattern(@"^[^@\s]+@[^@\s]+\.[^@\s]+$", Address, ValueObjectErrors.EmailMustBeValid.Description);
+            AssertionConcern.EnsureTrue(IsEmailValid(Address), ValueObjectErrors.EmailMustBeValid.Description);
         }
     }
 }

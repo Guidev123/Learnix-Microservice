@@ -27,7 +27,7 @@ namespace Learnix.Commons.Domain.ValueObjects
                 throw new DomainException(ValueObjectErrors.FullNameMustBeNotEmpty.Description);
             }
 
-            var parts = fullName.Split(' ', 2, StringSplitOptions.RemoveEmptyEntries);
+            var parts = GetFirstAndLastName(fullName);
 
             if (parts.Length != 2)
             {
@@ -36,6 +36,8 @@ namespace Learnix.Commons.Domain.ValueObjects
 
             return new Name(parts[0], parts[1]);
         }
+
+        public static string[] GetFirstAndLastName(string fullName) => fullName.Split(' ', 2, StringSplitOptions.RemoveEmptyEntries);
 
         protected override void Validate()
         {
