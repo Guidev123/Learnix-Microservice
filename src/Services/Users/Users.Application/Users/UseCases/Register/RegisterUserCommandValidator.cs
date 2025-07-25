@@ -59,6 +59,12 @@ namespace Users.Application.Users.UseCases.Register
         private static bool VerifyNameLength(string fullName)
         {
             var firstAndLastName = Name.GetFirstAndLastName(fullName);
+
+            if (firstAndLastName.Length != 2)
+            {
+                return false;
+            }
+
             var firstName = firstAndLastName[0];
             var lastName = firstAndLastName[1];
 

@@ -21,9 +21,8 @@ namespace Learnix.Commons.Infrastructure
 
         private static IServiceCollection AddApplication(this IServiceCollection services, Assembly applicationAssembly)
         {
+            services.AddMidR(applicationAssembly);
             services.AddValidatorsFromAssembly(applicationAssembly, includeInternalTypes: true);
-
-            services.AddMidR();
 
             services.Decorate(typeof(IRequestHandler<,>), typeof(ValidationDecorator.RequestHandler<,>));
             services.Decorate(typeof(IRequestHandler<,>), typeof(RequestLoggingDecorator.RequestHandler<,>));
