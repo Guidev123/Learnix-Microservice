@@ -26,7 +26,11 @@ namespace Users.Infrastructure
             var dbConnectionString = configuration.GetConnectionString("Database") ?? string.Empty;
 
             services
-                .AddCommonInfrastructure(AssemblyReference.Assembly, configuration)
+                .AddApplication(AssemblyReference.Assembly)
+                .AddHandlerDecorators()
+                .AddData(configuration)
+                .AddKafkaMessageBus(configuration)
+                .AddBackgroundJobs()
                 .AddTracing()
                 .AddDataAccess(dbConnectionString)
                 .AddOutboxPattern(configuration)
@@ -95,7 +99,7 @@ namespace Users.Infrastructure
 
         private static IServiceCollection AddOutboxPattern(this IServiceCollection services, IConfiguration configuration)
         {
-            services.Decorate(typeof(INotificationHandler<>), typeof(IdempotentDomainEventHandlerDecorator.DomainEventHandler<>));
+            services.Decorate(typeof(INotificationHandler<>), typeof(IdempotentDomainEventHandlerDecorator<>));
 
             services.Configure<OutboxOptions>(configuration.GetSection(nameof(OutboxOptions)));
             services.ConfigureOptions<ConfigureProcessOutboxJob>();

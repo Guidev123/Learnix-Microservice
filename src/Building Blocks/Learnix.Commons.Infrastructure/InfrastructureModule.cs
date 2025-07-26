@@ -19,34 +19,25 @@ namespace Learnix.Commons.Infrastructure
 {
     public static class InfrastructureModule
     {
-        public static IServiceCollection AddCommonInfrastructure(
-            this IServiceCollection services,
-            Assembly applicationAssembly,
-            IConfiguration configuration)
-        {
-            services
-                .AddApplication(applicationAssembly)
-                .AddData(configuration)
-                .AddKafkaMessageBus(configuration)
-                .AddBackgroundJobs();
-
-            return services;
-        }
-
-        private static IServiceCollection AddApplication(this IServiceCollection services, Assembly applicationAssembly)
+        public static IServiceCollection AddApplication(this IServiceCollection services, Assembly applicationAssembly)
         {
             services.AddMidR(applicationAssembly);
             services.AddValidatorsFromAssembly(applicationAssembly, includeInternalTypes: true);
-
-            services.Decorate(typeof(IRequestHandler<,>), typeof(ValidationDecorator.RequestHandler<,>));
-            services.Decorate(typeof(IRequestHandler<,>), typeof(RequestLoggingDecorator.RequestHandler<,>));
 
             services.TryAddSingleton<IDateTimeProvider, DateTimeProvider>();
 
             return services;
         }
 
-        private static IServiceCollection AddData(this IServiceCollection services, IConfiguration configuration)
+        public static IServiceCollection AddHandlerDecorators(this IServiceCollection services)
+        {
+            services.Decorate(typeof(IRequestHandler<,>), typeof(ValidationDecorator<,>));
+            services.Decorate(typeof(IRequestHandler<,>), typeof(RequestLoggingDecorator<,>));
+
+            return services;
+        }
+
+        public static IServiceCollection AddData(this IServiceCollection services, IConfiguration configuration)
         {
             var databaseConnectionString = configuration.GetConnectionString("Database") ?? string.Empty;
 
@@ -60,7 +51,7 @@ namespace Learnix.Commons.Infrastructure
             return services;
         }
 
-        private static IServiceCollection AddBackgroundJobs(this IServiceCollection services)
+        public static IServiceCollection AddBackgroundJobs(this IServiceCollection services)
         {
             services.AddQuartz(c =>
             {
@@ -74,7 +65,7 @@ namespace Learnix.Commons.Infrastructure
             return services;
         }
 
-        private static IServiceCollection AddKafkaMessageBus(this IServiceCollection services, IConfiguration configuration)
+        public static IServiceCollection AddKafkaMessageBus(this IServiceCollection services, IConfiguration configuration)
         {
             services.Configure<MessageBusOptions>(configuration.GetSection(nameof(MessageBusOptions)));
 

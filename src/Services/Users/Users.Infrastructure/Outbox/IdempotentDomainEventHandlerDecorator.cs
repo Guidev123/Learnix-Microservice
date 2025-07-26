@@ -7,28 +7,25 @@ using System.Data.Common;
 
 namespace Users.Infrastructure.Outbox
 {
-    internal static class IdempotentDomainEventHandlerDecorator
+    internal sealed class IdempotentDomainEventHandlerDecorator<TDomainEvent>(
+        INotificationHandler<TDomainEvent> innerHandler,
+        ISqlConnectionFactory sqlConnectionFactory) : INotificationHandler<TDomainEvent>
+        where TDomainEvent : DomainEvent
     {
-        internal sealed class DomainEventHandler<TDomainEvent>(
-            INotificationHandler<TDomainEvent> innerHandler,
-            ISqlConnectionFactory sqlConnectionFactory) : INotificationHandler<TDomainEvent>
-            where TDomainEvent : DomainEvent
+        public async Task ExecuteAsync(TDomainEvent notification, CancellationToken cancellationToken)
         {
-            public async Task ExecuteAsync(TDomainEvent notification, CancellationToken cancellationToken)
+            using var connection = sqlConnectionFactory.Create();
+
+            var outboxMessageConsumer = new OutboxMessageConsumer(notification.CorrelationId, notification.Messagetype);
+
+            if (await IsOutboxMessageProcessedAsync(outboxMessageConsumer, connection))
             {
-                using var connection = sqlConnectionFactory.Create();
-
-                var outboxMessageConsumer = new OutboxMessageConsumer(notification.CorrelationId, notification.Messagetype);
-
-                if (await IsOutboxMessageProcessedAsync(outboxMessageConsumer, connection))
-                {
-                    return;
-                }
-
-                await innerHandler.ExecuteAsync(notification, cancellationToken);
-
-                await MarkOutboxMessageAsProcessedAsync(outboxMessageConsumer, connection);
+                return;
             }
+
+            await innerHandler.ExecuteAsync(notification, cancellationToken);
+
+            await MarkOutboxMessageAsProcessedAsync(outboxMessageConsumer, connection);
         }
 
         private static async Task<bool> IsOutboxMessageProcessedAsync(

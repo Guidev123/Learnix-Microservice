@@ -16,7 +16,12 @@ namespace Learning.Infrastructure
             var dbConnectionString = configuration.GetConnectionString("Database") ?? string.Empty;
 
             services
-                .AddCommonInfrastructure(AssemblyReference.Assembly, configuration)
+                .AddApplication(AssemblyReference.Assembly)
+                .AddHandlerDecorators()
+                .AddData(configuration)
+                .AddKafkaMessageBus(configuration)
+                .AddBackgroundJobs()
+                .AddTracing()
                 .AddDataAccess(dbConnectionString)
                 .AddTracing()
                 .AddIntegrationEvents();
