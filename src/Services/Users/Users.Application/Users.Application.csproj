@@ -7,7 +7,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Dapper" Version="2.1.66" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\..\..\Building Blocks\Learnix.Commons.Application\Learnix.Commons.Application.csproj" />
+    <ProjectReference Include="..\..\..\Building Blocks\Learnix.Commons.Contracts\Learnix.Commons.Contracts.csproj" />
     <ProjectReference Include="..\Users.Domain\Users.Domain.csproj" />
   </ItemGroup>
 

@@ -1,4 +1,5 @@
-﻿using Learnix.Commons.Domain.Abstractions;
+﻿using Learnix.Commons.Application;
+using Learnix.Commons.Domain.Abstractions;
 using Learnix.Commons.Infrastructure;
 using Learnix.Commons.Infrastructure.Http;
 using Microsoft.EntityFrameworkCore;
@@ -20,20 +21,24 @@ namespace Users.Infrastructure
     {
         public static IServiceCollection AddInfrastructureModule(this IServiceCollection services, IConfiguration configuration)
         {
+            var dbConnectionString = configuration.GetConnectionString("Database") ?? string.Empty;
+
             services
-                .AddCommonInfrastructure(AssemblyReference.Assembly)
+                .AddCommonInfrastructure(AssemblyReference.Assembly, configuration)
                 .AddTracing()
-                .AddDataAccess(configuration)
+                .AddDataAccess(dbConnectionString)
                 .AddHttpClientServices(configuration);
 
             return services;
         }
 
-        private static IServiceCollection AddDataAccess(this IServiceCollection services, IConfiguration configuration)
+        private static IServiceCollection AddDataAccess(
+            this IServiceCollection services,
+            string dbConnectionString)
         {
             services.AddDbContext<UsersDbContext>(options =>
             {
-                options.UseSqlServer(configuration.GetConnectionString("Database"));
+                options.UseSqlServer(dbConnectionString);
             });
 
             services.AddScoped<IUserRepository, UserRepository>();
@@ -44,7 +49,7 @@ namespace Users.Infrastructure
 
         private static IServiceCollection AddHttpClientServices(this IServiceCollection services, IConfiguration configuration)
         {
-            services.Configure<KeyCloakOptions>(configuration.GetSection("Users:KeyCloak"));
+            services.Configure<KeyCloakOptions>(configuration.GetSection("Users:Keycloak"));
 
             services.AddTransient<KeyCloakAuthDelegatingHandler>();
 

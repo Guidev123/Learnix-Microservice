@@ -1,7 +1,7 @@
 ﻿using Learnix.Commons.Domain.Results;
 using MidR.MemoryQueue.Interfaces;
 
-namespace Learnix.Commons.Application.Abstractions
+namespace Learnix.Commons.Application.Messaging
 {
     public interface ICommand : IRequest<Result>, IBaseCommand;
 

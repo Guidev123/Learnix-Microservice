@@ -28,14 +28,20 @@ namespace Learnix.Commons.Domain.ValueObjects
             var today = DateTime.Today;
             var age = today.Year - birthDate.Year;
 
+            if (age >= MaxAge)
+            {
+                return false;
+            }
+
             if (birthDate.Date > today.AddYears(-age))
+            {
                 age--;
+            }
 
             return age >= MinAge;
         }
         protected override void Validate()
         {
-            AssertionConcern.EnsureTrue(BirthDate <= DateTime.UtcNow.AddYears(-MaxAge), ValueObjectErrors.BirthDateCannotBeInFuture.Description);
             AssertionConcern.EnsureTrue(BeAtLeastMinAgeYearsOld(BirthDate), ValueObjectErrors.AgeOutOfRange.Description);
         }
     }

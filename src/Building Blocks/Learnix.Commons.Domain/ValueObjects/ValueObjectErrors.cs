@@ -40,10 +40,6 @@ namespace Learnix.Commons.Domain.ValueObjects
             "Name.LastNameLengthInvalid",
             $"Last name must be between {Name.NameMinLength} and {Name.NameMaxLength} characters");
 
-        public static readonly Error BirthDateCannotBeInFuture = Error.Problem(
-            "Age.BirthDateCannotBeInFuture",
-            "Birth date cannot be in the future");
-
         public static readonly Error BirthDateCannotBeEmpty = Error.Problem(
             "Age.BirthDateCannotBeEmpty",
             "Birth date cannot be empty");

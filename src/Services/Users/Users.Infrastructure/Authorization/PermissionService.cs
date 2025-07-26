@@ -1,13 +1,22 @@
 ﻿using Learnix.Commons.Application.Authorization;
+using Learnix.Commons.Application.Exceptions;
 using Learnix.Commons.Domain.Results;
+using MidR.MemoryQueue.Interfaces;
+using Users.Application.Users.UseCases.GetPermissions;
 
 namespace Users.Infrastructure.Authorization
 {
-    public sealed class PermissionService : IPermissionService
+    public sealed class PermissionService(IMediator mediator) : IPermissionService
     {
-        public Task<Result<PermissionResponse>> GetUserPermissionsAsync(string identityId, CancellationToken cancellationToken = default)
+        public async Task<Result<PermissionResponse>> GetUserPermissionsAsync(string identityId, CancellationToken cancellationToken = default)
         {
-            throw new NotImplementedException();
+            var result = await mediator.DispatchAsync(new GetUserPermissionsQuery(identityId), cancellationToken);
+            if (result.IsFailure)
+            {
+                throw new LearnixException(nameof(GetUserPermissionsQuery), result.Error);
+            }
+
+            return result;
         }
     }
 }

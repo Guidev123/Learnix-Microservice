@@ -1,4 +1,4 @@
-﻿using Learnix.Commons.Application.Abstractions;
+﻿using Learnix.Commons.Application.Messaging;
 
 namespace Users.Application.Users.UseCases.Register
 {

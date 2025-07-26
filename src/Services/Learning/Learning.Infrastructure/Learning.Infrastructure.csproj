@@ -1,14 +1,26 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFramework>net9.0</TargetFramework>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>enable</Nullable>
-  </PropertyGroup>
+	<PropertyGroup>
+		<TargetFramework>net9.0</TargetFramework>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>enable</Nullable>
+	</PropertyGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\..\..\Building Blocks\Learnix.Commons.Infrastructure\Learnix.Commons.Infrastructure.csproj" />
-    <ProjectReference Include="..\Learning.Application\Learning.Application.csproj" />
-  </ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="Dapper" Version="2.1.66" />
+		<PackageReference Include="OpenTelemetry.Exporter.OpenTelemetryProtocol" Version="1.12.0" />
+		<PackageReference Include="OpenTelemetry.Extensions.Hosting" Version="1.12.0" />
+		<PackageReference Include="OpenTelemetry.Instrumentation.AspNetCore" Version="1.12.0" />
+		<PackageReference Include="OpenTelemetry.Instrumentation.EntityFrameworkCore" Version="1.12.0-beta.2" />
+		<PackageReference Include="OpenTelemetry.Instrumentation.Http" Version="1.12.0" />
+		<PackageReference Include="OpenTelemetry.Instrumentation.SqlClient" Version="1.12.0-beta.2" />
+		<PackageReference Include="OpenTelemetry.Instrumentation.StackExchangeRedis" Version="1.12.0-beta.1" />
+	</ItemGroup>
+
+
+	<ItemGroup>
+		<ProjectReference Include="..\..\..\Building Blocks\Learnix.Commons.Infrastructure\Learnix.Commons.Infrastructure.csproj" />
+		<ProjectReference Include="..\Learning.Application\Learning.Application.csproj" />
+	</ItemGroup>
 
 </Project>

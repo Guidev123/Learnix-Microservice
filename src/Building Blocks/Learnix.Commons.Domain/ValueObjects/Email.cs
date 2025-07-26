@@ -20,7 +20,7 @@ namespace Learnix.Commons.Domain.ValueObjects
 
         public static implicit operator Email(string address) => new(address);
 
-        public static bool IsEmailValid(string address) => Regex.IsMatch(@"^[^@\s]+@[^@\s]+\.[^@\s]+$", address);
+        public static bool IsEmailValid(string address) => Regex.IsMatch(address, @"^[^@\s]+@[^@\s]+\.[^@\s]+$");
 
         protected override void Validate()
         {

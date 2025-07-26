@@ -1,12 +1,11 @@
-var builder = WebApplication.CreateBuilder(args);
+using Learning.WebApi.Configurations;
 
-builder.Services.AddOpenApi();
+var builder = WebApplication
+    .CreateBuilder(args)
+    .ConfigureServices();
 
-var app = builder.Build();
-
-if (app.Environment.IsDevelopment())
-{
-    app.MapOpenApi();
-}
+var app = builder
+    .Build()
+    .UsePipeline(builder);
 
 app.Run();

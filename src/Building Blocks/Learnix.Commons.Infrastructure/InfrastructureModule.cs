@@ -1,7 +1,12 @@
 ﻿using FluentValidation;
 using Learnix.Commons.Application.Clock;
 using Learnix.Commons.Application.Decorators;
+using Learnix.Commons.Application.Factories;
+using Learnix.Commons.Application.MessageBus;
 using Learnix.Commons.Infrastructure.Clock;
+using Learnix.Commons.Infrastructure.Factories;
+using Learnix.Commons.Infrastructure.MessageBus;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using MidR.MemoryQueue.DependencyInjection;
@@ -12,9 +17,15 @@ namespace Learnix.Commons.Infrastructure
 {
     public static class InfrastructureModule
     {
-        public static IServiceCollection AddCommonInfrastructure(this IServiceCollection services, Assembly applicationAssembly)
+        public static IServiceCollection AddCommonInfrastructure(
+            this IServiceCollection services,
+            Assembly applicationAssembly,
+            IConfiguration configuration)
         {
-            services.AddApplication(applicationAssembly);
+            services
+                .AddApplication(applicationAssembly)
+                .AddData(configuration)
+                .AddKafkaMessageBus(configuration);
 
             return services;
         }
@@ -28,6 +39,27 @@ namespace Learnix.Commons.Infrastructure
             services.Decorate(typeof(IRequestHandler<,>), typeof(RequestLoggingDecorator.RequestHandler<,>));
 
             services.TryAddSingleton<IDateTimeProvider, DateTimeProvider>();
+
+            return services;
+        }
+
+        private static IServiceCollection AddData(this IServiceCollection services, IConfiguration configuration)
+        {
+            var databaseConnectionString = configuration.GetConnectionString("Database") ?? string.Empty;
+
+            services.AddSingleton<ISqlConnectionFactory, SqlConnectionFactory>(sp =>
+            {
+                return new SqlConnectionFactory(databaseConnectionString);
+            });
+
+            return services;
+        }
+
+        private static IServiceCollection AddKafkaMessageBus(this IServiceCollection services, IConfiguration configuration)
+        {
+            services.Configure<MessageBusOptions>(configuration.GetSection(nameof(MessageBusOptions)));
+
+            services.TryAddSingleton<IMessageBus, MessageBus.MessageBus>();
 
             return services;
         }

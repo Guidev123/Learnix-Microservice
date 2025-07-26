@@ -8,6 +8,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\..\Building Blocks\Learnix.Commons.Application\Learnix.Commons.Application.csproj" />
+    <ProjectReference Include="..\..\..\Building Blocks\Learnix.Commons.Contracts\Learnix.Commons.Contracts.csproj" />
     <ProjectReference Include="..\Learning.Domain\Learning.Domain.csproj" />
   </ItemGroup>
 

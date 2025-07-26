@@ -4,6 +4,11 @@ namespace Users.Domain.Errors
 {
     public static class UserErrors
     {
+        public static Error NotFound(Guid id)
+            => Error.NotFound(
+                "Users.NotFound",
+                $"User with ID: {id} not found");
+
         public static readonly Error NameMustBeNotNull = Error.Problem(
             "Users.NameMustBeNotNull",
             "User name must be not null");
@@ -55,5 +60,14 @@ namespace Users.Domain.Errors
         public static readonly Error PasswordsDoNotMatch = Error.Problem(
             "Users.PasswordsDoNotMatch",
             "The passwords do not match");
+
+        public static Error PermissionNotFoundForIdenityId(string idenityId)
+            => Error.NotFound(
+                "Users.PermissionNotFoundForIdenityId",
+                $"No role found for user with identity identifier: {idenityId}");
+
+        public static Error AlreadyExists(string email) => Error.Conflict(
+            "Users.AlreadyExists",
+            $"User with E-mail: {email} already exists");
     }
 }

@@ -1,6 +1,6 @@
 ﻿using FluentValidation;
 using FluentValidation.Results;
-using Learnix.Commons.Application.Abstractions;
+using Learnix.Commons.Application.Messaging;
 using Learnix.Commons.Domain.Results;
 using MidR.MemoryQueue.Interfaces;
 using System.Reflection;

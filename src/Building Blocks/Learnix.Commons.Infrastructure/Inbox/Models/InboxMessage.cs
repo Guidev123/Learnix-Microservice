@@ -6,16 +6,12 @@
             Guid correlationId,
             string type,
             string content,
-            DateTime occurredOn,
-            DateTime? processedOn,
-            string? error)
+            DateTime occurredOn)
         {
             CorrelationId = correlationId;
             Type = type;
             Content = content;
             OccurredOn = occurredOn;
-            ProcessedOn = processedOn;
-            Error = error;
         }
 
         private InboxMessage()

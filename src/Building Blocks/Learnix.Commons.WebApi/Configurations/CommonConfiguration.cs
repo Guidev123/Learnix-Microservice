@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Hosting;
 using Serilog;
 
@@ -41,6 +42,8 @@ namespace Learnix.Commons.WebApi.Configurations
             builder.Services.AddTransient<IAuthorizationHandler, PermissionAuthorizationHandler>();
 
             builder.Services.AddTransient<IAuthorizationPolicyProvider, PermissionAuthorizationPolicyProvider>();
+
+            builder.Services.TryAddScoped<IPermissionService, TPermissionImplementation>();
 
             return builder;
         }

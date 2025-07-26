@@ -1,0 +1,61 @@
+﻿using Learning.Application;
+using Learning.Infrastructure.Inbox;
+using Learnix.Commons.Infrastructure;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using OpenTelemetry.Resources;
+using OpenTelemetry.Trace;
+
+namespace Learning.Infrastructure
+{
+    public static class LearningModule
+    {
+        public static IServiceCollection AddInfrastructureModule(this IServiceCollection services, IConfiguration configuration)
+        {
+            var dbConnectionString = configuration.GetConnectionString("Database") ?? string.Empty;
+
+            services
+                .AddCommonInfrastructure(AssemblyReference.Assembly, configuration)
+                .AddDataAccess(dbConnectionString)
+                .AddTracing()
+                .AddIntegrationEvents();
+
+            return services;
+        }
+
+        private static IServiceCollection AddDataAccess(
+            this IServiceCollection services,
+            string dbConnectionString)
+        {
+            return services;
+        }
+
+        private static IServiceCollection AddIntegrationEvents(this IServiceCollection services)
+        {
+            services.AddHostedService<IntegrationEventsConsumer>();
+
+            return services;
+        }
+
+        private static IServiceCollection AddTracing(this IServiceCollection services)
+        {
+            services
+            .AddOpenTelemetry()
+            .ConfigureResource(c => c.AddService("Learnix.Learning.WebApi"))
+            .WithTracing(tracing =>
+            {
+                tracing
+                    .AddAspNetCoreInstrumentation()
+                    .AddHttpClientInstrumentation()
+                    .AddSqlClientInstrumentation()
+                    .AddEntityFrameworkCoreInstrumentation()
+                    .AddRedisInstrumentation();
+
+                tracing.AddOtlpExporter();
+            });
+
+            return services;
+        }
+    }
+}
