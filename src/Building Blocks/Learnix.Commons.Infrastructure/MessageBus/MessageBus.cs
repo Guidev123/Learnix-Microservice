@@ -8,22 +8,21 @@ namespace Learnix.Commons.Infrastructure.MessageBus
 {
     internal sealed class MessageBus : IMessageBus
     {
-        private readonly ProducerConfig _config;
         private readonly MessageBusOptions _messageBusOptions;
 
         public MessageBus(IOptions<MessageBusOptions> options)
         {
             _messageBusOptions = options.Value;
-
-            _config = new ProducerConfig
-            {
-                BootstrapServers = _messageBusOptions.BootstrapServer
-            };
         }
 
         public async Task ProduceAsync<TIntegrationEvent>(string topic, TIntegrationEvent integrationEvent, CancellationToken cancellationToken = default) where TIntegrationEvent : IIntegrationEvent
         {
-            var producerBuilder = new ProducerBuilder<string, TIntegrationEvent>(_config)
+            var config = new ProducerConfig
+            {
+                BootstrapServers = _messageBusOptions.BootstrapServer
+            };
+
+            var producerBuilder = new ProducerBuilder<string, TIntegrationEvent>(config)
                 .SetValueSerializer(new KafkaSerializerExtensions<TIntegrationEvent>())
                 .Build();
 
