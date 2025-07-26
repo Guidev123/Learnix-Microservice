@@ -47,8 +47,8 @@ namespace Learnix.Commons.Infrastructure.MessageBus
                 };
 
                 using var consumerBuilder = new ConsumerBuilder<string, TIntegrationEvent>(config)
-                .SetValueDeserializer(new KafkaDeserializerExtensions<TIntegrationEvent>())
-                .Build();
+                    .SetValueDeserializer(new KafkaDeserializerExtensions<TIntegrationEvent>())
+                    .Build();
 
                 consumerBuilder.Subscribe(topic);
 

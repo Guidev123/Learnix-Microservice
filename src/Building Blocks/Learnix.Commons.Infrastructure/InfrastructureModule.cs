@@ -6,11 +6,13 @@ using Learnix.Commons.Application.MessageBus;
 using Learnix.Commons.Infrastructure.Clock;
 using Learnix.Commons.Infrastructure.Factories;
 using Learnix.Commons.Infrastructure.MessageBus;
+using Learnix.Commons.Infrastructure.Outbox.Interceptors;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using MidR.MemoryQueue.DependencyInjection;
 using MidR.MemoryQueue.Interfaces;
+using Quartz;
 using System.Reflection;
 
 namespace Learnix.Commons.Infrastructure
@@ -25,7 +27,8 @@ namespace Learnix.Commons.Infrastructure
             services
                 .AddApplication(applicationAssembly)
                 .AddData(configuration)
-                .AddKafkaMessageBus(configuration);
+                .AddKafkaMessageBus(configuration)
+                .AddBackgroundJobs();
 
             return services;
         }
@@ -51,6 +54,22 @@ namespace Learnix.Commons.Infrastructure
             {
                 return new SqlConnectionFactory(databaseConnectionString);
             });
+
+            services.TryAddSingleton<InsertOutboxMessagesInterceptor>();
+
+            return services;
+        }
+
+        private static IServiceCollection AddBackgroundJobs(this IServiceCollection services)
+        {
+            services.AddQuartz(c =>
+            {
+                var schedulerId = Guid.NewGuid();
+                c.SchedulerId = $"default-id-{schedulerId}";
+                c.SchedulerName = $"dafault-name-{schedulerId}";
+            });
+
+            services.AddQuartzHostedService(options => options.WaitForJobsToComplete = true);
 
             return services;
         }

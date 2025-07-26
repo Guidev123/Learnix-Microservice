@@ -1,6 +1,7 @@
 ﻿using Learnix.Commons.Domain.Abstractions;
 using Learnix.Commons.Infrastructure.Inbox.Configurations;
 using Learnix.Commons.Infrastructure.Outbox.Configurations;
+using Learnix.Commons.Infrastructure.Outbox.Models;
 using Microsoft.EntityFrameworkCore;
 using System.Reflection;
 using Users.Domain.Entities;
@@ -25,7 +26,7 @@ namespace Users.Infrastructure.Persistence
             modelBuilder.ApplyConfiguration(new InboxMessageConfiguration());
             modelBuilder.ApplyConfiguration(new InboxMessageConsumerConfiguration());
             modelBuilder.ApplyConfiguration(new OutboxMessageConsumerConfiguration());
-            modelBuilder.ApplyConfiguration(new OutboxMessageConsumerConfiguration());
+            modelBuilder.ApplyConfiguration(new OutboxMessageConfiguration());
             modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
         }
 

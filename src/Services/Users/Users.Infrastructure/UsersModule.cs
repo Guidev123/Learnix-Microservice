@@ -1,17 +1,19 @@
-﻿using Learnix.Commons.Application;
-using Learnix.Commons.Domain.Abstractions;
+﻿using Learnix.Commons.Domain.Abstractions;
 using Learnix.Commons.Infrastructure;
 using Learnix.Commons.Infrastructure.Http;
+using Learnix.Commons.Infrastructure.Outbox.Interceptors;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
+using MidR.MemoryQueue.Interfaces;
 using OpenTelemetry.Resources;
 using OpenTelemetry.Trace;
 using Users.Application;
 using Users.Application.Abstractions.Identity;
 using Users.Domain.Interfaces;
 using Users.Infrastructure.Identity;
+using Users.Infrastructure.Outbox;
 using Users.Infrastructure.Persistence;
 using Users.Infrastructure.Persistence.Repositories;
 
@@ -27,6 +29,7 @@ namespace Users.Infrastructure
                 .AddCommonInfrastructure(AssemblyReference.Assembly, configuration)
                 .AddTracing()
                 .AddDataAccess(dbConnectionString)
+                .AddOutboxPattern(configuration)
                 .AddHttpClientServices(configuration);
 
             return services;
@@ -36,9 +39,11 @@ namespace Users.Infrastructure
             this IServiceCollection services,
             string dbConnectionString)
         {
-            services.AddDbContext<UsersDbContext>(options =>
+            services.AddDbContext<UsersDbContext>((scope, options) =>
             {
                 options.UseSqlServer(dbConnectionString);
+                var outboxInterceptor = scope.GetRequiredService<InsertOutboxMessagesInterceptor>();
+                options.AddInterceptors(outboxInterceptor);
             });
 
             services.AddScoped<IUserRepository, UserRepository>();
@@ -84,6 +89,16 @@ namespace Users.Infrastructure
 
                 tracing.AddOtlpExporter();
             });
+
+            return services;
+        }
+
+        private static IServiceCollection AddOutboxPattern(this IServiceCollection services, IConfiguration configuration)
+        {
+            services.Decorate(typeof(INotificationHandler<>), typeof(IdempotentDomainEventHandlerDecorator.DomainEventHandler<>));
+
+            services.Configure<OutboxOptions>(configuration.GetSection(nameof(OutboxOptions)));
+            services.ConfigureOptions<ConfigureProcessOutboxJob>();
 
             return services;
         }

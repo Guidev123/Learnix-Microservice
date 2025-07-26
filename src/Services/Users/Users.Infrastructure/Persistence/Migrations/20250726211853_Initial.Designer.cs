@@ -12,7 +12,7 @@ using Users.Infrastructure.Persistence;
 namespace Users.Infrastructure.Persistence.Migrations
 {
     [DbContext(typeof(UsersDbContext))]
-    [Migration("20250723153703_Initial")]
+    [Migration("20250726211853_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -39,6 +39,12 @@ namespace Users.Infrastructure.Persistence.Migrations
                     b.Property<string>("Error")
                         .HasColumnType("VARCHAR(256)");
 
+                    b.Property<DateTime>("OccurredOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("ProcessedOn")
+                        .HasColumnType("datetime2");
+
                     b.Property<string>("Type")
                         .IsRequired()
                         .HasColumnType("VARCHAR(200)");
@@ -59,6 +65,34 @@ namespace Users.Infrastructure.Persistence.Migrations
                     b.HasKey("InboxMessageCorrelationId", "Name");
 
                     b.ToTable("InboxMessageConsumers", "users");
+                });
+
+            modelBuilder.Entity("Learnix.Commons.Infrastructure.Outbox.Models.OutboxMessage", b =>
+                {
+                    b.Property<Guid>("CorrelationId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Content")
+                        .IsRequired()
+                        .HasColumnType("VARCHAR(3000)");
+
+                    b.Property<string>("Error")
+                        .HasColumnType("VARCHAR(256)");
+
+                    b.Property<DateTime>("OccurredOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("ProcessedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Type")
+                        .IsRequired()
+                        .HasColumnType("VARCHAR(200)");
+
+                    b.HasKey("CorrelationId");
+
+                    b.ToTable("OutboxMessages", "users");
                 });
 
             modelBuilder.Entity("Learnix.Commons.Infrastructure.Outbox.Models.OutboxMessageConsumer", b =>

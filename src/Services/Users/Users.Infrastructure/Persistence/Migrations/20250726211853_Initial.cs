@@ -35,6 +35,8 @@ namespace Users.Infrastructure.Persistence.Migrations
                     CorrelationId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Type = table.Column<string>(type: "VARCHAR(200)", nullable: false),
                     Content = table.Column<string>(type: "VARCHAR(3000)", nullable: false),
+                    OccurredOn = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    ProcessedOn = table.Column<DateTime>(type: "datetime2", nullable: true),
                     Error = table.Column<string>(type: "VARCHAR(256)", nullable: true)
                 },
                 constraints: table =>
@@ -53,6 +55,23 @@ namespace Users.Infrastructure.Persistence.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_OutboxMessageConsumers", x => new { x.OutboxMessageCorrelationId, x.Name });
+                });
+
+            migrationBuilder.CreateTable(
+                name: "OutboxMessages",
+                schema: "users",
+                columns: table => new
+                {
+                    CorrelationId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Type = table.Column<string>(type: "VARCHAR(200)", nullable: false),
+                    Content = table.Column<string>(type: "VARCHAR(3000)", nullable: false),
+                    OccurredOn = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    ProcessedOn = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    Error = table.Column<string>(type: "VARCHAR(256)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_OutboxMessages", x => x.CorrelationId);
                 });
 
             migrationBuilder.CreateTable(
@@ -190,6 +209,10 @@ namespace Users.Infrastructure.Persistence.Migrations
 
             migrationBuilder.DropTable(
                 name: "OutboxMessageConsumers",
+                schema: "users");
+
+            migrationBuilder.DropTable(
+                name: "OutboxMessages",
                 schema: "users");
 
             migrationBuilder.DropTable(
