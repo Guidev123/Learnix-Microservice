@@ -12,7 +12,7 @@
 <body>
 
   <h1>👨‍🎓 Learnix</h1>
-  <p><strong>Eventix</strong> is a production-ready <strong>microservice</strong> built with <strong>ASP.NET Core</strong> designed as a reference architecture for scalable and maintainable systems. It focuses on domain separation, modular design, and asynchronous communication using an <strong>event-driven architecture</strong>.</p>
+  <p><strong>Learnix</strong> is a production-ready <strong>microservice</strong> built with <strong>ASP.NET Core</strong> designed as a reference architecture for scalable and maintainable systems. It focuses on domain separation, modular design, and asynchronous communication using an <strong>event-driven architecture</strong>.</p>
   
   <h2>🧱 Architecture Overview</h2>
   <img width="869" height="751" alt="archLearnix" src="https://github.com/user-attachments/assets/4c9533ad-3f01-42da-848d-1e042f5231ed" />
