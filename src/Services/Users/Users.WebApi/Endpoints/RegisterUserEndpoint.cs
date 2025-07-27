@@ -15,7 +15,7 @@ namespace Users.WebApi.Endpoints
                 var result = await mediator.DispatchAsync(command);
 
                 return result.Match(response => Results.Created("api/v1/users/me", response), ApiResults.Problem);
-            });
+            }).WithTags(Tags.Users);
         }
     }
 }

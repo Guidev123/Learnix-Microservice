@@ -13,9 +13,10 @@ using Users.Application;
 using Users.Application.Abstractions.Identity;
 using Users.Domain.Interfaces;
 using Users.Infrastructure.Identity;
+using Users.Infrastructure.Inbox;
 using Users.Infrastructure.Outbox;
 using Users.Infrastructure.Persistence;
-using Users.Infrastructure.Persistence.Repositories;
+using Users.Infrastructure.Users.Repositories;
 
 namespace Users.Infrastructure
 {
@@ -34,6 +35,7 @@ namespace Users.Infrastructure
                 .AddTracing()
                 .AddDataAccess(dbConnectionString)
                 .AddOutboxPattern(configuration)
+                .AddInboxPattern(configuration)
                 .AddHttpClientServices(configuration);
 
             return services;
@@ -103,6 +105,16 @@ namespace Users.Infrastructure
 
             services.Configure<OutboxOptions>(configuration.GetSection(nameof(OutboxOptions)));
             services.ConfigureOptions<ConfigureProcessOutboxJob>();
+
+            return services;
+        }
+
+        private static IServiceCollection AddInboxPattern(this IServiceCollection services, IConfiguration configuration)
+        {
+            services.Decorate(typeof(INotificationHandler<>), typeof(IdempotentIntegrationEventHandlerDecorator<>));
+
+            services.Configure<InboxOptions>(configuration.GetSection(nameof(InboxOptions)));
+            services.ConfigureOptions<ConfigureProcessInboxJob>();
 
             return services;
         }

@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Users.Domain.Entities;
 
-namespace Users.Infrastructure.Persistence.Configurations
+namespace Users.Infrastructure.Users.Configurations
 {
     internal sealed class UserConfiguration : IEntityTypeConfiguration<User>
     {

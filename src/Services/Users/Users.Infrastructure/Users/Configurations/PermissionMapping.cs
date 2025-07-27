@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Users.Domain.Models;
 
-namespace Users.Infrastructure.Persistence.Configurations
+namespace Users.Infrastructure.Users.Configurations
 {
     internal sealed class PermissionMapping : IEntityTypeConfiguration<Permission>
     {

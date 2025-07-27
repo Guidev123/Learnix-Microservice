@@ -1,8 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Users.Domain.Entities;
 using Users.Domain.Interfaces;
+using Users.Infrastructure.Persistence;
 
-namespace Users.Infrastructure.Persistence.Repositories
+namespace Users.Infrastructure.Users.Repositories
 {
     internal sealed class UserRepository(UsersDbContext context) : IUserRepository
     {

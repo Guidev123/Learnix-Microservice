@@ -16,7 +16,7 @@ namespace Users.WebApi.Endpoints
                 var result = await mediator.DispatchAsync(new GetUserByIdQuery(claimsPrincipal.GetUserId()));
 
                 return result.Match(Results.Ok, ApiResults.Problem);
-            }).RequireAuthorization(PolicyExtensions.GetUser);
+            }).WithTags(Tags.Users).RequireAuthorization(PolicyExtensions.GetUser);
         }
     }
 }
