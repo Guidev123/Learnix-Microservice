@@ -1,8 +1,6 @@
-﻿using MidR.MemoryQueue.Interfaces;
-
-namespace Learnix.Commons.Domain.DomainObjects
+﻿namespace Learnix.Commons.Domain.DomainObjects
 {
-    public interface IEvent : INotification
+    public interface IEvent
     {
         Guid CorrelationId { get; }
         DateTime OccurredOn { get; }

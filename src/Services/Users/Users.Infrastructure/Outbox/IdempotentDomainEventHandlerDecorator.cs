@@ -1,18 +1,18 @@
 ﻿using Dapper;
 using Learnix.Commons.Application.Factories;
+using Learnix.Commons.Application.Messaging;
 using Learnix.Commons.Domain.DomainEvents;
 using Learnix.Commons.Infrastructure.Outbox.Models;
-using MidR.MemoryQueue.Interfaces;
 using System.Data.Common;
 
 namespace Users.Infrastructure.Outbox
 {
     internal sealed class IdempotentDomainEventHandlerDecorator<TDomainEvent>(
-        INotificationHandler<TDomainEvent> innerHandler,
-        ISqlConnectionFactory sqlConnectionFactory) : INotificationHandler<TDomainEvent>
+        DomainEventHandler<TDomainEvent> innerHandler,
+        ISqlConnectionFactory sqlConnectionFactory) : DomainEventHandler<TDomainEvent>
         where TDomainEvent : DomainEvent
     {
-        public async Task ExecuteAsync(TDomainEvent notification, CancellationToken cancellationToken)
+        public override async Task ExecuteAsync(TDomainEvent notification, CancellationToken cancellationToken)
         {
             using var connection = sqlConnectionFactory.Create();
 

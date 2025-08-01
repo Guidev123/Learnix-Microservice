@@ -9,11 +9,9 @@ namespace Learnix.Commons.Domain.DomainObjects
         protected Entity()
         {
             Id = Guid.NewGuid();
-            CreatedAt = DateTime.UtcNow;
         }
 
         public Guid Id { get; protected set; }
-        public DateTime CreatedAt { get; }
         public IReadOnlyCollection<IDomainEvent> DomainEvents => _domainEvents.AsReadOnly();
 
         public void AddDomainEvent(IDomainEvent domainEvent)

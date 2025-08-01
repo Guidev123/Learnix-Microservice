@@ -1,5 +1,6 @@
 ﻿using Learnix.Commons.Application.Exceptions;
 using Learnix.Commons.Application.MessageBus;
+using Learnix.Commons.Application.Messaging;
 using Learnix.Commons.Contracts.Users;
 using MidR.MemoryQueue.Interfaces;
 using Users.Application.Users.UseCases.GetById;
@@ -7,9 +8,9 @@ using Users.Domain.DomainEvents;
 
 namespace Users.Application.Users.DomainEvents
 {
-    internal sealed class UserCreatedDomainEventHandler(IMediator mediator, IMessageBus messageBus) : INotificationHandler<UserCreatedDomainEvent>
+    internal sealed class UserCreatedDomainEventHandler(IMediator mediator, IMessageBus messageBus) : DomainEventHandler<UserCreatedDomainEvent>
     {
-        public async Task ExecuteAsync(UserCreatedDomainEvent notification, CancellationToken cancellationToken)
+        public override async Task ExecuteAsync(UserCreatedDomainEvent notification, CancellationToken cancellationToken)
         {
             var userResult = await mediator.DispatchAsync(new GetUserByIdQuery(notification.UserId), cancellationToken);
             if (userResult.IsFailure)

@@ -22,6 +22,7 @@ namespace Learnix.Commons.Infrastructure
         public static IServiceCollection AddApplication(this IServiceCollection services, Assembly applicationAssembly)
         {
             services.AddMidR(applicationAssembly);
+
             services.AddValidatorsFromAssembly(applicationAssembly, includeInternalTypes: true);
 
             services.TryAddSingleton<IDateTimeProvider, DateTimeProvider>();

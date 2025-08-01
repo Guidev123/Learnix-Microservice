@@ -3,12 +3,12 @@ using Learning.Infrastructure.Persistence;
 using Learnix.Commons.Application.Clock;
 using Learnix.Commons.Application.Exceptions;
 using Learnix.Commons.Application.Factories;
-using Learnix.Commons.Domain.DomainEvents;
+using Learnix.Commons.Application.Messaging;
 using Learnix.Commons.Infrastructure.Extensions;
+using Learnix.Commons.Infrastructure.Inbox.Factories;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using MidR.MemoryQueue.Interfaces;
 using Newtonsoft.Json;
 using Quartz;
 using System.Data;
@@ -41,16 +41,23 @@ namespace Learning.Infrastructure.Inbox
                 return;
             }
 
-            using var scope = serviceScopeFactory.CreateScope();
-            var mediator = scope.ServiceProvider.GetRequiredService<IMediator>();
-
             foreach (var inboxMessage in inboxMessages)
             {
                 Exception? exception = null;
 
                 try
                 {
-                    await mediator.PublishAsync(JsonConvert.DeserializeObject<IDomainEvent>(inboxMessage.Content, SerializerExtensions.Instance)!);
+                    var integrationEvent = JsonConvert.DeserializeObject<IIntegrationEvent>(inboxMessage.Content, SerializerExtensions.Instance)!;
+
+                    using var scope = serviceScopeFactory.CreateScope();
+
+                    var integrationEventHandlers = IntegrationEventHandlersFactory.GetHandlers(
+                        integrationEvent.GetType(),
+                        scope.ServiceProvider,
+                        typeof(LearningModule).Assembly);
+
+                    var handlerTasks = integrationEventHandlers.Select(handler => handler.ExecuteAsync(integrationEvent));
+                    await Task.WhenAll(handlerTasks);
                 }
                 catch (Exception ex)
                 {

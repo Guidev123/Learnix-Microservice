@@ -1,10 +1,12 @@
-﻿using Learnix.Commons.Domain.Abstractions;
+﻿using Learnix.Commons.Application.Messaging;
+using Learnix.Commons.Domain.Abstractions;
 using Learnix.Commons.Infrastructure;
 using Learnix.Commons.Infrastructure.Http;
 using Learnix.Commons.Infrastructure.Outbox.Interceptors;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Options;
 using MidR.MemoryQueue.Interfaces;
 using OpenTelemetry.Resources;
@@ -13,7 +15,6 @@ using Users.Application;
 using Users.Application.Abstractions.Identity;
 using Users.Domain.Interfaces;
 using Users.Infrastructure.Identity;
-using Users.Infrastructure.Inbox;
 using Users.Infrastructure.Outbox;
 using Users.Infrastructure.Persistence;
 using Users.Infrastructure.Users.Repositories;
@@ -35,7 +36,6 @@ namespace Users.Infrastructure
                 .AddTracing()
                 .AddDataAccess(dbConnectionString)
                 .AddOutboxPattern(configuration)
-                .AddInboxPattern(configuration)
                 .AddHttpClientServices(configuration);
 
             return services;
@@ -101,7 +101,7 @@ namespace Users.Infrastructure
 
         private static IServiceCollection AddOutboxPattern(this IServiceCollection services, IConfiguration configuration)
         {
-            services.Decorate(typeof(INotificationHandler<>), typeof(IdempotentDomainEventHandlerDecorator<>));
+            services.AddDomainEventHandlers();
 
             services.Configure<OutboxOptions>(configuration.GetSection(nameof(OutboxOptions)));
             services.ConfigureOptions<ConfigureProcessOutboxJob>();
@@ -109,12 +109,28 @@ namespace Users.Infrastructure
             return services;
         }
 
-        private static IServiceCollection AddInboxPattern(this IServiceCollection services, IConfiguration configuration)
+        private static IServiceCollection AddDomainEventHandlers(this IServiceCollection services)
         {
-            services.Decorate(typeof(INotificationHandler<>), typeof(IdempotentIntegrationEventHandlerDecorator<>));
+            var domainEventHandlers = AssemblyReference.Assembly
+                .GetTypes()
+                .Where(c => c.IsAssignableTo(typeof(IDomainEventHandler)))
+                .ToArray();
 
-            services.Configure<InboxOptions>(configuration.GetSection(nameof(InboxOptions)));
-            services.ConfigureOptions<ConfigureProcessInboxJob>();
+            foreach (var domainEventHandler in domainEventHandlers)
+            {
+                services.TryAddTransient(domainEventHandler);
+
+                var domainEvent = domainEventHandler
+                    .GetInterfaces()
+                    .Single(c => c.IsGenericType)
+                    .GetGenericArguments()
+                    .Single();
+
+                var closedIdempotentHandler = typeof(IdempotentDomainEventHandlerDecorator<>)
+                    .MakeGenericType(domainEvent);
+
+                services.Decorate(domainEventHandler, closedIdempotentHandler);
+            }
 
             return services;
         }

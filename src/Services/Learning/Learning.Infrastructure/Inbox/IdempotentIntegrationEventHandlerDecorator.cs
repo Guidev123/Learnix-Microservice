@@ -2,17 +2,16 @@
 using Learnix.Commons.Application.Factories;
 using Learnix.Commons.Application.Messaging;
 using Learnix.Commons.Infrastructure.Inbox.Models;
-using MidR.MemoryQueue.Interfaces;
 using System.Data.Common;
 
 namespace Learning.Infrastructure.Inbox
 {
     internal sealed class IdempotentIntegrationEventHandlerDecorator<TIntegrationEvent>(
-        INotificationHandler<TIntegrationEvent> innerHandler,
-        ISqlConnectionFactory sqlConnectionFactory) : INotificationHandler<TIntegrationEvent>
+        IntegrationEventHandler<TIntegrationEvent> innerHandler,
+        ISqlConnectionFactory sqlConnectionFactory) : IntegrationEventHandler<TIntegrationEvent>
         where TIntegrationEvent : IntegrationEvent
     {
-        public async Task ExecuteAsync(TIntegrationEvent notification, CancellationToken cancellationToken)
+        public override async Task ExecuteAsync(TIntegrationEvent notification, CancellationToken cancellationToken)
         {
             using var connection = sqlConnectionFactory.Create();
 

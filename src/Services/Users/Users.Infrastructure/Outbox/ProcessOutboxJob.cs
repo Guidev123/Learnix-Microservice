@@ -4,6 +4,7 @@ using Learnix.Commons.Application.Exceptions;
 using Learnix.Commons.Application.Factories;
 using Learnix.Commons.Domain.DomainEvents;
 using Learnix.Commons.Infrastructure.Extensions;
+using Learnix.Commons.Infrastructure.Outbox.Factories;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
@@ -41,16 +42,23 @@ namespace Users.Infrastructure.Outbox
                 return;
             }
 
-            using var scope = serviceScopeFactory.CreateScope();
-            var mediator = scope.ServiceProvider.GetRequiredService<IMediator>();
-
             foreach (var outboxMessage in outboxMessages)
             {
                 Exception? exception = null;
 
                 try
                 {
-                    await mediator.PublishAsync(JsonConvert.DeserializeObject<IDomainEvent>(outboxMessage.Content, SerializerExtensions.Instance)!);
+                    var domainEvent = JsonConvert.DeserializeObject<IDomainEvent>(outboxMessage.Content, SerializerExtensions.Instance)!;
+
+                    using var scope = serviceScopeFactory.CreateScope();
+
+                    var domainEventHandlers = DomainEventHandlersFactory.GetHandlers(
+                                            domainEvent.GetType(),
+                                            scope.ServiceProvider,
+                                            Application.AssemblyReference.Assembly);
+
+                    var handlerTasks = domainEventHandlers.Select(handler => handler.ExecuteAsync(domainEvent));
+                    await Task.WhenAll(handlerTasks);
                 }
                 catch (Exception ex)
                 {

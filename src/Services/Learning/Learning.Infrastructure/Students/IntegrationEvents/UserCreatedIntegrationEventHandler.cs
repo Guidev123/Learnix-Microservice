@@ -1,11 +1,11 @@
-﻿using Learnix.Commons.Contracts.Users;
-using MidR.MemoryQueue.Interfaces;
+﻿using Learnix.Commons.Application.Messaging;
+using Learnix.Commons.Contracts.Users;
 
 namespace Learning.Infrastructure.Students.IntegrationEvents
 {
-    internal sealed class UserCreatedIntegrationEventHandler : INotificationHandler<UserCreatedIntegrationEvent>
+    internal sealed class UserCreatedIntegrationEventHandler : IntegrationEventHandler<UserCreatedIntegrationEvent>
     {
-        public async Task ExecuteAsync(UserCreatedIntegrationEvent notification, CancellationToken cancellationToken)
+        public override async Task ExecuteAsync(UserCreatedIntegrationEvent notification, CancellationToken cancellationToken)
         {
         }
     }
