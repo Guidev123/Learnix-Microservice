@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Users.Domain.Entities;
-using Users.Domain.Interfaces;
+using Users.Domain.Users.Entities;
+using Users.Domain.Users.Interfaces;
 using Users.Infrastructure.Persistence;
 
 namespace Users.Infrastructure.Users.Repositories

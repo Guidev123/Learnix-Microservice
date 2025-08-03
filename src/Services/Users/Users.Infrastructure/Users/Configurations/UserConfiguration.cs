@@ -1,7 +1,7 @@
 ﻿using Learnix.Commons.Domain.ValueObjects;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Users.Domain.Entities;
+using Users.Domain.Users.Entities;
 
 namespace Users.Infrastructure.Users.Configurations
 {

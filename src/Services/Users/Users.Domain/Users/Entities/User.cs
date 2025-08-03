@@ -1,11 +1,11 @@
 ﻿using Learnix.Commons.Domain.DomainObjects;
 using Learnix.Commons.Domain.Results;
 using Learnix.Commons.Domain.ValueObjects;
-using Users.Domain.DomainEvents;
-using Users.Domain.Errors;
-using Users.Domain.Models;
+using Users.Domain.Users.DomainEvents;
+using Users.Domain.Users.Errors;
+using Users.Domain.Users.Models;
 
-namespace Users.Domain.Entities
+namespace Users.Domain.Users.Entities
 {
     public sealed class User : Entity, IAggregateRoot
     {
@@ -50,7 +50,7 @@ namespace Users.Domain.Entities
             AssertionConcern.EnsureNotNull(Name, UserErrors.NameMustBeNotNull.Description);
             AssertionConcern.EnsureNotNull(Email, UserErrors.EmailMustBeNotNull.Description);
             AssertionConcern.EnsureNotNull(Age, UserErrors.AgeMustBeNotNull.Description);
-            AssertionConcern.EnsureNotNull(IdentityId, UserErrors.IdentityIdMustBeNotNull.Description);
+            AssertionConcern.EnsureDifferent(IdentityId, Guid.Empty, UserErrors.IdentityIdMustBeNotNull.Description);
         }
     }
 }

@@ -4,7 +4,7 @@ using Learnix.Commons.Application.Messaging;
 using Learnix.Commons.Contracts.Users;
 using MidR.MemoryQueue.Interfaces;
 using Users.Application.Users.UseCases.GetById;
-using Users.Domain.DomainEvents;
+using Users.Domain.Users.DomainEvents;
 
 namespace Users.Application.Users.DomainEvents
 {

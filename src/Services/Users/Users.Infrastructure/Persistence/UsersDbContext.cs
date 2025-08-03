@@ -1,11 +1,10 @@
 ﻿using Learnix.Commons.Domain.Abstractions;
 using Learnix.Commons.Infrastructure.Inbox.Configurations;
 using Learnix.Commons.Infrastructure.Outbox.Configurations;
-using Learnix.Commons.Infrastructure.Outbox.Models;
 using Microsoft.EntityFrameworkCore;
 using System.Reflection;
-using Users.Domain.Entities;
-using Users.Domain.Models;
+using Users.Domain.Users.Entities;
+using Users.Domain.Users.Models;
 
 namespace Users.Infrastructure.Persistence
 {

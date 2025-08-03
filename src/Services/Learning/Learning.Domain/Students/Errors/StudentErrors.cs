@@ -23,5 +23,17 @@ namespace Learning.Domain.Errors
         public static readonly Error BirthDateMustBeNotEmpty = Error.Problem(
             "Students.BirthDateMustBeNotEmpty",
             "Birth Data must be not empty");
+
+        public static readonly Error EmailMustBeNotNull = Error.Problem(
+            "Students.EmailMustBeNotNull",
+            "E-mail must be not null");
+
+        public static readonly Error NameMustBeNotNull = Error.Problem(
+             "Students.NameMustBeNotNull",
+                  "Name must be not null");
+
+        public static readonly Error IdMustBeNotEmpty = Error.Problem(
+            "Students.IdMustBeNotEmpty",
+            "Id must be not empty");
     }
 }

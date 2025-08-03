@@ -1,7 +1,7 @@
 ﻿using Learnix.Commons.Application.Messaging;
 using Learnix.Commons.Domain.Results;
-using Users.Domain.Errors;
-using Users.Domain.Interfaces;
+using Users.Domain.Users.Errors;
+using Users.Domain.Users.Interfaces;
 
 namespace Users.Application.Users.UseCases.GetById
 {

@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Users.Domain.Entities;
-using Users.Domain.Models;
+using Users.Domain.Users.Entities;
+using Users.Domain.Users.Models;
 
 namespace Users.Infrastructure.Users.Configurations
 {

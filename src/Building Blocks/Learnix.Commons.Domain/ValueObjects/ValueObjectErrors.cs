@@ -20,6 +20,10 @@ namespace Learnix.Commons.Domain.ValueObjects
             "Email.EmailOutOfRange",
             $"E-mail length must be less or equal {Email.MaxEmailLength}");
 
+        public static readonly Error FirstNameAndLastNameMustBeNotEmpty = Error.Problem(
+            "Name.FirstNameAndLastNameMustBeNotEmpty",
+            "First name and last name cannot be empty");
+
         public static readonly Error EmailMustBeValid = Error.Problem(
             "Email.EmailMustBeValid",
             "Email address is not in a valid format");
@@ -51,5 +55,21 @@ namespace Learnix.Commons.Domain.ValueObjects
         public static readonly Error AgeOutOfRange = Error.Problem(
             "Age.AgeOutOfRange",
             $"Age must be between {Age.MinAge} and {Age.MaxAge} years");
+
+        public static readonly Error AmountMustBeGreaterThanZero = Error.Problem(
+            "Amount.AmountMustBeGreaterThanZero",
+            "Amount must be greater than zero");
+
+        public static readonly Error CurrencyIsRequired = Error.Problem(
+            "Money.CurrencyIsRequired",
+            "Currency is required");
+
+        public static readonly Error CurrencyLengthInvalid = Error.Problem(
+            "Money.CurrencyLengthInvalid",
+            $"Currency code must be exactly {Money.CurrencyCodeLength} characters long");
+
+        public static readonly Error CurrencyDoesNotExists = Error.Problem(
+            "Money.CurrencyDoesNotExists",
+            "Currency does not exist");
     }
 }

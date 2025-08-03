@@ -1,4 +1,4 @@
-﻿namespace Users.Domain.Models
+﻿namespace Users.Domain.Users.Models
 {
     public sealed class Permission
     {

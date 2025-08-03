@@ -1,7 +1,7 @@
 ﻿using FluentValidation;
 using Learnix.Commons.Domain.ValueObjects;
 using System.Text.RegularExpressions;
-using Users.Domain.Errors;
+using Users.Domain.Users.Errors;
 
 namespace Users.Application.Users.UseCases.Register
 {

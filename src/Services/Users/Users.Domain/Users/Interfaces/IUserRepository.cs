@@ -1,7 +1,7 @@
 ﻿using Learnix.Commons.Domain.Abstractions;
-using Users.Domain.Entities;
+using Users.Domain.Users.Entities;
 
-namespace Users.Domain.Interfaces
+namespace Users.Domain.Users.Interfaces
 {
     public interface IUserRepository : IRepository<User>
     {

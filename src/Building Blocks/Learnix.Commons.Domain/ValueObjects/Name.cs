@@ -37,6 +37,17 @@ namespace Learnix.Commons.Domain.ValueObjects
             return new Name(parts[0], parts[1]);
         }
 
+        public static implicit operator Name((string firstName, string lastName) name)
+        {
+            if (string.IsNullOrEmpty(name.firstName)
+                || string.IsNullOrEmpty(name.lastName))
+            {
+                throw new DomainException(ValueObjectErrors.FirstNameAndLastNameMustBeNotEmpty.Description);
+            }
+
+            return new(name.firstName, name.lastName);
+        }
+
         public static string[] GetFirstAndLastName(string fullName) => fullName.Split(' ', 2, StringSplitOptions.RemoveEmptyEntries);
 
         protected override void Validate()

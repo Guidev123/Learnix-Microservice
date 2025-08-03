@@ -65,24 +65,39 @@ namespace Learnix.Commons.Domain.DomainObjects
             if (value < min || value > max) throw new DomainException(message);
         }
 
-        public static void EnsureGreaterThan(long value, long min, string message)
+        public static void EnsureGreaterThanOrEqual(long value, long min, string message)
+        {
+            if (value <= min) throw new DomainException(message);
+        }
+
+        public static void EnsureGreaterThanOrEqual(int value, int min, string message)
+        {
+            if (value <= min) throw new DomainException(message);
+        }
+
+        public static void EnsureGreaterThanOrEqual(decimal value, decimal min, string message)
+        {
+            if (value <= min) throw new DomainException(message);
+        }
+
+        public static void EnsureGreaterThanOrEqual(double value, double min, string message)
         {
             if (value <= min) throw new DomainException(message);
         }
 
         public static void EnsureGreaterThan(int value, int min, string message)
         {
-            if (value <= min) throw new DomainException(message);
+            if (value < min) throw new DomainException(message);
         }
 
         public static void EnsureGreaterThan(decimal value, decimal min, string message)
         {
-            if (value <= min) throw new DomainException(message);
+            if (value < min) throw new DomainException(message);
         }
 
         public static void EnsureGreaterThan(double value, double min, string message)
         {
-            if (value <= min) throw new DomainException(message);
+            if (value < min) throw new DomainException(message);
         }
 
         public static void EnsureFalse(bool value, string message)

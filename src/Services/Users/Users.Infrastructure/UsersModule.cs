@@ -13,7 +13,7 @@ using OpenTelemetry.Resources;
 using OpenTelemetry.Trace;
 using Users.Application;
 using Users.Application.Abstractions.Identity;
-using Users.Domain.Interfaces;
+using Users.Domain.Users.Interfaces;
 using Users.Infrastructure.Identity;
 using Users.Infrastructure.Outbox;
 using Users.Infrastructure.Persistence;

@@ -3,7 +3,7 @@ using Learnix.Commons.Application.Authorization;
 using Learnix.Commons.Application.Factories;
 using Learnix.Commons.Application.Messaging;
 using Learnix.Commons.Domain.Results;
-using Users.Domain.Errors;
+using Users.Domain.Users.Errors;
 
 namespace Users.Application.Users.UseCases.GetPermissions
 {

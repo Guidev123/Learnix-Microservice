@@ -1,6 +1,6 @@
 ﻿using Learnix.Commons.Domain.Results;
 
-namespace Users.Domain.Errors
+namespace Users.Domain.Users.Errors
 {
     public static class UserErrors
     {
