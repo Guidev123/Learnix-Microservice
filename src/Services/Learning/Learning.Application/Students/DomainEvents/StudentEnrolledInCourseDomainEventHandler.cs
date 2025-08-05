@@ -1,4 +1,4 @@
-﻿using Learning.Domain.DomainEvents;
+﻿using Learning.Domain.Students.DomainEvents;
 using Learnix.Commons.Application.Messaging;
 
 namespace Learning.Application.Students.DomainEvents

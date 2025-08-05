@@ -1,5 +1,5 @@
 ﻿using FluentValidation;
-using Learning.Domain.Errors;
+using Learning.Domain.Students.Errors;
 
 namespace Learning.Application.Students.UseCases.Create
 {

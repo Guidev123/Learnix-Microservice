@@ -26,7 +26,6 @@ namespace Learning.Domain.Enrollments.Entities
         public DateTime EnrolledAt { get; }
         public DateTime EndsAt { get; }
         public EnrollmentStatusEnum Status { get; private set; }
-        public Course? Course { get; private set; }
 
         public static Enrollment Create(Guid studentId, Guid courseId, DateTime enrolledAt, DateTime endsAt)
         {
@@ -35,42 +34,29 @@ namespace Learning.Domain.Enrollments.Entities
             return enrollment;
         }
 
-        public void StartCourse()
+        public static void StartCourse(Course course)
         {
-            EnsureCourseIsNotNull();
-            Course?.StartCourse();
+            course.StartCourse();
         }
 
-        public void CompleteCourse(DateTime completedAt)
+        public static void CompleteCourse(DateTime completedAt, Course course)
         {
-            EnsureCourseIsNotNull();
-            Course?.CompleteCourse(completedAt);
+            course.CompleteCourse(completedAt);
         }
 
-        public void StartModule(Guid moduleId)
+        public static void StartModule(Guid moduleId, Course course)
         {
-            EnsureCourseIsNotNull();
-            Course?.StartModule(moduleId);
+            course.StartModule(moduleId);
         }
 
-        public void CompleteModule(Guid moduleId)
+        public static void CompleteModule(Guid moduleId, Course course)
         {
-            EnsureCourseIsNotNull();
-            Course?.CompleteModule(moduleId);
+            course.CompleteModule(moduleId);
         }
 
-        public void CompleteLesson(Guid moduleId, Guid lessonId)
+        public static void CompleteLesson(Guid moduleId, Guid lessonId, Course course)
         {
-            EnsureCourseIsNotNull();
-            Course?.CompleteLesson(moduleId, lessonId);
-        }
-
-        private void EnsureCourseIsNotNull()
-        {
-            if (Course is null)
-            {
-                throw new DomainException(EnrollmentErrors.CourseMustBeNotNull.Description);
-            }
+            course.CompleteLesson(moduleId, lessonId);
         }
 
         protected override void Validate()

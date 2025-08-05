@@ -7,10 +7,9 @@ namespace Learning.Domain.Enrollments.Entities
 {
     public sealed class Course : Entity
     {
-        private Course(Guid id, Guid enrollmentId, DateTime startedAt, List<Module> modules)
+        private Course(Guid id, DateTime startedAt, List<Module> modules)
         {
             Id = id;
-            EnrollmentId = enrollmentId;
             ProgressDateRange = startedAt;
             Status = CourseProgressStatusEnum.InProgress;
             _modules = modules;
@@ -20,16 +19,15 @@ namespace Learning.Domain.Enrollments.Entities
         private Course()
         { }
 
-        public Guid EnrollmentId { get; }
         public CourseProgressStatusEnum Status { get; private set; }
-        public ProgressDateRange ProgressDateRange { get; private set; } = null!;
+        public CourseProgressDateRange ProgressDateRange { get; private set; } = null!;
 
         private readonly List<Module> _modules = [];
         public IReadOnlyCollection<Module> Modules => _modules.AsReadOnly();
 
-        public static Course Create(Guid id, Guid enrollmentId, DateTime startedAt, List<Module> modules)
+        public static Course Create(Guid id, DateTime startedAt, List<Module> modules)
         {
-            var course = new Course(id, enrollmentId, startedAt, modules);
+            var course = new Course(id, startedAt, modules);
 
             return course;
         }
@@ -72,7 +70,6 @@ namespace Learning.Domain.Enrollments.Entities
 
         protected override void Validate()
         {
-            AssertionConcern.EnsureDifferent(EnrollmentId, Guid.Empty, CourseErrors.EnrollmentIdMustBeNotEmpty.Description);
             AssertionConcern.EnsureDifferent(Id, Guid.Empty, CourseErrors.CourseIdMustBeNotEmpty.Description);
             AssertionConcern.EnsureNotNull(ProgressDateRange, CourseErrors.ProgressDateRangeMustBeNotNull.Description);
             AssertionConcern.EnsureFalse(Modules.Count == 0, CourseErrors.ModulesMustNotBeEmpty.Description);

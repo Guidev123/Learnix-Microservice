@@ -12,10 +12,6 @@ namespace Learning.Domain.Enrollments.Errors
             "Courses.ProgressDateRangeMustBeNotNull",
             "Progress date range must be not null");
 
-        public static readonly Error EnrollmentIdMustBeNotEmpty = Error.Problem(
-            "Courses.EnrollmentIdMustBeNotEmpty",
-            "Enrollment ID must be not empty");
-
         public static readonly Error ProgresStartedDateCanNotBeInFuture = Error.Problem(
             "Courses.LessonProgresStartedDateCannotBeInFuture",
             "Progress started date cannot be in the future");

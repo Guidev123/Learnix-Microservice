@@ -1,10 +1,10 @@
-﻿using Learning.Domain.DomainEvents;
-using Learning.Domain.Enrollments.Entities;
-using Learning.Domain.Errors;
+﻿using Learning.Domain.Enrollments.Entities;
+using Learning.Domain.Students.DomainEvents;
+using Learning.Domain.Students.Errors;
 using Learnix.Commons.Domain.DomainObjects;
 using Learnix.Commons.Domain.ValueObjects;
 
-namespace Learning.Domain.Entities
+namespace Learning.Domain.Students.Students.Entities
 {
     public sealed class Student : Entity, IAggregateRoot
     {

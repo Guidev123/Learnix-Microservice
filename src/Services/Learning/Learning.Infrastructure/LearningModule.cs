@@ -1,8 +1,11 @@
 ﻿using Learning.Application;
 using Learning.Infrastructure.Inbox;
 using Learning.Infrastructure.Outbox;
+using Learning.Infrastructure.Persistence;
 using Learnix.Commons.Application.Messaging;
+using Learnix.Commons.Domain.Abstractions;
 using Learnix.Commons.Infrastructure;
+using Learnix.Commons.Infrastructure.Outbox.Interceptors;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -37,6 +40,15 @@ namespace Learning.Infrastructure
             this IServiceCollection services,
             string dbConnectionString)
         {
+            services.AddDbContext<LearningDbContext>((scope, options) =>
+            {
+                options.UseSqlServer(dbConnectionString);
+                var outboxInterceptor = scope.GetRequiredService<InsertOutboxMessagesInterceptor>();
+                options.AddInterceptors(outboxInterceptor);
+            });
+
+            services.AddScoped<IUnitOfWork>(scope => scope.GetRequiredService<LearningDbContext>());
+
             return services;
         }
 
