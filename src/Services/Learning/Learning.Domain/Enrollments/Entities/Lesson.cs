@@ -32,13 +32,7 @@ namespace Learning.Domain.Enrollments.Entities
             if (IsCompleted) return;
             IsCompleted = true;
 
-            AddDomainEvent(new LessonCompletedDomainEvent
-            {
-                LessonId = Id,
-                ModuleId = ModuleId,
-                AggregateId = enrollmentId,
-                Messagetype = nameof(LessonCompletedDomainEvent)
-            });
+            AddDomainEvent(new LessonCompletedDomainEvent(Id, ModuleId, enrollmentId));
         }
 
         protected override void Validate()

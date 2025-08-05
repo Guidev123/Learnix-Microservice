@@ -34,12 +34,7 @@ namespace Users.Domain.Users.Entities
 
             user._roles.Add(Role.Standard);
 
-            user.AddDomainEvent(new UserCreatedDomainEvent
-            {
-                UserId = user.Id,
-                AggregateId = user.Id,
-                Messagetype = nameof(UserCreatedDomainEvent)
-            });
+            user.AddDomainEvent(new UserCreatedDomainEvent(user.Id));
 
             return user;
         }

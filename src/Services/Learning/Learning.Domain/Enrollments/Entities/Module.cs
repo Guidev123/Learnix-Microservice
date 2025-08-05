@@ -53,13 +53,7 @@ namespace Learning.Domain.Enrollments.Entities
                 if (Status == ModuleProgressEnum.Completed) return;
                 Status = ModuleProgressEnum.Completed;
 
-                AddDomainEvent(new ModuleCompletedDomainEvent
-                {
-                    ModuleId = Id,
-                    CourseId = CourseId,
-                    AggregateId = enrollmentId,
-                    Messagetype = nameof(ModuleCompletedDomainEvent)
-                });
+                AddDomainEvent(new ModuleCompletedDomainEvent(Id, CourseId, enrollmentId));
             }
         }
 
