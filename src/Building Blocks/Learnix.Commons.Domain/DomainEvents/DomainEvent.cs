@@ -2,20 +2,12 @@
 {
     public abstract record DomainEvent : IDomainEvent
     {
-        protected DomainEvent(Guid aggregateId)
-        {
-            AggregateId = aggregateId;
-            CorrelationId = Guid.NewGuid();
-            OccurredOn = DateTime.UtcNow;
-            Messagetype = GetType().Name;
-        }
+        public Guid AggregateId { get; init; }
 
-        public Guid AggregateId { get; }
+        public Guid CorrelationId { get; init; } = Guid.NewGuid();
 
-        public Guid CorrelationId { get; }
+        public DateTime OccurredOn { get; init; } = DateTime.UtcNow;
 
-        public DateTime OccurredOn { get; }
-
-        public string Messagetype { get; } = string.Empty;
+        public string Messagetype { get; init; } = null!;
     }
 }

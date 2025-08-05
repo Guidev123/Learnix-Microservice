@@ -20,13 +20,16 @@ namespace Users.Application.Users.DomainEvents
 
             var user = userResult.Value;
 
-            await messageBus.ProduceAsync("users.user-created", new UserCreatedIntegrationEvent(
-                notification.UserId,
-                user.FirstName,
-                user.LastName,
-                user.Email,
-                user.BirthDate
-                ), cancellationToken);
+            await messageBus.ProduceAsync("users.user-created", new UserCreatedIntegrationEvent
+            {
+                CorrelationId = notification.CorrelationId,
+                OccurredOn = notification.OccurredOn,
+                Messagetype = nameof(UserCreatedIntegrationEvent),
+                UserId = user.Id,
+                FirstName = user.FirstName,
+                LastName = user.LastName,
+                Email = user.Email
+            }, cancellationToken);
         }
     }
 }

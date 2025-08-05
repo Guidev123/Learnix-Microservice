@@ -35,7 +35,12 @@ namespace Learning.Domain.Students.Entities
         public void Enroll(Enrollment enrollment)
         {
             _enrollments.Add(enrollment);
-            AddDomainEvent(new StudentEnrolledInCourseDomainEvent(Id, enrollment.Id));
+            AddDomainEvent(new StudentEnrolledInCourseDomainEvent
+            {
+                StudentId = Id,
+                EnrollmentId = enrollment.Id,
+                AggregateId = Id
+            });
         }
 
         protected override void Validate()

@@ -49,23 +49,24 @@ namespace Learning.Domain.Enrollments.Entities
         {
             var module = _modules.FirstOrDefault(m => m.Id == moduleId)
                 ?? throw new DomainException(ModuleErrors.NotFound(moduleId).Description);
+
             module.StartModule();
         }
 
-        internal void CompleteModule(Guid moduleId)
+        internal void CompleteModule(Guid moduleId, Guid enrollmentId)
         {
             var module = _modules.FirstOrDefault(m => m.Id == moduleId)
                 ?? throw new DomainException(ModuleErrors.NotFound(moduleId).Description);
 
-            module.CompleteModule();
+            module.CompleteModule(enrollmentId);
         }
 
-        internal void CompleteLesson(Guid moduleId, Guid lessonId)
+        internal void CompleteLesson(Guid moduleId, Guid lessonId, Guid enrollmentId)
         {
             var module = _modules.FirstOrDefault(m => m.Id == moduleId)
                 ?? throw new DomainException(ModuleErrors.NotFound(moduleId).Description);
 
-            module.CompleteLesson(lessonId);
+            module.CompleteLesson(lessonId, enrollmentId);
         }
 
         protected override void Validate()

@@ -49,14 +49,14 @@ namespace Learning.Domain.Enrollments.Entities
             course.StartModule(moduleId);
         }
 
-        public static void CompleteModule(Guid moduleId, Course course)
+        public void CompleteModule(Guid moduleId, Course course)
         {
-            course.CompleteModule(moduleId);
+            course.CompleteModule(moduleId, Id);
         }
 
-        public static void CompleteLesson(Guid moduleId, Guid lessonId, Course course)
+        public void CompleteLesson(Guid moduleId, Guid lessonId, Course course)
         {
-            course.CompleteLesson(moduleId, lessonId);
+            course.CompleteLesson(moduleId, lessonId, Id);
         }
 
         protected override void Validate()

@@ -27,12 +27,18 @@ namespace Learning.Domain.Enrollments.Entities
             return lesson;
         }
 
-        internal void CompleteLesson()
+        internal void CompleteLesson(Guid enrollmentId)
         {
             if (IsCompleted) return;
             IsCompleted = true;
 
-            AddDomainEvent(new LessonCompletedDomainEvent(Id, ModuleId));
+            AddDomainEvent(new LessonCompletedDomainEvent
+            {
+                LessonId = Id,
+                ModuleId = ModuleId,
+                AggregateId = enrollmentId,
+                Messagetype = nameof(LessonCompletedDomainEvent)
+            });
         }
 
         protected override void Validate()

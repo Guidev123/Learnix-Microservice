@@ -2,15 +2,8 @@
 {
     public abstract record IntegrationEvent : IIntegrationEvent
     {
-        protected IntegrationEvent()
-        {
-            CorrelationId = Guid.NewGuid();
-            OccurredOn = DateTime.UtcNow;
-            Messagetype = GetType().Name;
-        }
-
-        public Guid CorrelationId { get; }
-        public DateTime OccurredOn { get; }
-        public string Messagetype { get; } = null!;
+        public Guid CorrelationId { get; init; }
+        public DateTime OccurredOn { get; init; }
+        public string Messagetype { get; init; } = null!;
     }
 }

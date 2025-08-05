@@ -2,8 +2,9 @@
 
 namespace Learning.Domain.Students.DomainEvents
 {
-    public sealed record StudentEnrolledInCourseDomainEvent(
-        Guid StudentId,
-        Guid EnrollmentId
-        ) : DomainEvent(StudentId);
+    public sealed record StudentEnrolledInCourseDomainEvent : DomainEvent
+    {
+        public Guid StudentId { get; init; }
+        public Guid EnrollmentId { get; init; }
+    }
 }

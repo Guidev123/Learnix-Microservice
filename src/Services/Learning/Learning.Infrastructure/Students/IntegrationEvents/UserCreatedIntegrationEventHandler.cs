@@ -10,7 +10,7 @@ namespace Learning.Infrastructure.Students.IntegrationEvents
     {
         public override async Task ExecuteAsync(UserCreatedIntegrationEvent notification, CancellationToken cancellationToken)
         {
-            var command = new CreateStudentCommand(notification.Id, notification.FirstName, notification.LastName, notification.Email);
+            var command = new CreateStudentCommand(notification.UserId, notification.FirstName, notification.LastName, notification.Email);
 
             var result = await mediator.DispatchAsync(command, cancellationToken);
 

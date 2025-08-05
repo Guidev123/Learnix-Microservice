@@ -2,5 +2,9 @@
 
 namespace Learning.Domain.Enrollments.DomainEvents
 {
-    public sealed record ModuleCompletedDomainEvent(Guid ModuleId, Guid CourseId) : DomainEvent(ModuleId);
+    public sealed record ModuleCompletedDomainEvent : DomainEvent
+    {
+        public Guid ModuleId { get; init; }
+        public Guid CourseId { get; init; }
+    }
 }

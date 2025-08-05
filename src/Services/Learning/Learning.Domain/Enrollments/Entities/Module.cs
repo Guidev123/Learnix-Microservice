@@ -46,14 +46,20 @@ namespace Learning.Domain.Enrollments.Entities
             Status = ModuleProgressEnum.Started;
         }
 
-        internal void CompleteModule()
+        internal void CompleteModule(Guid enrollmentId)
         {
             if (TotalLessons == CompletedLessons)
             {
                 if (Status == ModuleProgressEnum.Completed) return;
                 Status = ModuleProgressEnum.Completed;
 
-                AddDomainEvent(new ModuleCompletedDomainEvent(Id, CourseId));
+                AddDomainEvent(new ModuleCompletedDomainEvent
+                {
+                    ModuleId = Id,
+                    CourseId = CourseId,
+                    AggregateId = enrollmentId,
+                    Messagetype = nameof(ModuleCompletedDomainEvent)
+                });
             }
         }
 
@@ -62,19 +68,19 @@ namespace Learning.Domain.Enrollments.Entities
             CompletionPercentage = (double)CompletedLessons / TotalLessons * 100;
         }
 
-        internal void CompleteLesson(Guid lessonId)
+        internal void CompleteLesson(Guid lessonId, Guid enrollmentId)
         {
             var lesson = _lessons.FirstOrDefault(l => l.Id == lessonId)
                 ?? throw new DomainException(ModuleErrors.NotFound(lessonId).Description);
 
             if (lesson.IsCompleted is false)
             {
-                lesson.CompleteLesson();
+                lesson.CompleteLesson(enrollmentId);
                 CompletedLessons += 1;
                 GetCompletionPercentage();
                 if (CompletedLessons == TotalLessons)
                 {
-                    CompleteModule();
+                    CompleteModule(enrollmentId);
                 }
             }
         }

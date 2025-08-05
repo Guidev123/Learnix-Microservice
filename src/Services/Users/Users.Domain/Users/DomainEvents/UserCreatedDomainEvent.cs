@@ -2,7 +2,8 @@
 
 namespace Users.Domain.Users.DomainEvents
 {
-    public sealed record UserCreatedDomainEvent(
-        Guid UserId
-        ) : DomainEvent(UserId);
+    public sealed record UserCreatedDomainEvent : DomainEvent
+    {
+        public Guid UserId { get; init; }
+    }
 }
