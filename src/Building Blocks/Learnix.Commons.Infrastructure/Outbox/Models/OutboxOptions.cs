@@ -1,6 +1,6 @@
-﻿namespace Learning.Infrastructure.Outbox
+﻿namespace Learnix.Commons.Infrastructure.Outbox.Models
 {
-    internal sealed class OutboxOptions
+    public sealed class OutboxOptions
     {
         public int IntervalInSeconds { get; init; }
         public int BatchSize { get; init; }

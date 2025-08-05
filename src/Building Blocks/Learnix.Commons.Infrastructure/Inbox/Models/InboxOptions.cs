@@ -1,6 +1,6 @@
-﻿namespace Learning.Infrastructure.Inbox
+﻿namespace Learnix.Commons.Infrastructure.Inbox.Models
 {
-    internal sealed class InboxOptions
+    public sealed class InboxOptions
     {
         public int IntervalInSeconds { get; init; }
         public int BatchSize { get; init; }

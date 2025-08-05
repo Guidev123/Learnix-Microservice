@@ -6,7 +6,6 @@ namespace Learning.Application.Students.UseCases.Create
         Guid Id,
         string FirstName,
         string LastName,
-        string Email,
-        DateTime BirthDate
+        string Email
         ) : ICommand;
 }

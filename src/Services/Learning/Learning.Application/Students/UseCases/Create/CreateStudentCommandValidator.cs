@@ -20,10 +20,6 @@ namespace Learning.Application.Students.UseCases.Create
                 .WithMessage(StudentErrors.EmailMustBeNotEmpty.Description)
                 .EmailAddress()
                 .WithMessage(StudentErrors.EmailIsInvalid.Description);
-
-            RuleFor(c => c.BirthDate)
-                .NotEmpty()
-                .WithMessage(StudentErrors.BirthDateMustBeNotEmpty.Description);
         }
     }
 }

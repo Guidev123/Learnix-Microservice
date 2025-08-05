@@ -3,6 +3,7 @@ using Learnix.Commons.Domain.Abstractions;
 using Learnix.Commons.Infrastructure;
 using Learnix.Commons.Infrastructure.Http;
 using Learnix.Commons.Infrastructure.Outbox.Interceptors;
+using Learnix.Commons.Infrastructure.Outbox.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;

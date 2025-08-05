@@ -1,4 +1,4 @@
-﻿namespace Learning.Infrastructure.Outbox
+﻿namespace Learnix.Commons.Infrastructure.Outbox.Models
 {
     public sealed record OutboxMessageResponse(
         Guid CorrelationId,

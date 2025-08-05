@@ -1,4 +1,4 @@
-﻿using Learning.Domain.Students.Students.Entities;
+﻿using Learning.Domain.Students.Entities;
 using Learnix.Commons.Domain.ValueObjects;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;

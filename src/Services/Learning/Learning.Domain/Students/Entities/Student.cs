@@ -4,7 +4,7 @@ using Learning.Domain.Students.Errors;
 using Learnix.Commons.Domain.DomainObjects;
 using Learnix.Commons.Domain.ValueObjects;
 
-namespace Learning.Domain.Students.Students.Entities
+namespace Learning.Domain.Students.Entities
 {
     public sealed class Student : Entity, IAggregateRoot
     {

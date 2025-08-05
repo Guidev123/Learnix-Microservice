@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Options;
+﻿using Learnix.Commons.Infrastructure.Outbox.Models;
+using Microsoft.Extensions.Options;
 using Quartz;
 
 namespace Learning.Infrastructure.Outbox

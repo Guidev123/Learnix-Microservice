@@ -28,7 +28,7 @@ namespace Users.Domain.Users.Entities
         public Guid IdentityId { get; private set; } = default!;
         public IReadOnlyCollection<Role> Roles => [.. _roles];
 
-        public static Result<User> Create(string fullName, string email, DateTime birthDate)
+        public static User Create(string fullName, string email, DateTime birthDate)
         {
             var user = new User(fullName, email, birthDate);
 
@@ -50,7 +50,6 @@ namespace Users.Domain.Users.Entities
             AssertionConcern.EnsureNotNull(Name, UserErrors.NameMustBeNotNull.Description);
             AssertionConcern.EnsureNotNull(Email, UserErrors.EmailMustBeNotNull.Description);
             AssertionConcern.EnsureNotNull(Age, UserErrors.AgeMustBeNotNull.Description);
-            AssertionConcern.EnsureDifferent(IdentityId, Guid.Empty, UserErrors.IdentityIdMustBeNotNull.Description);
         }
     }
 }

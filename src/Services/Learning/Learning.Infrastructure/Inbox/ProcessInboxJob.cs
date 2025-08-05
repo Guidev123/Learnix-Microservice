@@ -6,6 +6,7 @@ using Learnix.Commons.Application.Factories;
 using Learnix.Commons.Application.Messaging;
 using Learnix.Commons.Infrastructure.Extensions;
 using Learnix.Commons.Infrastructure.Inbox.Factories;
+using Learnix.Commons.Infrastructure.Inbox.Models;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
@@ -107,7 +108,7 @@ namespace Learning.Infrastructure.Inbox
             await connection.ExecuteAsync(sql, new
             {
                 inboxMessage.CorrelationId,
-                ProcessedOnUtc = dateTimeProvider.UtcNow,
+                ProcessedOn = dateTimeProvider.UtcNow,
                 Error = GetExceptionMessage(exception)
             }, transaction: transaction);
         }

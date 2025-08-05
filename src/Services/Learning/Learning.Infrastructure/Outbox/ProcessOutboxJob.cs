@@ -6,6 +6,7 @@ using Learnix.Commons.Application.Factories;
 using Learnix.Commons.Domain.DomainEvents;
 using Learnix.Commons.Infrastructure.Extensions;
 using Learnix.Commons.Infrastructure.Outbox.Factories;
+using Learnix.Commons.Infrastructure.Outbox.Models;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;

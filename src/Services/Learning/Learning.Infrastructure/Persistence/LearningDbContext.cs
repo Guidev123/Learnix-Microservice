@@ -1,8 +1,11 @@
-﻿using Learnix.Commons.Domain.Abstractions;
+﻿using Learning.Domain.Enrollments.Entities;
+using Learning.Domain.Students.Entities;
+using Learnix.Commons.Domain.Abstractions;
 using Learnix.Commons.Infrastructure.Inbox.Configurations;
 using Learnix.Commons.Infrastructure.Outbox.Configurations;
 using Microsoft.EntityFrameworkCore;
 using System.Reflection;
+using Module = Learning.Domain.Enrollments.Entities.Module;
 
 namespace Learning.Infrastructure.Persistence
 {
@@ -10,6 +13,12 @@ namespace Learning.Infrastructure.Persistence
     {
         public LearningDbContext(DbContextOptions<LearningDbContext> options) : base(options)
         { }
+
+        internal DbSet<Student> Students { get; set; } = default!;
+        internal DbSet<Enrollment> Enrollments { get; set; } = default!;
+        internal DbSet<Course> Courses { get; set; } = default!;
+        internal DbSet<Module> Modules { get; set; } = default!;
+        internal DbSet<Lesson> Lessons { get; set; } = default!;
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

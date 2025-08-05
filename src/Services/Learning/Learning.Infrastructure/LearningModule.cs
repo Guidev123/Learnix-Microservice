@@ -1,11 +1,15 @@
 ﻿using Learning.Application;
+using Learning.Domain.Students.Interfaces;
 using Learning.Infrastructure.Inbox;
 using Learning.Infrastructure.Outbox;
 using Learning.Infrastructure.Persistence;
+using Learning.Infrastructure.Students.Repositories;
 using Learnix.Commons.Application.Messaging;
 using Learnix.Commons.Domain.Abstractions;
 using Learnix.Commons.Infrastructure;
+using Learnix.Commons.Infrastructure.Inbox.Models;
 using Learnix.Commons.Infrastructure.Outbox.Interceptors;
+using Learnix.Commons.Infrastructure.Outbox.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -47,6 +51,7 @@ namespace Learning.Infrastructure
                 options.AddInterceptors(outboxInterceptor);
             });
 
+            services.AddScoped<IStudentRepository, StudentRepository>();
             services.AddScoped<IUnitOfWork>(scope => scope.GetRequiredService<LearningDbContext>());
 
             return services;

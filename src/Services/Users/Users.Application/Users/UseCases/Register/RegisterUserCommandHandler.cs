@@ -21,9 +21,7 @@ namespace Users.Application.Users.UseCases.Register
                 return Result.Failure<RegisterUserResponse>(UserErrors.AlreadyExists(request.Email));
             }
 
-            var userResult = User.Create(request.FullName, request.Email, request.BirthDate);
-
-            var user = userResult.Value;
+            var user = User.Create(request.FullName, request.Email, request.BirthDate);
 
             var identityResult = await identityProviderService.RegisterAsync(new(
                 user.Email.Address,
