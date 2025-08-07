@@ -108,19 +108,6 @@ namespace Learning.Infrastructure
             services.AddGrpcClient<UserPermissionsService.UserPermissionsServiceClient>(options =>
             {
                 options.Address = new Uri(configuration["ExternalServices:UsersApi"]!);
-
-                options.ChannelOptionsActions.Add(channelOptions =>
-                {
-                    channelOptions.HttpHandler = HttpMessageHandlerFactory.CreateGrpcSocketsHttpHandler();
-                    options.ChannelOptionsActions.Add(channelOptions =>
-                    {
-                        channelOptions.HttpHandler = HttpMessageHandlerFactory.CreateGrpcSocketsHttpHandler();
-                        if (channelOptions.HttpClient is not null)
-                        {
-                            channelOptions.HttpClient.Timeout = Timeout.InfiniteTimeSpan;
-                        }
-                    });
-                });
             }).AddResilienceHandler(nameof(HttpResiliencePipelineExtensions), pipeline => pipeline.ConfigureGrpcResilience());
 
             return services;
