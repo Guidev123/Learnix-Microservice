@@ -1,8 +1,10 @@
 ﻿using FluentValidation;
+using Learnix.Commons.Application.Cache;
 using Learnix.Commons.Application.Clock;
 using Learnix.Commons.Application.Decorators;
 using Learnix.Commons.Application.Factories;
 using Learnix.Commons.Application.MessageBus;
+using Learnix.Commons.Infrastructure.Cache;
 using Learnix.Commons.Infrastructure.Clock;
 using Learnix.Commons.Infrastructure.Factories;
 using Learnix.Commons.Infrastructure.MessageBus;
@@ -13,6 +15,7 @@ using Microsoft.Extensions.DependencyInjection.Extensions;
 using MidR.DependencyInjection;
 using MidR.Interfaces;
 using Quartz;
+using StackExchange.Redis;
 using System.Reflection;
 
 namespace Learnix.Commons.Infrastructure
@@ -48,6 +51,29 @@ namespace Learnix.Commons.Infrastructure
             });
 
             services.TryAddSingleton<InsertOutboxMessagesInterceptor>();
+
+            return services;
+        }
+
+        public static IServiceCollection AddCacheService(this IServiceCollection services, IConfiguration configuration)
+        {
+            try
+            {
+                IConnectionMultiplexer connectionMultiplexer = ConnectionMultiplexer.Connect(configuration.GetConnectionString("Cache") ?? string.Empty);
+                services.TryAddSingleton(connectionMultiplexer);
+
+                services.AddStackExchangeRedisCache(options =>
+                {
+                    options.ConnectionMultiplexerFactory = () => Task.FromResult(connectionMultiplexer);
+                });
+
+                services.TryAddSingleton<ICacheService, CacheService>();
+            }
+            catch
+            {
+                services.TryAddSingleton<ICacheService, CacheService>();
+                services.AddDistributedMemoryCache();
+            }
 
             return services;
         }

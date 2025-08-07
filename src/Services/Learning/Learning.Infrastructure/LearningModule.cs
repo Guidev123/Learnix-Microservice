@@ -32,6 +32,7 @@ namespace Learning.Infrastructure
                 .AddGrpcServices(configuration)
                 .AddHandlerDecorators()
                 .AddData(configuration)
+                .AddCacheService(configuration)
                 .AddOutboxPattern(configuration)
                 .AddInboxPattern(configuration)
                 .AddKafkaMessageBus(configuration)
@@ -107,7 +108,20 @@ namespace Learning.Infrastructure
             services.AddGrpcClient<UserPermissionsService.UserPermissionsServiceClient>(options =>
             {
                 options.Address = new Uri(configuration["ExternalServices:UsersApi"]!);
-            }).AddResilienceHandler(nameof(ResiliencePipelineExtensions), pipeline => pipeline.ConfigureResilience());
+
+                options.ChannelOptionsActions.Add(channelOptions =>
+                {
+                    channelOptions.HttpHandler = HttpMessageHandlerFactory.CreateGrpcSocketsHttpHandler();
+                    options.ChannelOptionsActions.Add(channelOptions =>
+                    {
+                        channelOptions.HttpHandler = HttpMessageHandlerFactory.CreateGrpcSocketsHttpHandler();
+                        if (channelOptions.HttpClient is not null)
+                        {
+                            channelOptions.HttpClient.Timeout = Timeout.InfiniteTimeSpan;
+                        }
+                    });
+                });
+            }).AddResilienceHandler(nameof(HttpResiliencePipelineExtensions), pipeline => pipeline.ConfigureGrpcResilience());
 
             return services;
         }

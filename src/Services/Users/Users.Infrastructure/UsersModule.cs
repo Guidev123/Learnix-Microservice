@@ -32,6 +32,7 @@ namespace Users.Infrastructure
                 .AddGrpcServices()
                 .AddHandlerDecorators()
                 .AddData(configuration)
+                .AddCacheService(configuration)
                 .AddKafkaMessageBus(configuration)
                 .AddBackgroundJobs()
                 .AddTracing()
@@ -71,9 +72,9 @@ namespace Users.Infrastructure
 
                 httpClient.BaseAddress = new Uri(keyCloakOptions.AdminUrl);
             }).AddHttpMessageHandler<KeyCloakAuthDelegatingHandler>()
-            .ConfigurePrimaryHttpMessageHandler(HttpMessageHandlerFactory.CreateSocketsHttpHandler)
+            .ConfigurePrimaryHttpMessageHandler(HttpMessageHandlerFactory.CreateSocketsHttpRestHandler)
             .SetHandlerLifetime(Timeout.InfiniteTimeSpan)
-            .AddResilienceHandler(nameof(ResiliencePipelineExtensions), pipeline => pipeline.ConfigureResilience());
+            .AddResilienceHandler(nameof(HttpResiliencePipelineExtensions), pipeline => pipeline.ConfigureHttpRestResilience());
 
             services.AddTransient<IIdentityProviderService, IdentityProviderService>();
 
