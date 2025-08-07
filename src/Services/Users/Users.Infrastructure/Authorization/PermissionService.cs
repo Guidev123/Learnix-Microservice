@@ -1,7 +1,7 @@
 ﻿using Learnix.Commons.Application.Authorization;
 using Learnix.Commons.Application.Exceptions;
 using Learnix.Commons.Domain.Results;
-using MidR.MemoryQueue.Interfaces;
+using MidR.Interfaces;
 using Users.Application.Users.UseCases.GetPermissions;
 
 namespace Users.Infrastructure.Authorization

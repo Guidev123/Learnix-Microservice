@@ -1,8 +1,8 @@
 ﻿using Learning.Application.Students.UseCases.Create;
 using Learnix.Commons.Application.Exceptions;
 using Learnix.Commons.Application.Messaging;
-using Learnix.Commons.Contracts.Users;
-using MidR.MemoryQueue.Interfaces;
+using Learnix.Commons.Contracts.Users.IntegrationEvents;
+using MidR.Interfaces;
 
 namespace Learning.Infrastructure.Students.IntegrationEvents
 {

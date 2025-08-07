@@ -1,6 +1,6 @@
 ﻿using Learnix.Commons.Application.Messaging;
 
-namespace Learnix.Commons.Contracts.Users
+namespace Learnix.Commons.Contracts.Users.IntegrationEvents
 {
     public sealed record UserCreatedIntegrationEvent : IntegrationEvent
     {

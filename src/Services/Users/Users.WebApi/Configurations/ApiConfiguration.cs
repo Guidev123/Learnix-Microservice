@@ -3,6 +3,7 @@ using Learnix.Commons.WebApi.Extensions;
 using System.Reflection;
 using Users.Infrastructure;
 using Users.Infrastructure.Authorization;
+using Users.WebApi.gRPC;
 
 namespace Users.WebApi.Configurations
 {
@@ -24,6 +25,14 @@ namespace Users.WebApi.Configurations
         {
             app.UseCommonPipeline(builder);
             app.MapEndpoints();
+            app.MapGrpcServices();
+
+            return app;
+        }
+
+        private static WebApplication MapGrpcServices(this WebApplication app)
+        {
+            app.MapGrpcService<GetUserPermissionsService>();
 
             return app;
         }

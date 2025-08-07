@@ -10,8 +10,8 @@ using Learnix.Commons.Infrastructure.Outbox.Interceptors;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
-using MidR.MemoryQueue.DependencyInjection;
-using MidR.MemoryQueue.Interfaces;
+using MidR.DependencyInjection;
+using MidR.Interfaces;
 using Quartz;
 using System.Reflection;
 

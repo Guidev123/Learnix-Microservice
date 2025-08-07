@@ -1,7 +1,7 @@
 ﻿using Learnix.Commons.Domain.Results;
 using Learnix.Commons.WebApi.Endpoints;
 using Learnix.Commons.WebApi.Extensions;
-using MidR.MemoryQueue.Interfaces;
+using MidR.Interfaces;
 using Users.Application.Users.UseCases.Register;
 
 namespace Users.WebApi.Endpoints

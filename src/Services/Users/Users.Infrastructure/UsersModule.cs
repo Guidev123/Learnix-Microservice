@@ -9,7 +9,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Options;
-using MidR.MemoryQueue.Interfaces;
 using OpenTelemetry.Resources;
 using OpenTelemetry.Trace;
 using Users.Application;
@@ -30,6 +29,7 @@ namespace Users.Infrastructure
 
             services
                 .AddApplication(AssemblyReference.Assembly)
+                .AddGrpcServices()
                 .AddHandlerDecorators()
                 .AddData(configuration)
                 .AddKafkaMessageBus(configuration)
@@ -96,6 +96,13 @@ namespace Users.Infrastructure
 
                 tracing.AddOtlpExporter();
             });
+
+            return services;
+        }
+
+        private static IServiceCollection AddGrpcServices(this IServiceCollection services)
+        {
+            services.AddGrpc();
 
             return services;
         }

@@ -1,5 +1,5 @@
 ﻿using Learnix.Commons.Domain.Results;
-using MidR.MemoryQueue.Interfaces;
+using MidR.Interfaces;
 
 namespace Learnix.Commons.Application.Messaging
 {

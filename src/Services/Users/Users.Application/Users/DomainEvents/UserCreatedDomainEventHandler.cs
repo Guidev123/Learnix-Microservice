@@ -1,8 +1,8 @@
 ﻿using Learnix.Commons.Application.Exceptions;
 using Learnix.Commons.Application.MessageBus;
 using Learnix.Commons.Application.Messaging;
-using Learnix.Commons.Contracts.Users;
-using MidR.MemoryQueue.Interfaces;
+using Learnix.Commons.Contracts.Users.IntegrationEvents;
+using MidR.Interfaces;
 using Users.Application.Users.UseCases.GetById;
 using Users.Domain.Users.DomainEvents;
 

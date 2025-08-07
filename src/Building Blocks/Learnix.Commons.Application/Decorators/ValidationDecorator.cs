@@ -2,7 +2,7 @@
 using FluentValidation.Results;
 using Learnix.Commons.Application.Messaging;
 using Learnix.Commons.Domain.Results;
-using MidR.MemoryQueue.Interfaces;
+using MidR.Interfaces;
 using System.Reflection;
 
 namespace Learnix.Commons.Application.Decorators

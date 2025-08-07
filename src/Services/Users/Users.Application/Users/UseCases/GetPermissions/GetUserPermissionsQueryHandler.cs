@@ -23,7 +23,7 @@ namespace Users.Application.Users.UseCases.GetPermissions
                 WHERE u.IdentityId = @IdentityId
                 """;
 
-            var permissions = (await connection.QueryAsync<UserPermission>(sql, new { IdentityId = request.IdentityId })).AsList();
+            var permissions = (await connection.QueryAsync<UserPermission>(sql, new { request.IdentityId })).AsList();
 
             if (permissions.Count == 0)
             {
