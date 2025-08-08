@@ -4,6 +4,10 @@ namespace Learning.Domain.Students.Errors
 {
     public static class StudentErrors
     {
+        public static Error NotFound(Guid studentId) => Error.NotFound(
+            "Students.NotFound",
+            $"Student with ID: {studentId} not found");
+
         public static readonly Error FirstNameMustBeNotEmpty = Error.Problem(
             "Students.FirstNameMustBeNotEmpty",
             "First Name must be not empty");

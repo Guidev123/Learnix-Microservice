@@ -1,5 +1,7 @@
 ﻿using Learning.Application;
+using Learning.Domain.Enrollments.Interfaces;
 using Learning.Domain.Students.Interfaces;
+using Learning.Infrastructure.Enrollments.Repositories;
 using Learning.Infrastructure.Inbox;
 using Learning.Infrastructure.Outbox;
 using Learning.Infrastructure.Persistence;
@@ -56,6 +58,7 @@ namespace Learning.Infrastructure
             });
 
             services.AddScoped<IStudentRepository, StudentRepository>();
+            services.AddScoped<IEnrollmentRepository, EnrollmentRepository>();
             services.AddScoped<IUnitOfWork>(scope => scope.GetRequiredService<LearningDbContext>());
 
             return services;

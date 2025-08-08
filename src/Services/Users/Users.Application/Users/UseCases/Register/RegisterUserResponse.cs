@@ -1,4 +1,4 @@
 ﻿namespace Users.Application.Users.UseCases.Register
 {
-    public sealed record RegisterUserResponse(Guid Id);
+    public sealed record RegisterUserResponse(Guid UserId);
 }

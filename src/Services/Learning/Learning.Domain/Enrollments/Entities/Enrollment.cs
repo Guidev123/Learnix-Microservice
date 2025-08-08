@@ -6,7 +6,7 @@ namespace Learning.Domain.Enrollments.Entities
 {
     public sealed class Enrollment : Entity, IAggregateRoot
     {
-        public const int MaxEnrollmentDurationInDays = 365;
+        public const int EnrollmentDurationInDays = 365;
 
         private Enrollment(Guid studentId, Guid courseId, DateTime enrolledAt, DateTime endsAt)
         {
@@ -65,7 +65,7 @@ namespace Learning.Domain.Enrollments.Entities
             AssertionConcern.EnsureDifferent(CourseId, Guid.Empty, EnrollmentErrors.CourseIdMustBeNotEmpty.Description);
             AssertionConcern.EnsureTrue(EnrolledAt <= DateTime.UtcNow, EnrollmentErrors.EnrollmentDateCannotBeInFuture.Description);
             AssertionConcern.EnsureTrue(EndsAt > EnrolledAt, EnrollmentErrors.EndDateMustBeAfterEnrollmentDate.Description);
-            AssertionConcern.EnsureTrue(EndsAt <= EnrolledAt.AddDays(MaxEnrollmentDurationInDays), EnrollmentErrors.EndDateMustBeWithinMaxDuration(MaxEnrollmentDurationInDays).Description);
+            AssertionConcern.EnsureTrue(EndsAt.DayOfYear == EnrolledAt.AddDays(EnrollmentDurationInDays).DayOfYear, EnrollmentErrors.EndDateMustBeWithinMaxDuration(EnrollmentDurationInDays).Description);
         }
     }
 }
