@@ -367,3 +367,4 @@ FodyWeavers.xsd
 /src/Services/Courses/Courses.WebApi/appsettings.Development.json
 /docker-compose.yml
 .containers/
+/.idea/.idea.Learnix/.idea
