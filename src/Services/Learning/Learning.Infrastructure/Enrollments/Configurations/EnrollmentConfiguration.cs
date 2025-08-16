@@ -20,7 +20,7 @@ namespace Learning.Infrastructure.Enrollments.Configurations
                 .OnDelete(DeleteBehavior.ClientCascade);
 
             builder
-                .HasOne<Course>()
+                .HasOne<CourseProgress>()
                 .WithMany()
                 .HasForeignKey(e => e.CourseId)
                 .OnDelete(DeleteBehavior.ClientNoAction);

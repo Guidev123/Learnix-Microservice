@@ -26,7 +26,7 @@ namespace Learning.Infrastructure.Outbox
     {
         public async Task Execute(IJobExecutionContext context)
         {
-            logger.LogInformation("{Module} - Beginning to process outbox messages", Schemas.Learning);
+            logger.LogInformation("{ModuleProgress} - Beginning to process outbox messages", Schemas.Learning);
 
             using var connection = sqlConnectionFactory.Create();
             await connection.OpenAsync();
@@ -38,7 +38,7 @@ namespace Learning.Infrastructure.Outbox
             if (outboxMessages.Count == 0)
             {
                 await transaction.CommitAsync();
-                logger.LogInformation("{Module} - No outbox messages to process", Schemas.Learning);
+                logger.LogInformation("{ModuleProgress} - No outbox messages to process", Schemas.Learning);
                 return;
             }
 
@@ -62,7 +62,7 @@ namespace Learning.Infrastructure.Outbox
                 }
                 catch (Exception ex)
                 {
-                    logger.LogError(ex, "{Module} - Exception while processing outbox message {CorrelationId}", Schemas.Learning, outboxMessage.CorrelationId);
+                    logger.LogError(ex, "{ModuleProgress} - Exception while processing outbox message {CorrelationId}", Schemas.Learning, outboxMessage.CorrelationId);
 
                     exception = ex;
                 }
@@ -72,7 +72,7 @@ namespace Learning.Infrastructure.Outbox
 
             await transaction.CommitAsync();
 
-            logger.LogInformation("{Module} - Completed process outbox messages", Schemas.Learning);
+            logger.LogInformation("{ModuleProgress} - Completed process outbox messages", Schemas.Learning);
         }
 
         private static async Task<IReadOnlyList<OutboxMessageResponse>> GetOutboxMessagesAsync(

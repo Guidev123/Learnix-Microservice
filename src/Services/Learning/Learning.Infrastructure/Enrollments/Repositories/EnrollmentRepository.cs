@@ -39,5 +39,10 @@ namespace Learning.Infrastructure.Enrollments.Repositories
         public void Update(Enrollment enrollment) => context.Update(enrollment);
 
         public void Dispose() => context.Dispose();
+
+        public Task<bool> CourseAlreadyExistsAsync(Guid courseId, CancellationToken cancellationToken = default)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

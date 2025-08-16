@@ -28,10 +28,10 @@ namespace Learning.Domain.Enrollments.ValueObjects
 
         protected override void Validate()
         {
-            AssertionConcern.EnsureTrue(StartedAt <= DateTime.UtcNow, CourseErrors.ProgresStartedDateCanNotBeInFuture.Description);
+            AssertionConcern.EnsureTrue(StartedAt <= DateTime.UtcNow, CourseProgressErrors.ProgresStartedDateCanNotBeInFuture.Description);
             if (IsCompleted)
             {
-                AssertionConcern.EnsureTrue(CompletedAt!.Value >= StartedAt, CourseErrors.ProgressCompletedDateMustBeAfterStartedDate.Description);
+                AssertionConcern.EnsureTrue(CompletedAt!.Value >= StartedAt, CourseProgressErrors.ProgressCompletedDateMustBeAfterStartedDate.Description);
             }
         }
     }

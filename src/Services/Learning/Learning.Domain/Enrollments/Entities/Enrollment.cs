@@ -34,29 +34,29 @@ namespace Learning.Domain.Enrollments.Entities
             return enrollment;
         }
 
-        public static void StartCourse(Course course)
+        public static void StartCourse(CourseProgress courseProgress)
         {
-            course.StartCourse();
+            courseProgress.StartCourse();
         }
 
-        public static void CompleteCourse(DateTime completedAt, Course course)
+        public static void CompleteCourse(DateTime completedAt, CourseProgress courseProgress)
         {
-            course.CompleteCourse(completedAt);
+            courseProgress.CompleteCourse(completedAt);
         }
 
-        public static void StartModule(Guid moduleId, Course course)
+        public static void StartModule(Guid moduleId, CourseProgress courseProgress)
         {
-            course.StartModule(moduleId);
+            courseProgress.StartModule(moduleId);
         }
 
-        public void CompleteModule(Guid moduleId, Course course)
+        public void CompleteModule(Guid moduleId, CourseProgress courseProgress)
         {
-            course.CompleteModule(moduleId, Id);
+            courseProgress.CompleteModule(moduleId, Id);
         }
 
-        public void CompleteLesson(Guid moduleId, Guid lessonId, Course course)
+        public void CompleteLesson(Guid moduleId, Guid lessonId, CourseProgress courseProgress)
         {
-            course.CompleteLesson(moduleId, lessonId, Id);
+            courseProgress.CompleteLesson(moduleId, lessonId, Id);
         }
 
         protected override void Validate()

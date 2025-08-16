@@ -9,7 +9,7 @@ namespace Learning.Application.Enrollments.UseCases.Enroll
         {
             RuleFor(e => e.CourseId)
                 .NotEqual(Guid.Empty)
-                .WithMessage(CourseErrors.CourseIdMustBeNotEmpty.Description);
+                .WithMessage(CourseProgressErrors.CourseIdMustBeNotEmpty.Description);
 
             RuleFor(e => e.StudentId)
                 .NotEqual(Guid.Empty)

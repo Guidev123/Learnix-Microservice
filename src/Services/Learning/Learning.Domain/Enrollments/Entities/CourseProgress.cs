@@ -5,31 +5,32 @@ using Learnix.Commons.Domain.DomainObjects;
 
 namespace Learning.Domain.Enrollments.Entities
 {
-    public sealed class Course : Entity
+    public sealed class CourseProgress : Entity
     {
-        private Course(Guid id, DateTime startedAt, List<Module> modules)
+        private CourseProgress(Guid courseId, DateTime startedAt, List<ModuleProgress> modules)
         {
-            Id = id;
+            CourseId = courseId;
             ProgressDateRange = startedAt;
             Status = CourseProgressStatusEnum.InProgress;
             _modules = modules;
             Validate();
         }
 
-        private Course()
+        private CourseProgress()
         { }
 
+        public Guid CourseId { get; }
         public CourseProgressStatusEnum Status { get; private set; }
         public CourseProgressDateRange ProgressDateRange { get; private set; } = null!;
 
-        private readonly List<Module> _modules = [];
-        public IReadOnlyCollection<Module> Modules => _modules.AsReadOnly();
+        private readonly List<ModuleProgress> _modules = [];
+        public IReadOnlyCollection<ModuleProgress> Modules => _modules.AsReadOnly();
 
-        public static Course Create(Guid id, DateTime startedAt, List<Module> modules)
+        public static CourseProgress Create(Guid courseId, DateTime startedAt, List<ModuleProgress> modules)
         {
-            var course = new Course(id, startedAt, modules);
+            var courseProgress = new CourseProgress(courseId, startedAt, modules);
 
-            return course;
+            return courseProgress;
         }
 
         internal void StartCourse()
@@ -48,7 +49,7 @@ namespace Learning.Domain.Enrollments.Entities
         internal void StartModule(Guid moduleId)
         {
             var module = _modules.FirstOrDefault(m => m.Id == moduleId)
-                ?? throw new DomainException(ModuleErrors.NotFound(moduleId).Description);
+                ?? throw new DomainException(ModuleProgressErrors.NotFound(moduleId).Description);
 
             module.StartModule();
         }
@@ -56,7 +57,7 @@ namespace Learning.Domain.Enrollments.Entities
         internal void CompleteModule(Guid moduleId, Guid enrollmentId)
         {
             var module = _modules.FirstOrDefault(m => m.Id == moduleId)
-                ?? throw new DomainException(ModuleErrors.NotFound(moduleId).Description);
+                ?? throw new DomainException(ModuleProgressErrors.NotFound(moduleId).Description);
 
             module.CompleteModule(enrollmentId);
         }
@@ -64,16 +65,16 @@ namespace Learning.Domain.Enrollments.Entities
         internal void CompleteLesson(Guid moduleId, Guid lessonId, Guid enrollmentId)
         {
             var module = _modules.FirstOrDefault(m => m.Id == moduleId)
-                ?? throw new DomainException(ModuleErrors.NotFound(moduleId).Description);
+                ?? throw new DomainException(ModuleProgressErrors.NotFound(moduleId).Description);
 
             module.CompleteLesson(lessonId, enrollmentId);
         }
 
         protected override void Validate()
         {
-            AssertionConcern.EnsureDifferent(Id, Guid.Empty, CourseErrors.CourseIdMustBeNotEmpty.Description);
-            AssertionConcern.EnsureNotNull(ProgressDateRange, CourseErrors.ProgressDateRangeMustBeNotNull.Description);
-            AssertionConcern.EnsureFalse(Modules.Count == 0, CourseErrors.ModulesMustNotBeEmpty.Description);
+            AssertionConcern.EnsureDifferent(CourseId, Guid.Empty, CourseProgressErrors.CourseIdMustBeNotEmpty.Description);
+            AssertionConcern.EnsureNotNull(ProgressDateRange, CourseProgressErrors.ProgressDateRangeMustBeNotNull.Description);
+            AssertionConcern.EnsureFalse(Modules.Count == 0, CourseProgressErrors.ModulesMustNotBeEmpty.Description);
         }
     }
 }

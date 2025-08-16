@@ -1,0 +1,23 @@
+﻿using Courses.Application.Courses.UseCases.AttachModules;
+using Learnix.Commons.Domain.Results;
+using Learnix.Commons.WebApi.Endpoints;
+using Learnix.Commons.WebApi.Extensions;
+using MidR.Interfaces;
+
+namespace Courses.WebApi.Endpoints
+{
+    internal sealed class AttachModulesEndpoint : IEndpoint
+    {
+        public void MapEndpoint(IEndpointRouteBuilder app)
+        {
+            app.MapPost("api/v1/courses/{courseId:guid}/modules", async (Guid courseId, AttachModulesCommand command, IMediator mediator) =>
+            {
+                var result = await mediator.DispatchAsync(command.SetCourseId(courseId)).ConfigureAwait(false);
+
+                return result.Match(Results.NoContent, ApiResults.Problem);
+            }
+            ).WithTags(Tags.Courses)
+            /*.RequireAuthorization(PolicyExtensions.CreateCourse)*/;
+        }
+    }
+}

@@ -30,6 +30,12 @@ namespace Learning.Application.Enrollments.UseCases.Enroll
                 return Result.Failure<EnrollResponse>(StudentErrors.NotFound(request.StudentId));
             }
 
+            var courseExists = await enrollmentRepository.CourseAlreadyExistsAsync(enrollment.CourseId, cancellationToken);
+            if (courseExists is false)
+            {
+                return Result.Failure<EnrollResponse>(CourseProgressErrors.NotFound(request.CourseId));
+            }
+
             var alreadyEnrolled = await enrollmentRepository.AlreadyEnrolledAsync(enrollment.Id, enrollment.StudentId, cancellationToken);
             if (alreadyEnrolled)
             {

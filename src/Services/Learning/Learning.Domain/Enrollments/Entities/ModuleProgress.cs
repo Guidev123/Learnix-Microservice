@@ -5,15 +5,15 @@ using Learnix.Commons.Domain.DomainObjects;
 
 namespace Learning.Domain.Enrollments.Entities
 {
-    public sealed class Module : Entity
+    public sealed class ModuleProgress : Entity
     {
         public const int DefaultTotalLessons = 0;
         public const int MinimumCompletedLessons = 1;
         public const int MinimumTotalLessons = 1;
 
-        private Module(Guid id, Guid courseId, List<Lesson> lessons)
+        private ModuleProgress(Guid moduleId, Guid courseId, List<LessonProgress> lessons)
         {
-            Id = id;
+            ModuleId = moduleId;
             CourseId = courseId;
             Status = ModuleProgressEnum.NotStarted;
             _lessons = lessons;
@@ -21,21 +21,22 @@ namespace Learning.Domain.Enrollments.Entities
             Validate();
         }
 
-        private Module()
+        private ModuleProgress()
         { }
 
+        public Guid ModuleId { get; private set; }
         public Guid CourseId { get; }
         public int TotalLessons { get; private set; }
         public int CompletedLessons { get; private set; }
         public double CompletionPercentage { get; private set; }
         public ModuleProgressEnum Status { get; private set; }
 
-        private readonly List<Lesson> _lessons = [];
-        public IReadOnlyCollection<Lesson> Lessons => _lessons.AsReadOnly();
+        private readonly List<LessonProgress> _lessons = [];
+        public IReadOnlyCollection<LessonProgress> Lessons => _lessons.AsReadOnly();
 
-        public static Module Create(Guid id, Guid courseId, List<Lesson> lessons)
+        public static ModuleProgress Create(Guid moduleId, Guid courseId, List<LessonProgress> lessons)
         {
-            var module = new Module(id, courseId, lessons);
+            var module = new ModuleProgress(moduleId, courseId, lessons);
 
             return module;
         }
@@ -53,7 +54,7 @@ namespace Learning.Domain.Enrollments.Entities
                 if (Status == ModuleProgressEnum.Completed) return;
                 Status = ModuleProgressEnum.Completed;
 
-                AddDomainEvent(new ModuleCompletedDomainEvent(Id, CourseId, enrollmentId));
+                AddDomainEvent(new ModuleCompletedDomainEvent(ModuleId, CourseId, enrollmentId));
             }
         }
 
@@ -64,8 +65,8 @@ namespace Learning.Domain.Enrollments.Entities
 
         internal void CompleteLesson(Guid lessonId, Guid enrollmentId)
         {
-            var lesson = _lessons.FirstOrDefault(l => l.Id == lessonId)
-                ?? throw new DomainException(ModuleErrors.NotFound(lessonId).Description);
+            var lesson = _lessons.FirstOrDefault(l => l.LessonId == lessonId)
+                ?? throw new DomainException(ModuleProgressErrors.NotFound(lessonId).Description);
 
             if (lesson.IsCompleted is false)
             {
@@ -81,9 +82,10 @@ namespace Learning.Domain.Enrollments.Entities
 
         protected override void Validate()
         {
-            AssertionConcern.EnsureDifferent(CourseId, Guid.Empty, ModuleErrors.CourseIdMustBeNotEmpty.Description);
-            AssertionConcern.EnsureGreaterThanOrEqual(TotalLessons, MinimumTotalLessons, ModuleErrors.TotalLessonsMustBeGreaterThanZero.Description);
-            AssertionConcern.EnsureFalse(Lessons.Count == 0, ModuleErrors.LessonsMustNotBeEmpty.Description);
+            AssertionConcern.EnsureDifferent(CourseId, Guid.Empty, ModuleProgressErrors.CourseIdMustBeNotEmpty.Description);
+            AssertionConcern.EnsureDifferent(ModuleId, Guid.Empty, ModuleProgressErrors.ModuleIdMustBeNotEmpty.Description);
+            AssertionConcern.EnsureGreaterThanOrEqual(TotalLessons, MinimumTotalLessons, ModuleProgressErrors.TotalLessonsMustBeGreaterThanZero.Description);
+            AssertionConcern.EnsureFalse(Lessons.Count == 0, ModuleProgressErrors.LessonsMustNotBeEmpty.Description);
         }
     }
 }

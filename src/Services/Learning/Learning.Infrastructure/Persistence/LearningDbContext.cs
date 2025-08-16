@@ -5,7 +5,7 @@ using Learnix.Commons.Infrastructure.Inbox.Configurations;
 using Learnix.Commons.Infrastructure.Outbox.Configurations;
 using Microsoft.EntityFrameworkCore;
 using System.Reflection;
-using Module = Learning.Domain.Enrollments.Entities.Module;
+using ModuleProgress = Learning.Domain.Enrollments.Entities.ModuleProgress;
 
 namespace Learning.Infrastructure.Persistence
 {
@@ -16,9 +16,9 @@ namespace Learning.Infrastructure.Persistence
 
         internal DbSet<Student> Students { get; set; } = default!;
         internal DbSet<Enrollment> Enrollments { get; set; } = default!;
-        internal DbSet<Course> Courses { get; set; } = default!;
-        internal DbSet<Module> Modules { get; set; } = default!;
-        internal DbSet<Lesson> Lessons { get; set; } = default!;
+        internal DbSet<CourseProgress> Courses { get; set; } = default!;
+        internal DbSet<ModuleProgress> Modules { get; set; } = default!;
+        internal DbSet<LessonProgress> Lessons { get; set; } = default!;
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

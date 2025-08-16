@@ -4,15 +4,15 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Learning.Infrastructure.Enrollments.Configurations
 {
-    internal sealed class ModuleConfiguration : IEntityTypeConfiguration<Module>
+    internal sealed class ModuleProgressConfiguration : IEntityTypeConfiguration<ModuleProgress>
     {
-        public void Configure(EntityTypeBuilder<Module> builder)
+        public void Configure(EntityTypeBuilder<ModuleProgress> builder)
         {
-            builder.ToTable("Modules");
+            builder.ToTable("ModuleProgress");
             builder.HasKey(m => m.Id);
 
             builder
-                .HasOne<Course>()
+                .HasOne<CourseProgress>()
                 .WithMany(c => c.Modules)
                 .HasForeignKey(m => m.CourseId)
                 .OnDelete(DeleteBehavior.ClientCascade);

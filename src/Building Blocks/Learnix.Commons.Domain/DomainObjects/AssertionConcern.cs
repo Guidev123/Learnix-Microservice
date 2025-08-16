@@ -35,7 +35,7 @@ namespace Learnix.Commons.Domain.DomainObjects
             if (string.IsNullOrEmpty(value)) throw new DomainException(message);
         }
 
-        public static void EnsureNotNull(object obj, string message)
+        public static void EnsureNotNull(object? obj, string message)
         {
             if (obj is null) throw new DomainException(message);
         }

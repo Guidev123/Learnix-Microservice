@@ -4,11 +4,11 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Learning.Infrastructure.Enrollments.Configurations
 {
-    internal sealed class CourseConfiguration : IEntityTypeConfiguration<Course>
+    internal sealed class CourseProgressConfiguration : IEntityTypeConfiguration<CourseProgress>
     {
-        public void Configure(EntityTypeBuilder<Course> builder)
+        public void Configure(EntityTypeBuilder<CourseProgress> builder)
         {
-            builder.ToTable("Courses");
+            builder.ToTable("CourseProgress");
             builder.HasKey(c => c.Id);
 
             builder.Property(c => c.Status)

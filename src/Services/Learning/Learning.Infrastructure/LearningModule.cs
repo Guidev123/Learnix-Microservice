@@ -39,7 +39,6 @@ namespace Learning.Infrastructure
                 .AddInboxPattern(configuration)
                 .AddKafkaMessageBus(configuration)
                 .AddBackgroundJobs()
-                .AddTracing()
                 .AddDataAccess(dbConnectionString)
                 .AddTracing();
 

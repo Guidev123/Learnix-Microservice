@@ -18,7 +18,7 @@ namespace Learning.Domain.Enrollments.Errors
 
         public static readonly Error CourseIdMustBeNotEmpty = Error.Problem(
             "Enrollments.CourseIdMustBeNotEmpty",
-            "Course ID must be not empty");
+            "CourseProgress ID must be not empty");
 
         public static readonly Error EnrollmentDateCannotBeInFuture = Error.Problem(
             "Enrollments.EnrollmentDateCannotBeInFuture",
@@ -34,6 +34,6 @@ namespace Learning.Domain.Enrollments.Errors
 
         public static readonly Error CourseMustBeNotNull = Error.Problem(
             "Enrollments.CourseMustBeNotNull",
-            "Course must be not null");
+            "CourseProgress must be not null");
     }
 }
