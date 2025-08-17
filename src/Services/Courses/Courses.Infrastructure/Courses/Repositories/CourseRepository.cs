@@ -20,7 +20,7 @@ namespace Courses.Infrastructure.Courses.Repositories
             => await context.Courses.AsNoTrackingWithIdentityResolution().Include(c => c.Modules).FirstOrDefaultAsync(c => c.Id == id, cancellationToken);
 
         public async Task<Course?> GetWithModulesAndLessonsAsync(Guid id, CancellationToken cancellationToken = default)
-            => await context.Courses.AsNoTrackingWithIdentityResolution().Include(c => c.Modules).ThenInclude(c => c.Lessons).FirstOrDefaultAsync(x => x.Id == id, cancellationToken);
+            => await context.Courses.AsNoTrackingWithIdentityResolution().Include(c => c.Modules.OrderBy(x => x.OrderIndex)).ThenInclude(c => c.Lessons.OrderBy(x => x.OrderIndex)).FirstOrDefaultAsync(x => x.Id == id, cancellationToken);
 
         public void Insert(Course course) => context.Courses.Add(course);
 

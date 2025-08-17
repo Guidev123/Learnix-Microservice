@@ -34,7 +34,7 @@ namespace Courses.Domain.Courses.Entities
 
         public void AddModule(Module module)
         {
-            module.SetOrderIndex((uint)_modules.Count);
+            module.SetOrderIndex((uint)_modules.Count + 1);
             _modules.Add(module);
         }
 

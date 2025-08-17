@@ -13,16 +13,19 @@ namespace Courses.Application.Courses.UseCases.AttachModules
     {
         public async Task<Result> ExecuteAsync(AttachModulesCommand request, CancellationToken cancellationToken = default)
         {
-            var course = await courseRepository.GetByIdAsync(request.CourseId, cancellationToken);
+            var course = await courseRepository.GetWithModulesByIdAsync(request.CourseId, cancellationToken);
             if (course is null)
             {
                 return Result.Failure(CourseErrors.NotFound(request.CourseId));
             }
 
+            var index = GetLastOrderIndex(course);
+
             var modules = request.Modules.Select(m => Module.Create(m.Title, course.Id));
             AddModulesToCourse(modules, course);
 
-            courseRepository.InsertModulesRange(modules);
+            var orderedModules = course.Modules.Where(x => x.OrderIndex > index);
+            courseRepository.InsertModulesRange(orderedModules);
 
             var wasSaved = await unitOfWork.CommitAsync(cancellationToken);
 
@@ -38,5 +41,8 @@ namespace Courses.Application.Courses.UseCases.AttachModules
                 course.AddModule(module);
             }
         }
+
+        private static uint GetLastOrderIndex(Course course)
+            => course.GetModulesInOrder().Select(x => x.OrderIndex).LastOrDefault();
     }
 }

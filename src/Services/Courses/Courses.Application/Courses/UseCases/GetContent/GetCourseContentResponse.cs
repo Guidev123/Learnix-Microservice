@@ -1,10 +1,10 @@
 ﻿using Courses.Domain.Courses.Enumerators;
 
-namespace Courses.Application.Courses.UseCases.GetById
+namespace Courses.Application.Courses.UseCases.GetContent
 {
-    public sealed record GetCourseByIdResponse
+    public sealed record GetCourseContentResponse
     {
-        public GetCourseByIdResponse(Guid id, string title, string description, DificultLevelEnum dificultLevel, List<ModuleResponse> modules)
+        public GetCourseContentResponse(Guid id, string title, string description, DificultLevelEnum dificultLevel, List<ModuleResponse> modules)
         {
             Id = id;
             Title = title;

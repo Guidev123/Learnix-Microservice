@@ -36,7 +36,7 @@ namespace Courses.Domain.Courses.Entities
 
         internal void AddLesson(Lesson lesson)
         {
-            lesson.SetOrderIndex((uint)_lessons.Count);
+            lesson.SetOrderIndex((uint)_lessons.Count + 1);
             _lessons.Add(lesson);
         }
 
