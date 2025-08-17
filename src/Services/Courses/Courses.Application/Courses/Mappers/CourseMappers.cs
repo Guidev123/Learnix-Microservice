@@ -2,6 +2,7 @@
 using Courses.Domain.Courses.Entities;
 using Courses.Domain.Courses.Errors;
 using Learnix.Commons.Application.Exceptions;
+using Learnix.Commons.Contracts.Courses.IntegrationEvents;
 using static Courses.Application.Courses.UseCases.GetContent.GetCourseContentResponse;
 
 namespace Courses.Application.Courses.Mappers
@@ -35,6 +36,32 @@ namespace Courses.Application.Courses.Mappers
                 ?? throw new LearnixException(nameof(Course), ModuleErrors.NotFound(lesson.ModuleId));
 
             return new LessonResponse(
+                lesson.Id,
+                lesson.Title,
+                lesson.Video.Url,
+                lesson.OrderIndex,
+                course.GetNextLesson(module, lesson)?.Id,
+                course.GetPreviousLesson(module, lesson)?.Id
+                );
+        }
+
+        public static CourseCreatedIntegrationEvent.ModuleResponse MapFromEntityToIntegrationEvent(this Module module, Course course)
+        {
+            return new CourseCreatedIntegrationEvent.ModuleResponse(
+                module.Id,
+                module.Title,
+                module.OrderIndex,
+                [.. module.Lessons.Select(x => x.MapFromEntityToIntegrationEvent(course))],
+                course.GetNextModule(module)?.Id,
+                course.GetPreviousModule(module)?.Id);
+        }
+
+        public static CourseCreatedIntegrationEvent.LessonResponse MapFromEntityToIntegrationEvent(this Lesson lesson, Course course)
+        {
+            var module = course.Modules.FirstOrDefault(m => m.Id == lesson.ModuleId)
+                ?? throw new LearnixException(nameof(Course), ModuleErrors.NotFound(lesson.ModuleId));
+
+            return new CourseCreatedIntegrationEvent.LessonResponse(
                 lesson.Id,
                 lesson.Title,
                 lesson.Video.Url,

@@ -10,9 +10,9 @@ namespace Users.Application.Users.DomainEvents
 {
     internal sealed class UserCreatedDomainEventHandler(IMediator mediator, IMessageBus messageBus) : DomainEventHandler<UserCreatedDomainEvent>
     {
-        public override async Task ExecuteAsync(UserCreatedDomainEvent notification, CancellationToken cancellationToken)
+        public override async Task ExecuteAsync(UserCreatedDomainEvent domainEvent, CancellationToken cancellationToken)
         {
-            var userResult = await mediator.DispatchAsync(new GetUserByIdQuery(notification.UserId), cancellationToken);
+            var userResult = await mediator.DispatchAsync(new GetUserByIdQuery(domainEvent.UserId), cancellationToken);
             if (userResult.IsFailure)
             {
                 throw new LearnixException(nameof(GetUserByIdQuery), userResult.Error);
@@ -21,8 +21,9 @@ namespace Users.Application.Users.DomainEvents
             var user = userResult.Value;
 
             await messageBus.ProduceAsync("users.user-created", new UserCreatedIntegrationEvent(
-                notification.CorrelationId,
-                notification.UserId,
+                domainEvent.CorrelationId,
+                domainEvent.OccurredOn,
+                domainEvent.UserId,
                 user.FirstName,
                 user.LastName,
                 user.Email), cancellationToken);

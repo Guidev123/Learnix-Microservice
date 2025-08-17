@@ -6,6 +6,7 @@ using Courses.Infrastructure.Inbox;
 using Courses.Infrastructure.Outbox;
 using Courses.Infrastructure.Persistence;
 using Learnix.Commons.Application.Messaging;
+using Learnix.Commons.Contracts.Users.Protos;
 using Learnix.Commons.Domain.Abstractions;
 using Learnix.Commons.Infrastructure;
 using Learnix.Commons.Infrastructure.Http;
@@ -29,6 +30,7 @@ namespace Courses.Infrastructure
 
             services
                 .AddApplication(AssemblyReference.Assembly)
+                .AddGrpcServices(configuration)
                 .AddHandlerDecorators()
                 .AddData(configuration)
                 .AddCacheService(configuration)
@@ -55,6 +57,16 @@ namespace Courses.Infrastructure
 
             services.AddScoped<ICourseRepository, CourseRepository>();
             services.AddScoped<IUnitOfWork>(scope => scope.GetRequiredService<CourseDbContext>());
+
+            return services;
+        }
+
+        private static IServiceCollection AddGrpcServices(this IServiceCollection services, IConfiguration configuration)
+        {
+            services.AddGrpcClient<UserPermissionsService.UserPermissionsServiceClient>(options =>
+            {
+                options.Address = new Uri(configuration["ExternalServices:UsersApi"]!);
+            }).AddResilienceHandler(nameof(HttpResiliencePipelineExtensions), pipeline => pipeline.ConfigureGrpcResilience());
 
             return services;
         }

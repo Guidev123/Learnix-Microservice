@@ -9,6 +9,7 @@ namespace Learnix.Commons.Contracts.Users.IntegrationEvents
 
         public UserCreatedIntegrationEvent(
             Guid correlationId,
+            DateTime occurredOn,
             Guid userId,
             string firstName,
             string lastName,
@@ -19,6 +20,7 @@ namespace Learnix.Commons.Contracts.Users.IntegrationEvents
             FirstName = firstName;
             LastName = lastName;
             Email = email;
+            OccurredOn = occurredOn;
             Messagetype = GetType().Name;
         }
 
