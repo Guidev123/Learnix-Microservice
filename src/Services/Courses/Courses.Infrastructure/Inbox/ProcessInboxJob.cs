@@ -26,7 +26,7 @@ namespace Courses.Infrastructure.Inbox
     {
         public async Task Execute(IJobExecutionContext context)
         {
-            logger.LogInformation("{ModuleProgress} - Beginning to process inbox messages", Schemas.Courses);
+            logger.LogInformation("{Module} - Beginning to process inbox messages", Schemas.Courses);
 
             using var connection = sqlConnectionFactory.Create();
             await connection.OpenAsync();
@@ -38,7 +38,7 @@ namespace Courses.Infrastructure.Inbox
             if (inboxMessages.Count == 0)
             {
                 await transaction.CommitAsync();
-                logger.LogInformation("{ModuleProgress} - No inbox messages to process", Schemas.Courses);
+                logger.LogInformation("{Module} - No inbox messages to process", Schemas.Courses);
                 return;
             }
 
@@ -62,7 +62,7 @@ namespace Courses.Infrastructure.Inbox
                 }
                 catch (Exception ex)
                 {
-                    logger.LogError(ex, "{ModuleProgress} - Exception while processing inbox message {CorrelationId}", Schemas.Courses, inboxMessage.CorrelationId);
+                    logger.LogError(ex, "{Module} - Exception while processing inbox message {CorrelationId}", Schemas.Courses, inboxMessage.CorrelationId);
 
                     exception = ex;
                 }
@@ -72,7 +72,7 @@ namespace Courses.Infrastructure.Inbox
 
             await transaction.CommitAsync();
 
-            logger.LogInformation("{ModuleProgress} - Completed process inbox messages", Schemas.Courses);
+            logger.LogInformation("{Module} - Completed process inbox messages", Schemas.Courses);
         }
 
         private static async Task<IReadOnlyList<InboxMessageResponse>> GetInboxMessagesAsync(

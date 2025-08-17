@@ -2,6 +2,7 @@
 using Learnix.Commons.Application.Factories;
 using Learnix.Commons.Application.MessageBus;
 using Learnix.Commons.Application.Messaging;
+using Learnix.Commons.Contracts.Courses.IntegrationEvents;
 using Learnix.Commons.Infrastructure.Extensions;
 using Learnix.Commons.Infrastructure.Inbox.Models;
 using Microsoft.Extensions.Hosting;
@@ -13,6 +14,8 @@ namespace Courses.Infrastructure.Inbox
     {
         protected override Task ExecuteAsync(CancellationToken stoppingToken)
         {
+            messageBus.ConsumeAsync<CourseCreatedIntegrationEvent>("courses.course-created", StoreInboxMessageAsync, stoppingToken);
+
             return Task.CompletedTask;
         }
 

@@ -1,4 +1,5 @@
 ﻿using Courses.Application.Courses.Mappers;
+using Courses.Application.CoursesContent.Abstractions;
 using Courses.Domain.Courses.DomainEvents;
 using Courses.Domain.Courses.Errors;
 using Courses.Domain.Courses.Interfaces;
@@ -9,22 +10,28 @@ using Learnix.Commons.Contracts.Courses.IntegrationEvents;
 
 namespace Courses.Application.Courses.DomainEvents
 {
-    internal sealed class CourseCreatedDomainEventHandler(ICourseRepository courseRepository, IMessageBus messageBus) : DomainEventHandler<CourseCreatedDomainEvent>
+    internal sealed class CourseCreatedDomainEventHandler(
+        ICourseRepository courseRepository,
+        ICourseContentRepository courseContentRepository,
+        IMessageBus messageBus) : DomainEventHandler<CourseCreatedDomainEvent>
     {
         public override async Task ExecuteAsync(CourseCreatedDomainEvent domainEvent, CancellationToken cancellationToken = default)
         {
             var course = await courseRepository.GetWithModulesAndLessonsAsync(domainEvent.CourseId, cancellationToken)
                 ?? throw new LearnixException(nameof(CourseCreatedDomainEvent), CourseErrors.NotFound(domainEvent.CourseId));
 
-            await messageBus.ProduceAsync("courses.course-created", new CourseCreatedIntegrationEvent(
-                domainEvent.CorrelationId,
-                domainEvent.OccurredOn,
-                course.Id,
-                course.Specification.Title,
-                course.Specification.Description,
-                nameof(course.DificultLevel),
-                [.. course.Modules.Select(x => x.MapFromEntityToIntegrationEvent(course))]
-                ), cancellationToken);
+            await Task.WhenAll(
+                courseContentRepository.InsertAsync(course.MapFromEntity(), cancellationToken),
+                messageBus.ProduceAsync("courses.course-created", new CourseCreatedIntegrationEvent(
+                    domainEvent.CorrelationId,
+                    domainEvent.OccurredOn,
+                    course.Id,
+                    course.Specification.Title,
+                    course.Specification.Description,
+                    nameof(course.DificultLevel),
+                    [.. course.Modules.Select(x => x.MapFromEntityToIntegrationEvent(course))]
+                    ), cancellationToken)
+            );
         }
     }
 }

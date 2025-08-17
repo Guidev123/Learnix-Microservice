@@ -26,7 +26,7 @@ namespace Courses.Infrastructure.Outbox
     {
         public async Task Execute(IJobExecutionContext context)
         {
-            logger.LogInformation("{ModuleProgress} - Beginning to process outbox messages", Schemas.Courses);
+            logger.LogInformation("{Module} - Beginning to process outbox messages", Schemas.Courses);
 
             using var connection = sqlConnectionFactory.Create();
             await connection.OpenAsync();
@@ -38,7 +38,7 @@ namespace Courses.Infrastructure.Outbox
             if (outboxMessages.Count == 0)
             {
                 await transaction.CommitAsync();
-                logger.LogInformation("{ModuleProgress} - No outbox messages to process", Schemas.Courses);
+                logger.LogInformation("{Module} - No outbox messages to process", Schemas.Courses);
                 return;
             }
 
@@ -62,7 +62,7 @@ namespace Courses.Infrastructure.Outbox
                 }
                 catch (Exception ex)
                 {
-                    logger.LogError(ex, "{ModuleProgress} - Exception while processing outbox message {CorrelationId}", Schemas.Courses, outboxMessage.CorrelationId);
+                    logger.LogError(ex, "{Module} - Exception while processing outbox message {CorrelationId}", Schemas.Courses, outboxMessage.CorrelationId);
 
                     exception = ex;
                 }
@@ -72,7 +72,7 @@ namespace Courses.Infrastructure.Outbox
 
             await transaction.CommitAsync();
 
-            logger.LogInformation("{ModuleProgress} - Completed process outbox messages", Schemas.Courses);
+            logger.LogInformation("{Module} - Completed process outbox messages", Schemas.Courses);
         }
 
         private static async Task<IReadOnlyList<OutboxMessageResponse>> GetOutboxMessagesAsync(
@@ -84,7 +84,7 @@ namespace Courses.Infrastructure.Outbox
                 SELECT TOP ({batchSize})
                     CorrelationId,
                     Content
-                FROM learning.OutboxMessages WITH (UPDLOCK, ROWLOCK)
+                FROM courses.OutboxMessages WITH (UPDLOCK, ROWLOCK)
                 WHERE ProcessedOn IS NULL
                 ORDER BY OccurredOn";
 
@@ -100,7 +100,7 @@ namespace Courses.Infrastructure.Outbox
             Exception? exception)
         {
             var sql = @$"
-                UPDATE learning.OutboxMessages
+                UPDATE courses.OutboxMessages
                 SET ProcessedOn = @ProcessedOn,
                     Error = @Error
                 WHERE CorrelationId = @CorrelationId";

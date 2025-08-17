@@ -33,12 +33,12 @@ namespace Learnix.Commons.Contracts.Courses.IntegrationEvents
         public List<ModuleResponse> Modules { get; init; } = [];
 
         public sealed record ModuleResponse(
-         Guid Id,
-         string Title,
-         uint OrderIndex,
-         List<LessonResponse> Lessons,
-         Guid? NextModuleId,
-         Guid? PreviousModuleId
+             Guid Id,
+             string Title,
+             uint OrderIndex,
+             List<LessonResponse> Lessons,
+             Guid? NextModuleId,
+             Guid? PreviousModuleId
          );
 
         public sealed record LessonResponse(

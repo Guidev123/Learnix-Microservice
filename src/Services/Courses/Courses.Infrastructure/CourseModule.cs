@@ -1,4 +1,5 @@
 ﻿using Courses.Application;
+using Courses.Application.CoursesContent.Abstractions;
 using Courses.Domain.Courses.Entities;
 using Courses.Domain.Courses.Interfaces;
 using Courses.Infrastructure.Courses.Repositories;
@@ -17,6 +18,11 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
+using MongoDB.Bson;
+using MongoDB.Bson.Serialization;
+using MongoDB.Bson.Serialization.Serializers;
+using MongoDB.Driver;
+using MongoDB.Driver.Core.Extensions.DiagnosticSources;
 using OpenTelemetry.Resources;
 using OpenTelemetry.Trace;
 
@@ -27,6 +33,7 @@ namespace Courses.Infrastructure
         public static IServiceCollection AddInfrastructureModule(this IServiceCollection services, IConfiguration configuration)
         {
             var dbConnectionString = configuration.GetConnectionString("Database") ?? string.Empty;
+            var mongoConnectionString = configuration.GetConnectionString("Mongo") ?? string.Empty;
 
             services
                 .AddApplication(AssemblyReference.Assembly)
@@ -35,7 +42,7 @@ namespace Courses.Infrastructure
                 .AddData(configuration)
                 .AddCacheService(configuration)
                 .AddBackgroundJobs()
-                .AddDataAccess(dbConnectionString)
+                .AddDataAccess(dbConnectionString, mongoConnectionString)
                 .AddKafkaMessageBus(configuration)
                 .AddInboxPattern(configuration)
                 .AddOutboxPattern(configuration)
@@ -46,7 +53,8 @@ namespace Courses.Infrastructure
 
         private static IServiceCollection AddDataAccess(
             this IServiceCollection services,
-            string dbConnectionString)
+            string dbConnectionString,
+            string mongoConnectionString)
         {
             services.AddDbContext<CourseDbContext>((scope, options) =>
             {
@@ -55,8 +63,28 @@ namespace Courses.Infrastructure
                 options.AddInterceptors(outboxInterceptor);
             });
 
+            services.AddMongo(mongoConnectionString);
+
             services.AddScoped<ICourseRepository, CourseRepository>();
+            services.AddScoped<ICourseContentRepository, CourseContentRepository>();
             services.AddScoped<IUnitOfWork>(scope => scope.GetRequiredService<CourseDbContext>());
+
+            return services;
+        }
+
+        private static IServiceCollection AddMongo(this IServiceCollection services, string mongoConnectionString)
+        {
+            var mongoClientSettings = MongoClientSettings.FromConnectionString(mongoConnectionString);
+            mongoClientSettings.ClusterConfigurator = c => c.Subscribe(
+                new DiagnosticsActivityEventSubscriber(
+                    new InstrumentationOptions()
+                    {
+                        CaptureCommandText = true
+                    }));
+
+            services.AddSingleton<IMongoClient>(new MongoClient(mongoClientSettings));
+
+            BsonSerializer.RegisterSerializer(new GuidSerializer(GuidRepresentation.Standard));
 
             return services;
         }
@@ -105,7 +133,8 @@ namespace Courses.Infrastructure
                     .AddHttpClientInstrumentation()
                     .AddSqlClientInstrumentation()
                     .AddEntityFrameworkCoreInstrumentation()
-                    .AddRedisInstrumentation();
+                    .AddRedisInstrumentation()
+                    .AddSource("MongoDB.Driver.Core.Extensions.DiagnosticSources");
 
                 tracing.AddOtlpExporter();
             });

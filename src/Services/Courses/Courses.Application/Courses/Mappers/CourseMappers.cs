@@ -1,17 +1,16 @@
-﻿using Courses.Application.Courses.UseCases.GetContent;
+﻿using Courses.Application.CoursesContent.UseCases.GetContent;
 using Courses.Domain.Courses.Entities;
 using Courses.Domain.Courses.Errors;
 using Learnix.Commons.Application.Exceptions;
 using Learnix.Commons.Contracts.Courses.IntegrationEvents;
-using static Courses.Application.Courses.UseCases.GetContent.GetCourseContentResponse;
 
 namespace Courses.Application.Courses.Mappers
 {
     internal static class CourseMappers
     {
-        public static GetCourseContentResponse MapFromEntity(this Course course)
+        public static CourseContentResponse MapFromEntity(this Course course)
         {
-            return new GetCourseContentResponse(
+            return new CourseContentResponse(
                 course.Id,
                 course.Specification.Title,
                 course.Specification.Description,

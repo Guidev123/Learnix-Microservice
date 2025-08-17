@@ -25,7 +25,7 @@ namespace Courses.WebApi.Endpoints
                 return result.Match(Results.NoContent, ApiResults.Problem);
             }
             ).WithTags(Tags.Courses)
-            .RequireAuthorization(PolicyExtensions.CreateCourse);
+            /*.RequireAuthorization(PolicyExtensions.CreateCourse)*/;
         }
     }
 }
