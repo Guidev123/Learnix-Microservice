@@ -1,5 +1,5 @@
 ﻿using Courses.Application;
-using Courses.Application.CoursesContent.Abstractions;
+using Courses.Application.Courses.Abstractions;
 using Courses.Domain.Courses.Entities;
 using Courses.Domain.Courses.Interfaces;
 using Courses.Infrastructure.Courses.Repositories;

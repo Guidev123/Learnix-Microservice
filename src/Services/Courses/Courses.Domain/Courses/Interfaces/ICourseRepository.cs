@@ -11,9 +11,9 @@ namespace Courses.Domain.Courses.Interfaces
 
         Task<Module?> GetModuleByIdAsync(Guid id, CancellationToken cancellationToken = default);
 
-        Task<Course?> GetWithModulesByIdAsync(Guid id, CancellationToken cancellationToken = default);
+        Task<Course?> GetWithModulesByIdAsync(Guid id, bool asNoTrackingEnabled = true, CancellationToken cancellationToken = default);
 
-        Task<Course?> GetWithModulesAndLessonsAsync(Guid id, CancellationToken cancellationToken = default);
+        Task<Course?> GetWithModulesAndLessonsAsync(Guid id, bool asNoTrackingEnabled = true, CancellationToken cancellationToken = default);
 
         void Insert(Course course);
 

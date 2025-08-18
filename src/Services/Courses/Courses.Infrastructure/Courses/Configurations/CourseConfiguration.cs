@@ -36,6 +36,11 @@ namespace Courses.Infrastructure.Courses.Configurations
                 .HasConversion<string>()
                 .IsRequired();
 
+            builder.Property(c => c.Status)
+                .HasColumnType("VARCHAR(50)")
+                .HasConversion<string>()
+                .IsRequired();
+
             builder.HasOne<Category>()
                 .WithMany()
                 .HasForeignKey(c => c.CategoryId)

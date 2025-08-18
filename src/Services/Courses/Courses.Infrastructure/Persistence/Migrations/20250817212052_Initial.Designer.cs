@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Courses.Infrastructure.Persistence.Migrations
 {
     [DbContext(typeof(CourseDbContext))]
-    [Migration("20250816011148_Initial")]
+    [Migration("20250817212052_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -53,6 +53,10 @@ namespace Courses.Infrastructure.Persistence.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("DificultLevel")
+                        .IsRequired()
+                        .HasColumnType("VARCHAR(50)");
+
+                    b.Property<string>("Status")
                         .IsRequired()
                         .HasColumnType("VARCHAR(50)");
 

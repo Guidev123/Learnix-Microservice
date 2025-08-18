@@ -39,9 +39,30 @@ namespace Courses.Domain.Courses.Errors
             "Courses.CategoryIdMustBeNotEmpty",
             "The category ID must not be empty");
 
+        public static readonly Error CourseIdMustBeNotEmpty = Error.Problem(
+            "Courses.CourseIdMustBeNotEmpty",
+            "The course ID must not be empty");
+
         public static Error FailToPersist(Guid id) =>
             Error.Problem(
             "Courses.FailToPersist",
             $"Fail to persist course with ID {id}");
+
+        public static Error FailToPersistChanges(Guid id) =>
+            Error.Problem(
+            "Courses.FailToPersist",
+            $"Fail to persist changes for course with ID {id}");
+
+        public static Error StatusMustBeNotPublished(Guid id) => Error.Problem(
+            "Courses.StatusMustBeNotPublished",
+            $"This course ID {id} has already been published and should not be changed, only draft or hidden courses can be modified");
+
+        public static readonly Error CanNotPublishCourseWithoutModules = Error.Problem(
+            "Courses.CanNotPublishCourseWithoutModules",
+            "It is not allowed to publish a course without modules");
+
+        public static readonly Error CanNotPublishCourseWithModulesWithoutLessons = Error.Problem(
+            "Courses.CanNotPublishCourseWithModulesWithoutLessons",
+            "It is not allowed to publish a course with modules without lessons");
     }
 }

@@ -96,6 +96,7 @@ namespace Courses.Infrastructure.Persistence.Migrations
                     Title = table.Column<string>(type: "VARCHAR(100)", maxLength: 100, nullable: false),
                     Description = table.Column<string>(type: "VARCHAR(500)", maxLength: 500, nullable: false),
                     DificultLevel = table.Column<string>(type: "VARCHAR(50)", nullable: false),
+                    Status = table.Column<string>(type: "VARCHAR(50)", nullable: false),
                     CategoryId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
                 },
                 constraints: table =>

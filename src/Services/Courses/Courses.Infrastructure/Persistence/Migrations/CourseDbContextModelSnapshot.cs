@@ -53,6 +53,10 @@ namespace Courses.Infrastructure.Persistence.Migrations
                         .IsRequired()
                         .HasColumnType("VARCHAR(50)");
 
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasColumnType("VARCHAR(50)");
+
                     b.HasKey("Id");
 
                     b.HasIndex("CategoryId");

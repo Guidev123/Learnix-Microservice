@@ -1,4 +1,4 @@
-﻿using Courses.Application.CoursesContent.UseCases.GetContent;
+﻿using Courses.Application.Courses.UseCases.GetContent;
 using Courses.Domain.Courses.Entities;
 using Courses.Domain.Courses.Errors;
 using Learnix.Commons.Application.Exceptions;
@@ -15,6 +15,7 @@ namespace Courses.Application.Courses.Mappers
                 course.Specification.Title,
                 course.Specification.Description,
                 course.DificultLevel,
+                course.Status,
                 course.Modules.Select(x => x.MapFromEntity(course)).ToList());
         }
 
@@ -44,9 +45,9 @@ namespace Courses.Application.Courses.Mappers
                 );
         }
 
-        public static CourseCreatedIntegrationEvent.ModuleResponse MapFromEntityToIntegrationEvent(this Module module, Course course)
+        public static CoursePublishedIntegrationEvent.ModuleResponse MapFromEntityToIntegrationEvent(this Module module, Course course)
         {
-            return new CourseCreatedIntegrationEvent.ModuleResponse(
+            return new CoursePublishedIntegrationEvent.ModuleResponse(
                 module.Id,
                 module.Title,
                 module.OrderIndex,
@@ -55,12 +56,12 @@ namespace Courses.Application.Courses.Mappers
                 course.GetPreviousModule(module)?.Id);
         }
 
-        public static CourseCreatedIntegrationEvent.LessonResponse MapFromEntityToIntegrationEvent(this Lesson lesson, Course course)
+        public static CoursePublishedIntegrationEvent.LessonResponse MapFromEntityToIntegrationEvent(this Lesson lesson, Course course)
         {
             var module = course.Modules.FirstOrDefault(m => m.Id == lesson.ModuleId)
                 ?? throw new LearnixException(nameof(Course), ModuleErrors.NotFound(lesson.ModuleId));
 
-            return new CourseCreatedIntegrationEvent.LessonResponse(
+            return new CoursePublishedIntegrationEvent.LessonResponse(
                 lesson.Id,
                 lesson.Title,
                 lesson.Video.Url,

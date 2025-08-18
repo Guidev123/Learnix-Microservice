@@ -1,4 +1,4 @@
-﻿using Courses.Application.CoursesContent.GetContent;
+﻿using Courses.Application.Courses.UseCases.GetContent;
 using Learnix.Commons.Domain.Results;
 using Learnix.Commons.WebApi.Endpoints;
 using Learnix.Commons.WebApi.Extensions;
@@ -17,7 +17,7 @@ namespace Courses.WebApi.Endpoints
                 return result.Match(successResult => Results.Ok(successResult), ApiResults.Problem);
             }
             ).WithTags(Tags.Courses)
-            /*.RequireAuthorization(PolicyExtensions.GetCourseContent)*/;
+            .RequireAuthorization(PolicyExtensions.GetCourseContent);
         }
     }
 }

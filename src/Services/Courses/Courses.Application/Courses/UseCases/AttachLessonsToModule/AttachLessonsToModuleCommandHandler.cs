@@ -1,4 +1,5 @@
 ﻿using Courses.Domain.Courses.Entities;
+using Courses.Domain.Courses.Enumerators;
 using Courses.Domain.Courses.Errors;
 using Courses.Domain.Courses.Interfaces;
 using Learnix.Commons.Application.Messaging;
@@ -13,10 +14,15 @@ namespace Courses.Application.Courses.UseCases.AttachLessonsToModule
     {
         public async Task<Result> ExecuteAsync(AttachLessonsToModuleCommand request, CancellationToken cancellationToken = default)
         {
-            var course = await courseRepository.GetWithModulesAndLessonsAsync(request.CourseId, cancellationToken);
+            var course = await courseRepository.GetWithModulesAndLessonsAsync(request.CourseId, false, cancellationToken);
             if (course is null)
             {
                 return Result.Failure(ModuleErrors.NotFound(request.ModuleId));
+            }
+
+            if (course.Status == CourseStatusEnum.Published)
+            {
+                return Result.Failure(CourseErrors.StatusMustBeNotPublished(request.CourseId));
             }
 
             var lessons = request.Lessons.Select(lesson => Lesson.Create(
@@ -34,7 +40,7 @@ namespace Courses.Application.Courses.UseCases.AttachLessonsToModule
             }
 
             var index = GetLastOrderIndex(module);
-            AddLessonsToModule(lessons, course, module.Id);
+            course.AddLessonsToModule(module.Id, lessons);
 
             var orderedLessons = module.Lessons.Where(x => x.OrderIndex > index);
             courseRepository.InsertLessonsToModuleRange(orderedLessons);
@@ -44,18 +50,6 @@ namespace Courses.Application.Courses.UseCases.AttachLessonsToModule
             return wasSaved
                 ? Result.Success()
                 : Result.Failure(LessonErrors.FailToPersistLessons);
-        }
-
-        private static void AddLessonsToModule(
-            IEnumerable<Lesson> lessons,
-            Course course,
-            Guid moduleId
-            )
-        {
-            foreach (var lesson in lessons)
-            {
-                course.AddLessonToModule(moduleId, lesson);
-            }
         }
 
         private static uint GetLastOrderIndex(Module module)

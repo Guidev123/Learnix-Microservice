@@ -1,4 +1,4 @@
-﻿namespace Courses.Application.CoursesContent.UseCases.GetContent
+﻿namespace Courses.Application.Courses.UseCases.GetContent
 {
     public sealed class LessonResponse
     {

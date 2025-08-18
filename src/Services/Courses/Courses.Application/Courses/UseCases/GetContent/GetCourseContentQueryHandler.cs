@@ -1,9 +1,9 @@
-﻿using Courses.Application.CoursesContent.Abstractions;
+﻿using Courses.Application.Courses.Abstractions;
 using Courses.Domain.Courses.Errors;
 using Learnix.Commons.Application.Messaging;
 using Learnix.Commons.Domain.Results;
 
-namespace Courses.Application.CoursesContent.UseCases.GetContent
+namespace Courses.Application.Courses.UseCases.GetContent
 {
     internal sealed class GetCourseContentQueryHandler(ICourseContentRepository courseContentRepository) : IQueryHandler<GetCourseContentQuery, CourseContentResponse>
     {

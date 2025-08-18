@@ -1,6 +1,6 @@
-﻿using Courses.Application.CoursesContent.UseCases.GetContent;
+﻿using Courses.Application.Courses.UseCases.GetContent;
 
-namespace Courses.Application.CoursesContent.Abstractions
+namespace Courses.Application.Courses.Abstractions
 {
     public interface ICourseContentRepository
     {

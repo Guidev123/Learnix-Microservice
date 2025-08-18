@@ -19,6 +19,7 @@ namespace Courses.Domain.Courses.Entities
             Specification = (title, description);
             DificultLevel = dificultLevel;
             CategoryId = categoryId;
+            Status = CourseStatusEnum.Draft;
             Validate();
         }
 
@@ -27,23 +28,39 @@ namespace Courses.Domain.Courses.Entities
 
         public CourseSpecification Specification { get; private set; } = null!;
         public DificultLevelEnum DificultLevel { get; private set; }
+        public CourseStatusEnum Status { get; private set; }
         public Guid CategoryId { get; private set; }
         public IReadOnlyCollection<Module> Modules => _modules.AsReadOnly();
         public uint ModulesQuantity => (uint)_modules.Count;
         public uint DurationInHours => (uint)_modules.Sum(m => m.DurationInHours);
 
-        public void AddModule(Module module)
+        public void AddModules(IEnumerable<Module> modules)
         {
-            module.SetOrderIndex((uint)_modules.Count + 1);
-            _modules.Add(module);
+            foreach (var module in modules)
+            {
+                AddModule(module);
+            }
+
+            AddDomainEvent(new CourseUpdatedDomainEvent(Id));
         }
 
-        public void AddLessonToModule(Guid moduleId, Lesson lesson)
+        public void AddLessonsToModule(Guid moduleId, IEnumerable<Lesson> lessons)
         {
             var module = _modules.FirstOrDefault(m => m.Id == moduleId);
             AssertionConcern.EnsureNotNull(module, ModuleErrors.NotFound(moduleId).Description);
 
-            module?.AddLesson(lesson);
+            foreach (var lesson in lessons)
+            {
+                AddLessonToModule(moduleId, lesson);
+            }
+
+            AddDomainEvent(new CourseUpdatedDomainEvent(Id));
+        }
+
+        public void Publish()
+        {
+            Status = CourseStatusEnum.Published;
+            AddDomainEvent(new CoursePublishedDomainEvent(Id));
         }
 
         public IEnumerable<Module> GetModulesInOrder() => _modules.OrderBy(m => m.OrderIndex);
@@ -74,6 +91,20 @@ namespace Courses.Domain.Courses.Entities
             course.AddDomainEvent(new CourseCreatedDomainEvent(course.Id));
 
             return course;
+        }
+
+        private void AddModule(Module module)
+        {
+            module.SetOrderIndex((uint)_modules.Count + 1);
+            _modules.Add(module);
+        }
+
+        private void AddLessonToModule(Guid moduleId, Lesson lesson)
+        {
+            var module = _modules.FirstOrDefault(m => m.Id == moduleId);
+            AssertionConcern.EnsureNotNull(module, ModuleErrors.NotFound(moduleId).Description);
+
+            module?.AddLesson(lesson);
         }
 
         protected override void Validate()

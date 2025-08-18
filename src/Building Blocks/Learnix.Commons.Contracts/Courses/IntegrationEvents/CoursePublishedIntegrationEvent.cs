@@ -2,9 +2,9 @@
 
 namespace Learnix.Commons.Contracts.Courses.IntegrationEvents
 {
-    public sealed record CourseCreatedIntegrationEvent : IntegrationEvent
+    public sealed record CoursePublishedIntegrationEvent : IntegrationEvent
     {
-        public CourseCreatedIntegrationEvent(
+        public CoursePublishedIntegrationEvent(
             Guid correlationId,
             DateTime occurredOn,
             Guid courseId,
@@ -23,7 +23,7 @@ namespace Learnix.Commons.Contracts.Courses.IntegrationEvents
             Messagetype = GetType().Name;
         }
 
-        private CourseCreatedIntegrationEvent()
+        private CoursePublishedIntegrationEvent()
         { }
 
         public Guid CourseId { get; init; }

@@ -1,5 +1,5 @@
-﻿using Courses.Application.CoursesContent.Abstractions;
-using Courses.Application.CoursesContent.UseCases.GetContent;
+﻿using Courses.Application.Courses.Abstractions;
+using Courses.Application.Courses.UseCases.GetContent;
 using Courses.Infrastructure.Persistence;
 using MongoDB.Driver;
 

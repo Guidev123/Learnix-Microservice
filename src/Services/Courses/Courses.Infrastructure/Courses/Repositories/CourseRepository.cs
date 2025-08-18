@@ -16,11 +16,27 @@ namespace Courses.Infrastructure.Courses.Repositories
         public async Task<Module?> GetModuleByIdAsync(Guid id, CancellationToken cancellationToken = default)
             => await context.Modules.AsNoTracking().FirstOrDefaultAsync(m => m.Id == id, cancellationToken);
 
-        public async Task<Course?> GetWithModulesByIdAsync(Guid id, CancellationToken cancellationToken = default)
-            => await context.Courses.AsNoTrackingWithIdentityResolution().Include(c => c.Modules).FirstOrDefaultAsync(c => c.Id == id, cancellationToken);
+        public async Task<Course?> GetWithModulesByIdAsync(Guid id, bool asNoTrackingEnabled = true, CancellationToken cancellationToken = default)
+        {
+            var query = context.Courses;
+            if (asNoTrackingEnabled)
+            {
+                query.AsNoTrackingWithIdentityResolution();
+            }
 
-        public async Task<Course?> GetWithModulesAndLessonsAsync(Guid id, CancellationToken cancellationToken = default)
-            => await context.Courses.AsNoTrackingWithIdentityResolution().Include(c => c.Modules.OrderBy(x => x.OrderIndex)).ThenInclude(c => c.Lessons.OrderBy(x => x.OrderIndex)).FirstOrDefaultAsync(x => x.Id == id, cancellationToken);
+            return await query.Include(c => c.Modules).FirstOrDefaultAsync(c => c.Id == id, cancellationToken);
+        }
+
+        public async Task<Course?> GetWithModulesAndLessonsAsync(Guid id, bool asNoTrackingEnabled = true, CancellationToken cancellationToken = default)
+        {
+            var query = context.Courses;
+            if (asNoTrackingEnabled)
+            {
+                query.AsNoTrackingWithIdentityResolution();
+            }
+
+            return await query.Include(c => c.Modules.OrderBy(x => x.OrderIndex)).ThenInclude(c => c.Lessons.OrderBy(x => x.OrderIndex)).FirstOrDefaultAsync(x => x.Id == id, cancellationToken);
+        }
 
         public void Insert(Course course) => context.Courses.Add(course);
 
@@ -28,7 +44,7 @@ namespace Courses.Infrastructure.Courses.Repositories
 
         public void InsertModulesRange(IEnumerable<Module> modules) => context.Modules.AddRange(modules);
 
-        public void Update(Course course) => context.Courses.Add(course);
+        public void Update(Course course) => context.Courses.Update(course);
 
         public void Dispose() => context.Dispose();
     }
