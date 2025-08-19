@@ -31,13 +31,13 @@ namespace Learnix.Commons.WebApi.Middlewares
             return true;
         }
 
-        private static string GetExceptionMessage(Exception? exception)
+        private static string? GetExceptionMessage(Exception? exception)
         {
             return exception switch
             {
                 LearnixException learnixException when learnixException.Error?.Description is not null => learnixException.Error.Description,
                 _ when exception?.InnerException?.Message is not null => exception.InnerException.Message,
-                _ => exception?.Message ?? "Unknown error"
+                _ => "Unknown error"
             };
         }
     }
