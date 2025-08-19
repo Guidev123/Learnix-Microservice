@@ -12,7 +12,7 @@ namespace Courses.WebApi.Endpoints
         {
             app.MapPost("api/v1/courses", async (CreateCourseCommand command, IMediator mediator) =>
             {
-                var result = await mediator.DispatchAsync(command).ConfigureAwait(false);
+                var result = await mediator.SendAsync(command).ConfigureAwait(false);
 
                 return result.Match(successResult => Results.Created($"api/v1/courses/{successResult.CourseId}",
                                     successResult), ApiResults.Problem);

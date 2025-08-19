@@ -10,7 +10,7 @@ namespace Users.Infrastructure.Authorization
     {
         public async Task<Result<PermissionResponse>> GetUserPermissionsAsync(string identityId, CancellationToken cancellationToken = default)
         {
-            var result = await mediator.DispatchAsync(new GetUserPermissionsQuery(identityId), cancellationToken);
+            var result = await mediator.SendAsync(new GetUserPermissionsQuery(identityId), cancellationToken);
             if (result.IsFailure)
             {
                 throw new LearnixException(nameof(GetUserPermissionsQuery), result.Error);

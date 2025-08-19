@@ -12,7 +12,7 @@ namespace Courses.WebApi.Endpoints
         {
             app.MapPatch("api/v1/courses/{courseId:guid}/publish", async (Guid courseId, IMediator mediator) =>
             {
-                var result = await mediator.DispatchAsync(new PublishCourseCommand(courseId));
+                var result = await mediator.SendAsync(new PublishCourseCommand(courseId));
 
                 return result.Match(Results.NoContent, ApiResults.Problem);
             }

@@ -10,7 +10,7 @@ namespace Users.WebApi.gRPC
     {
         public override async Task<GetUserPermissionsResponse> GetUserPermissions(GetUserPermissionsRequest request, ServerCallContext context)
         {
-            var result = await mediator.DispatchAsync(new GetUserPermissionsQuery(request.IdentityId), context.CancellationToken).ConfigureAwait(false);
+            var result = await mediator.SendAsync(new GetUserPermissionsQuery(request.IdentityId), context.CancellationToken).ConfigureAwait(false);
             if (result.IsFailure)
             {
                 throw new RpcException(new Status(StatusCode.NotFound, result.Error!.Description));

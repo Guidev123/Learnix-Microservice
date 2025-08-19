@@ -12,7 +12,7 @@ namespace Courses.WebApi.Endpoints
         {
             app.MapGet("api/v1/courses/{courseId:guid}/content", async (Guid courseId, IMediator mediator) =>
             {
-                var result = await mediator.DispatchAsync(new GetCourseContentQuery(courseId)).ConfigureAwait(false);
+                var result = await mediator.SendAsync(new GetCourseContentQuery(courseId)).ConfigureAwait(false);
 
                 return result.Match(successResult => Results.Ok(successResult), ApiResults.Problem);
             }

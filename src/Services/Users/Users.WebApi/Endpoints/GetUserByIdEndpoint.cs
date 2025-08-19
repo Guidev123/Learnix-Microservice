@@ -13,7 +13,7 @@ namespace Users.WebApi.Endpoints
         {
             app.MapGet("api/v1/users/me", async (ClaimsPrincipal claimsPrincipal, IMediator mediator) =>
             {
-                var result = await mediator.DispatchAsync(new GetUserByIdQuery(claimsPrincipal.GetUserId()));
+                var result = await mediator.SendAsync(new GetUserByIdQuery(claimsPrincipal.GetUserId()));
 
                 return result.Match(Results.Ok, ApiResults.Problem);
             }).WithTags(Tags.Users).RequireAuthorization(PolicyExtensions.GetUser);

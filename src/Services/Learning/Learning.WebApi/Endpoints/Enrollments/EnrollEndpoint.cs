@@ -14,7 +14,7 @@ namespace Learning.WebApi.Endpoints.Enrollments
             app.MapPost("api/v1/enrollments", async (EnrollCommand command, ClaimsPrincipal claimsPrincipal, IMediator mediator) =>
             {
                 command.SetStudentId(claimsPrincipal.GetUserId());
-                var result = await mediator.DispatchAsync(command);
+                var result = await mediator.SendAsync(command);
 
                 return result.Match(Results.Ok, ApiResults.Problem);
             }).WithTags(Tags.Enrollments).RequireAuthorization(PolicyExtensions.EnrollStudent);

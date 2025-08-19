@@ -12,7 +12,7 @@ namespace Users.Application.Users.DomainEvents
     {
         public override async Task ExecuteAsync(UserCreatedDomainEvent domainEvent, CancellationToken cancellationToken)
         {
-            var userResult = await mediator.DispatchAsync(new GetUserByIdQuery(domainEvent.UserId), cancellationToken);
+            var userResult = await mediator.SendAsync(new GetUserByIdQuery(domainEvent.UserId), cancellationToken);
             if (userResult.IsFailure)
             {
                 throw new LearnixException(nameof(GetUserByIdQuery), userResult.Error);

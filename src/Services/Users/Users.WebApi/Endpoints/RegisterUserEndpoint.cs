@@ -12,7 +12,7 @@ namespace Users.WebApi.Endpoints
         {
             app.MapPost("api/v1/users", async (RegisterUserCommand command, IMediator mediator) =>
             {
-                var result = await mediator.DispatchAsync(command);
+                var result = await mediator.SendAsync(command);
 
                 return result.Match(response => Results.Created("api/v1/users/me", response), ApiResults.Problem);
             }).WithTags(Tags.Users);
