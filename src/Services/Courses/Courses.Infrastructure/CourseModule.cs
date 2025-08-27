@@ -38,7 +38,6 @@ namespace Courses.Infrastructure
             services
                 .AddApplication(AssemblyReference.Assembly)
                 .AddGrpcServices(configuration)
-                .AddHandlerDecorators()
                 .AddData(configuration)
                 .AddCacheService(configuration)
                 .AddBackgroundJobs()

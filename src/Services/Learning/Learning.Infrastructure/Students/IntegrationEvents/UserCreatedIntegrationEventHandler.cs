@@ -6,13 +6,13 @@ using MidR.Interfaces;
 
 namespace Learning.Infrastructure.Students.IntegrationEvents
 {
-    internal sealed class UserCreatedIntegrationEventHandler(IMediator mediator) : IntegrationEventHandler<UserCreatedIntegrationEvent>
+    internal sealed class UserCreatedIntegrationEventHandler(ISender sender) : IntegrationEventHandler<UserCreatedIntegrationEvent>
     {
         public override async Task ExecuteAsync(UserCreatedIntegrationEvent notification, CancellationToken cancellationToken)
         {
             var command = new CreateStudentCommand(notification.UserId, notification.FirstName, notification.LastName, notification.Email);
 
-            var result = await mediator.DispatchAsync(command, cancellationToken);
+            var result = await sender.SendAsync(command, cancellationToken);
 
             if (result.IsFailure)
             {

@@ -10,9 +10,9 @@ namespace Courses.WebApi.Endpoints
     {
         public void MapEndpoint(IEndpointRouteBuilder app)
         {
-            app.MapGet("api/v1/courses/{courseId:guid}/content", async (Guid courseId, IMediator mediator) =>
+            app.MapGet("api/v1/courses/{courseId:guid}/content", async (Guid courseId, ISender sender) =>
             {
-                var result = await mediator.SendAsync(new GetCourseContentQuery(courseId)).ConfigureAwait(false);
+                var result = await sender.SendAsync(new GetCourseContentQuery(courseId)).ConfigureAwait(false);
 
                 return result.Match(successResult => Results.Ok(successResult), ApiResults.Problem);
             }

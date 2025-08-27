@@ -10,9 +10,9 @@ namespace Courses.WebApi.Endpoints
     {
         public void MapEndpoint(IEndpointRouteBuilder app)
         {
-            app.MapPatch("api/v1/courses/{courseId:guid}/publish", async (Guid courseId, IMediator mediator) =>
+            app.MapPatch("api/v1/courses/{courseId:guid}/publish", async (Guid courseId, ISender sender) =>
             {
-                var result = await mediator.SendAsync(new PublishCourseCommand(courseId));
+                var result = await sender.SendAsync(new PublishCourseCommand(courseId));
 
                 return result.Match(Results.NoContent, ApiResults.Problem);
             }

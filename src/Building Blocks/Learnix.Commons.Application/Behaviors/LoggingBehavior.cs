@@ -1,19 +1,18 @@
 ﻿using Learnix.Commons.Application.Exceptions;
 using Learnix.Commons.Domain.Results;
 using Microsoft.Extensions.Logging;
+using MidR.Behaviors;
 using MidR.Interfaces;
 using Serilog.Context;
 using System.Diagnostics;
 
-namespace Learnix.Commons.Application.Decorators
+namespace Learnix.Commons.Application.Behaviors
 {
-    public sealed class RequestLoggingDecorator<TRequest, TResponse>(IRequestHandler<TRequest, TResponse> innerHandler,
-        ILogger<IRequestHandler<TRequest, TResponse>> logger)
-        : IRequestHandler<TRequest, TResponse>
+    public sealed class LoggingBehavior<TRequest, TResponse>(ILogger<LoggingBehavior<TRequest, TResponse>> logger) : IRequestBehavior<TRequest, TResponse>
         where TRequest : IRequest<TResponse>
         where TResponse : Result
     {
-        public async Task<TResponse> ExecuteAsync(TRequest request, CancellationToken cancellationToken)
+        public async Task<TResponse> ExecuteAsync(TRequest request, RequestDelegate<TResponse> next, CancellationToken cancellationToken)
         {
             var requestName = typeof(TRequest).Name;
             var requestModule = GetRequestModule(typeof(TRequest).FullName!);
@@ -28,7 +27,7 @@ namespace Learnix.Commons.Application.Decorators
                 {
                     logger.LogInformation("Processing request: {RequestName}", requestName);
 
-                    var result = await innerHandler.ExecuteAsync(request, cancellationToken);
+                    var result = await next();
 
                     stopwatch.Stop();
                     var executionTime = stopwatch.ElapsedMilliseconds;

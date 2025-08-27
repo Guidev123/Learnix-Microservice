@@ -8,11 +8,11 @@ using Users.Domain.Users.DomainEvents;
 
 namespace Users.Application.Users.DomainEvents
 {
-    internal sealed class UserCreatedDomainEventHandler(IMediator mediator, IMessageBus messageBus) : DomainEventHandler<UserCreatedDomainEvent>
+    internal sealed class UserCreatedDomainEventHandler(ISender sender, IMessageBus messageBus) : DomainEventHandler<UserCreatedDomainEvent>
     {
         public override async Task ExecuteAsync(UserCreatedDomainEvent domainEvent, CancellationToken cancellationToken)
         {
-            var userResult = await mediator.SendAsync(new GetUserByIdQuery(domainEvent.UserId), cancellationToken);
+            var userResult = await sender.SendAsync(new GetUserByIdQuery(domainEvent.UserId), cancellationToken);
             if (userResult.IsFailure)
             {
                 throw new LearnixException(nameof(GetUserByIdQuery), userResult.Error);

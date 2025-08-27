@@ -1,7 +1,7 @@
 ﻿using FluentValidation;
+using Learnix.Commons.Application.Behaviors;
 using Learnix.Commons.Application.Cache;
 using Learnix.Commons.Application.Clock;
-using Learnix.Commons.Application.Decorators;
 using Learnix.Commons.Application.Factories;
 using Learnix.Commons.Application.MessageBus;
 using Learnix.Commons.Infrastructure.Cache;
@@ -13,7 +13,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using MidR.DependencyInjection;
-using MidR.Interfaces;
 using Quartz;
 using StackExchange.Redis;
 using System.Reflection;
@@ -24,19 +23,15 @@ namespace Learnix.Commons.Infrastructure
     {
         public static IServiceCollection AddApplication(this IServiceCollection services, Assembly applicationAssembly)
         {
-            services.AddMidR(applicationAssembly);
+            services.AddMidR(applicationAssembly).WithBehaviors(behaviors =>
+            {
+                behaviors.AddBehavior(typeof(LoggingBehavior<,>)).WithPriority(1);
+                behaviors.AddBehavior(typeof(ValidationBehavior<,>)).WithPriority(2);
+            });
 
             services.AddValidatorsFromAssembly(applicationAssembly, includeInternalTypes: true);
 
             services.TryAddSingleton<IDateTimeProvider, DateTimeProvider>();
-
-            return services;
-        }
-
-        public static IServiceCollection AddHandlerDecorators(this IServiceCollection services)
-        {
-            services.Decorate(typeof(IRequestHandler<,>), typeof(ValidationDecorator<,>));
-            services.Decorate(typeof(IRequestHandler<,>), typeof(RequestLoggingDecorator<,>));
 
             return services;
         }

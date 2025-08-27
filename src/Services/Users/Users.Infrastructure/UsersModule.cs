@@ -30,7 +30,6 @@ namespace Users.Infrastructure
             services
                 .AddApplication(AssemblyReference.Assembly)
                 .AddGrpcServices()
-                .AddHandlerDecorators()
                 .AddData(configuration)
                 .AddCacheService(configuration)
                 .AddKafkaMessageBus(configuration)

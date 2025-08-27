@@ -11,10 +11,10 @@ namespace Learning.WebApi.Endpoints.Enrollments
     {
         public void MapEndpoint(IEndpointRouteBuilder app)
         {
-            app.MapPost("api/v1/enrollments", async (EnrollCommand command, ClaimsPrincipal claimsPrincipal, IMediator mediator) =>
+            app.MapPost("api/v1/enrollments", async (EnrollCommand command, ClaimsPrincipal claimsPrincipal, ISender sender) =>
             {
                 command.SetStudentId(claimsPrincipal.GetUserId());
-                var result = await mediator.SendAsync(command);
+                var result = await sender.SendAsync(command);
 
                 return result.Match(Results.Ok, ApiResults.Problem);
             }).WithTags(Tags.Enrollments).RequireAuthorization(PolicyExtensions.EnrollStudent);

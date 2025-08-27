@@ -14,9 +14,9 @@ namespace Courses.WebApi.Endpoints
                 Guid courseId,
                 Guid moduleId,
                 AttachLessonsToModuleCommand command,
-                IMediator mediator) =>
+                ISender sender) =>
             {
-                var result = await mediator.SendAsync(
+                var result = await sender.SendAsync(
                     command
                         .SetCourseId(courseId)
                         .SetModuleId(moduleId)

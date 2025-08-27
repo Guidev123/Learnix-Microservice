@@ -2,23 +2,25 @@
 using FluentValidation.Results;
 using Learnix.Commons.Application.Messaging;
 using Learnix.Commons.Domain.Results;
+using MidR.Behaviors;
 using MidR.Interfaces;
 using System.Reflection;
+using ValidationFailure = FluentValidation.Results.ValidationFailure;
 
-namespace Learnix.Commons.Application.Decorators
+namespace Learnix.Commons.Application.Behaviors
 {
-    public sealed class ValidationDecorator<TRequest, TResponse>(IRequestHandler<TRequest, TResponse> innerHandler,
-        IEnumerable<IValidator<TRequest>> validators)
-        : IRequestHandler<TRequest, TResponse>
+    public sealed class ValidationBehavior<TRequest, TResponse>(IEnumerable<IValidator<TRequest>> validators) : IRequestBehavior<TRequest, TResponse>
         where TRequest : IRequest<TResponse>, IBaseCommand
         where TResponse : Result
     {
-        public async Task<TResponse> ExecuteAsync(TRequest request, CancellationToken cancellationToken = default)
+        public async Task<TResponse> ExecuteAsync(TRequest request, RequestDelegate<TResponse> next, CancellationToken cancellationToken)
         {
             var validationFailures = await ValidateAsync(request, cancellationToken);
 
             if (validationFailures.Length == 0)
-                return await innerHandler.ExecuteAsync(request, cancellationToken);
+            {
+                return await next();
+            }
 
             if (typeof(TResponse).IsGenericType &&
                 typeof(TResponse).GetGenericTypeDefinition() == typeof(Result<>))

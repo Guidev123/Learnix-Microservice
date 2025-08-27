@@ -11,9 +11,9 @@ namespace Users.WebApi.Endpoints
     {
         public void MapEndpoint(IEndpointRouteBuilder app)
         {
-            app.MapGet("api/v1/users/me", async (ClaimsPrincipal claimsPrincipal, IMediator mediator) =>
+            app.MapGet("api/v1/users/me", async (ClaimsPrincipal claimsPrincipal, ISender sender) =>
             {
-                var result = await mediator.SendAsync(new GetUserByIdQuery(claimsPrincipal.GetUserId()));
+                var result = await sender.SendAsync(new GetUserByIdQuery(claimsPrincipal.GetUserId()));
 
                 return result.Match(Results.Ok, ApiResults.Problem);
             }).WithTags(Tags.Users).RequireAuthorization(PolicyExtensions.GetUser);
