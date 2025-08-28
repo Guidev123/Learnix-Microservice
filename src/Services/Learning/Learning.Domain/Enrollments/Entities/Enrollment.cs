@@ -1,6 +1,9 @@
 ﻿using Learning.Domain.Enrollments.Enumerators;
 using Learning.Domain.Enrollments.Errors;
+using Learning.Domain.Students.Entities;
+using Learning.Domain.Students.Errors;
 using Learnix.Commons.Domain.DomainObjects;
+using System.Reflection;
 
 namespace Learning.Domain.Enrollments.Entities
 {
@@ -27,9 +30,14 @@ namespace Learning.Domain.Enrollments.Entities
         public DateTime EndsAt { get; }
         public EnrollmentStatusEnum Status { get; private set; }
 
-        public static Enrollment Create(Guid studentId, Guid courseId, DateTime enrolledAt, DateTime endsAt)
+        public static Enrollment Create(Student student, Guid courseId, DateTime enrolledAt)
         {
-            var enrollment = new Enrollment(studentId, courseId, enrolledAt, endsAt);
+            if (student.Subscription is null)
+            {
+                throw new DomainException(StudentErrors.ToEnrollYouNeedSubscription.Description);
+            }
+
+            var enrollment = new Enrollment(student.Id, courseId, enrolledAt, student.Subscription.ExpiresAt);
 
             return enrollment;
         }
@@ -65,7 +73,6 @@ namespace Learning.Domain.Enrollments.Entities
             AssertionConcern.EnsureDifferent(CourseId, Guid.Empty, EnrollmentErrors.CourseIdMustBeNotEmpty.Description);
             AssertionConcern.EnsureTrue(EnrolledAt <= DateTime.UtcNow, EnrollmentErrors.EnrollmentDateCannotBeInFuture.Description);
             AssertionConcern.EnsureTrue(EndsAt > EnrolledAt, EnrollmentErrors.EndDateMustBeAfterEnrollmentDate.Description);
-            AssertionConcern.EnsureTrue(EndsAt.DayOfYear == EnrolledAt.AddDays(EnrollmentDurationInDays).DayOfYear, EnrollmentErrors.EndDateMustBeWithinMaxDuration(EnrollmentDurationInDays).Description);
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using Learnix.Commons.Domain.Results;
+﻿using Learning.Domain.Students.Enumerators;
+using Learnix.Commons.Domain.Results;
 
 namespace Learning.Domain.Students.Errors
 {
@@ -43,5 +44,13 @@ namespace Learning.Domain.Students.Errors
         public static Error PersistenceError(Guid id) => Error.Failure(
             "Students.PersistenceError",
             $"An error occurred while saving the student with ID '{id}' to the database.");
+
+        public static Error SubscriptionTypeNotFound(SubscriptionTypeEnum subscriptionTypeEnum) => Error.NotFound(
+            "Subscriptions.SubscriptionTypeNotFound",
+            $"The subscription type {subscriptionTypeEnum} not found");
+
+        public static readonly Error ToEnrollYouNeedSubscription = Error.Problem(
+            "Students.ToEnrollYouNeedSubscription",
+            "To enroll in a course you need a subscription");
     }
 }

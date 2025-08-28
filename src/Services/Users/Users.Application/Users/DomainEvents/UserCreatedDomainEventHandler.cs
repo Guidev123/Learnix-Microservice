@@ -20,7 +20,7 @@ namespace Users.Application.Users.DomainEvents
 
             var user = userResult.Value;
 
-            await messageBus.ProduceAsync("users.user-created", new UserCreatedIntegrationEvent(
+            await messageBus.ProduceAsync(Topics.UserCreated, new UserCreatedIntegrationEvent(
                 domainEvent.CorrelationId,
                 domainEvent.OccurredOn,
                 domainEvent.UserId,

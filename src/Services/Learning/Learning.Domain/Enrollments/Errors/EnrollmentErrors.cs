@@ -28,10 +28,6 @@ namespace Learning.Domain.Enrollments.Errors
             "Enrollments.EndDateMustBeAfterEnrollmentDate",
             "End date must be after the enrollment date");
 
-        public static Error EndDateMustBeWithinMaxDuration(int maxEnrollmentDurationInDays) => Error.Problem(
-            "Enrollments.EndDateMustBeWithinMaxDuration",
-            $"End date must be within {maxEnrollmentDurationInDays} days of enrollment date.");
-
         public static readonly Error CourseMustBeNotNull = Error.Problem(
             "Enrollments.CourseMustBeNotNull",
             "CourseProgress must be not null");

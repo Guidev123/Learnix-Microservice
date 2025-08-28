@@ -22,7 +22,7 @@ namespace Courses.Application.Courses.DomainEvents
 
             await Task.WhenAll(
                 courseContentRepository.ReplaceAsync(course.MapFromEntity(), cancellationToken),
-                messageBus.ProduceAsync("courses.course-published", new CoursePublishedIntegrationEvent(
+                messageBus.ProduceAsync(Topics.CoursePublished, new CoursePublishedIntegrationEvent(
                     domainEvent.CorrelationId,
                     domainEvent.OccurredOn,
                     course.Id,

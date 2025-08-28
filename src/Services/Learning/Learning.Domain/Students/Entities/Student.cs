@@ -1,6 +1,8 @@
 ﻿using Learning.Domain.Enrollments.Entities;
 using Learning.Domain.Students.DomainEvents;
+using Learning.Domain.Students.Enumerators;
 using Learning.Domain.Students.Errors;
+using Learning.Domain.Students.ValueObjects;
 using Learnix.Commons.Domain.DomainObjects;
 using Learnix.Commons.Domain.ValueObjects;
 
@@ -21,6 +23,7 @@ namespace Learning.Domain.Students.Entities
 
         public Email Email { get; private set; } = null!;
         public Name Name { get; private set; } = null!;
+        public Subscription? Subscription { get; private set; }
 
         private readonly List<Enrollment> _enrollments = [];
         public IReadOnlyCollection<Enrollment> Enrollments => _enrollments.AsReadOnly();
@@ -32,11 +35,24 @@ namespace Learning.Domain.Students.Entities
             return student;
         }
 
-        public void Enroll(Enrollment enrollment)
+        public void AddSubscription(SubscriptionTypeEnum subscriptionTypeEnum, DateTime currentDate)
         {
+            Subscription ??= Subscription.Create(subscriptionTypeEnum, currentDate);
+        }
+
+        public void Enroll(Enrollment enrollment, DateTime enrollmentDate)
+        {
+            if (HasActiveSubscription(enrollmentDate) is false)
+            {
+                throw new DomainException(StudentErrors.ToEnrollYouNeedSubscription.Description);
+            }
+
             _enrollments.Add(enrollment);
             AddDomainEvent(new StudentEnrolledInCourseDomainEvent(Id, enrollment.Id));
         }
+
+        public bool HasActiveSubscription(DateTime currentDate)
+            => Subscription is not null && Subscription.IsActive(currentDate);
 
         protected override void Validate()
         {
