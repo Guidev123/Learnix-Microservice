@@ -9,6 +9,7 @@ namespace Learning.Domain.Enrollments.Entities
             Id = id;
             ModuleId = moduleId;
             DurationInMinutes = durationInMinutes;
+            Validate();
         }
 
         public Guid ModuleId { get; private set; }

@@ -11,6 +11,7 @@ namespace Learning.Domain.Enrollments.Entities
             Id = moduleId;
             CourseId = courseId;
             Title = title;
+            Validate();
         }
 
         private Module()

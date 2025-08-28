@@ -12,6 +12,7 @@ namespace Learning.Domain.Enrollments.Entities
             Title = title;
             Description = description;
             IsActive = isActive;
+            Validate();
         }
 
         private Course()
