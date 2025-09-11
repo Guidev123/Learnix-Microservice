@@ -1,4 +1,4 @@
-﻿using Learning.Domain.Enrollments.Errors;
+﻿using Learning.Domain.Progress.Errors;
 using Learnix.Commons.Domain.DomainObjects;
 using Learnix.Commons.Domain.ValueObjects;
 

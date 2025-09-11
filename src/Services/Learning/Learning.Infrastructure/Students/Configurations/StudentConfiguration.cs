@@ -38,6 +38,17 @@ namespace Learning.Infrastructure.Students.Configurations
 
                 email.HasIndex(e => e.Address).IsUnique();
             });
+
+            builder.OwnsOne(s => s.Subscription, subscription =>
+            {
+                subscription.Property(sb => sb.Type)
+                    .HasConversion<string>()
+                    .HasColumnType("VARCHAR(160)")
+                    .HasColumnName("SubscriptionType");
+
+                subscription.Property(sb => sb.ExpiresAt)
+                    .HasColumnName("SubscriptionExpiresAt");
+            });
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using Learning.Domain.Enrollments.Entities;
+using Learning.Domain.Progress.Entities;
 using Learning.Domain.Students.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;

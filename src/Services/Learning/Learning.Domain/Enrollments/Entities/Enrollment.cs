@@ -3,14 +3,11 @@ using Learning.Domain.Enrollments.Errors;
 using Learning.Domain.Students.Entities;
 using Learning.Domain.Students.Errors;
 using Learnix.Commons.Domain.DomainObjects;
-using System.Reflection;
 
 namespace Learning.Domain.Enrollments.Entities
 {
     public sealed class Enrollment : Entity, IAggregateRoot
     {
-        public const int EnrollmentDurationInDays = 365;
-
         private Enrollment(Guid studentId, Guid courseId, DateTime enrolledAt, DateTime endsAt)
         {
             StudentId = studentId;
@@ -40,31 +37,6 @@ namespace Learning.Domain.Enrollments.Entities
             var enrollment = new Enrollment(student.Id, courseId, enrolledAt, student.Subscription.ExpiresAt);
 
             return enrollment;
-        }
-
-        public static void StartCourse(CourseProgress courseProgress)
-        {
-            courseProgress.StartCourse();
-        }
-
-        public static void CompleteCourse(DateTime completedAt, CourseProgress courseProgress)
-        {
-            courseProgress.CompleteCourse(completedAt);
-        }
-
-        public static void StartModule(Guid moduleId, CourseProgress courseProgress)
-        {
-            courseProgress.StartModule(moduleId);
-        }
-
-        public void CompleteModule(Guid moduleId, CourseProgress courseProgress)
-        {
-            courseProgress.CompleteModule(moduleId, Id);
-        }
-
-        public void CompleteLesson(Guid moduleId, Guid lessonId, CourseProgress courseProgress)
-        {
-            courseProgress.CompleteLesson(moduleId, lessonId, Id);
         }
 
         protected override void Validate()

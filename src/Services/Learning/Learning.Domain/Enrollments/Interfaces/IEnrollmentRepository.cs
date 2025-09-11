@@ -9,10 +9,16 @@ namespace Learning.Domain.Enrollments.Interfaces
 
         Task<bool> AlreadyEnrolledAsync(Guid enrollmentId, Guid studentId, CancellationToken cancellationToken = default);
 
-        Task<bool> CourseAlreadyExistsAsync(Guid courseId, CancellationToken cancellationToken = default);
-
         void Insert(Enrollment enrollment);
 
         void Update(Enrollment enrollment);
+
+        Task<Course> GetCourseByIdAsync(Guid courseId, CancellationToken cancellationToken = default);
+
+        Task<bool> CourseExistsAsync(Guid courseId, CancellationToken cancellationToken = default);
+
+        Task InsertCourseAsync(Course course, CancellationToken cancellationToken = default);
+
+        Task ReplaceCourseAsync(Course course, CancellationToken cancellationToken = default);
     }
 }

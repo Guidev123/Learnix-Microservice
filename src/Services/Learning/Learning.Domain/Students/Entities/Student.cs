@@ -37,7 +37,7 @@ namespace Learning.Domain.Students.Entities
 
         public void AddSubscription(SubscriptionTypeEnum subscriptionTypeEnum, DateTime currentDate)
         {
-            Subscription ??= Subscription.Create(subscriptionTypeEnum, currentDate);
+            Subscription ??= (subscriptionTypeEnum, currentDate);
         }
 
         public void Enroll(Enrollment enrollment, DateTime enrollmentDate)

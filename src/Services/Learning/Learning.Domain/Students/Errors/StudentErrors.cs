@@ -52,5 +52,9 @@ namespace Learning.Domain.Students.Errors
         public static readonly Error ToEnrollYouNeedSubscription = Error.Problem(
             "Students.ToEnrollYouNeedSubscription",
             "To enroll in a course you need a subscription");
+
+        public static readonly Error SubscriptionExpirationMustBeInFuture = Error.Problem(
+            "Students.SubscriptionExpirationMustBeInFuture",
+            "Subscription expiration date must be in the future");
     }
 }

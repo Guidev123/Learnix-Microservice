@@ -13,6 +13,7 @@ namespace Learning.Domain.Students.ValueObjects
         {
             Type = type;
             ExpiresAt = expiresAt;
+            Validate();
         }
 
         private Subscription()
@@ -23,29 +24,27 @@ namespace Learning.Domain.Students.ValueObjects
 
         public bool IsActive(DateTime currentDate) => ExpiresAt > currentDate;
 
-        public static Subscription Create(SubscriptionTypeEnum type, DateTime currentDate)
+        public static implicit operator Subscription((SubscriptionTypeEnum type, DateTime currentDate) subscriptionData)
         {
             var subscriptionFactoryDelegates = new Dictionary<SubscriptionTypeEnum, Func<DateTime, Subscription>>()
             {
                 { SubscriptionTypeEnum.Premium, CreatePremium }
             };
 
-            if (!subscriptionFactoryDelegates.TryGetValue(type, out var func))
+            if (!subscriptionFactoryDelegates.TryGetValue(subscriptionData.type, out var func))
             {
-                throw new DomainException(StudentErrors.SubscriptionTypeNotFound(type).Description);
+                throw new DomainException(StudentErrors.SubscriptionTypeNotFound(subscriptionData.type).Description);
             }
 
-            return func(currentDate);
+            return func(subscriptionData.currentDate);
         }
 
         private static Subscription CreatePremium(DateTime currentDate)
-        {
-            return new Subscription(SubscriptionTypeEnum.Premium, currentDate.AddDays(PremiumExpirationInDays));
-        }
+            => new(SubscriptionTypeEnum.Premium, currentDate.AddDays(PremiumExpirationInDays));
 
         protected override void Validate()
         {
-            throw new NotImplementedException();
+            AssertionConcern.EnsureTrue(ExpiresAt > DateTime.UtcNow, StudentErrors.SubscriptionExpirationMustBeInFuture.Description);
         }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using Learning.Domain.Enrollments.Entities;
 using Learning.Domain.Enrollments.Errors;
 using Learning.Domain.Enrollments.Interfaces;
+using Learning.Domain.Progress.Errors;
 using Learning.Domain.Students.Errors;
 using Learning.Domain.Students.Interfaces;
 using Learnix.Commons.Application.Clock;
@@ -18,19 +19,18 @@ namespace Learning.Application.Enrollments.UseCases.Enroll
     {
         public async Task<Result<EnrollResponse>> ExecuteAsync(EnrollCommand request, CancellationToken cancellationToken = default)
         {
-            var enrollment = Enrollment.Create(
-                request.StudentId,
-                request.CourseId,
-                dateTimeProvider.UtcNow,
-                dateTimeProvider.UtcNow.AddDays(Enrollment.EnrollmentDurationInDays));
-
-            var student = await studentRepository.GetByIdAsync(enrollment.StudentId, cancellationToken);
+            var student = await studentRepository.GetByIdAsync(request.StudentId, cancellationToken);
             if (student is null)
             {
                 return Result.Failure<EnrollResponse>(StudentErrors.NotFound(request.StudentId));
             }
 
-            var courseExists = await enrollmentRepository.CourseAlreadyExistsAsync(enrollment.CourseId, cancellationToken);
+            var enrollment = Enrollment.Create(
+                student,
+                request.CourseId,
+                dateTimeProvider.UtcNow);
+
+            var courseExists = await enrollmentRepository.CourseExistsAsync(enrollment.CourseId, cancellationToken);
             if (courseExists is false)
             {
                 return Result.Failure<EnrollResponse>(CourseProgressErrors.NotFound(request.CourseId));
@@ -44,7 +44,7 @@ namespace Learning.Application.Enrollments.UseCases.Enroll
 
             enrollmentRepository.Insert(enrollment);
 
-            student.Enroll(enrollment);
+            student.Enroll(enrollment, dateTimeProvider.UtcNow);
 
             var wasSaved = await unitOfWork.CommitAsync(cancellationToken);
             if (wasSaved is false)

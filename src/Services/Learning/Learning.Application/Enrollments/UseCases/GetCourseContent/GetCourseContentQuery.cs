@@ -1,6 +1,6 @@
 ﻿using Learnix.Commons.Application.Messaging;
 
-namespace Courses.Application.Courses.UseCases.GetContent
+namespace Learning.Application.Enrollments.UseCases.GetCourseContent
 {
     public sealed record GetCourseContentQuery(Guid CourseId) : IQuery<CourseContentResponse>;
 }

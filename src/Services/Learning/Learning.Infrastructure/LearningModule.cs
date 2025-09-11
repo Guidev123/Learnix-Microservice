@@ -1,10 +1,12 @@
 ﻿using Learning.Application;
 using Learning.Domain.Enrollments.Interfaces;
+using Learning.Domain.Progress.Interfaces;
 using Learning.Domain.Students.Interfaces;
 using Learning.Infrastructure.Enrollments.Repositories;
 using Learning.Infrastructure.Inbox;
 using Learning.Infrastructure.Outbox;
 using Learning.Infrastructure.Persistence;
+using Learning.Infrastructure.Progress.Repositories;
 using Learning.Infrastructure.Students.Repositories;
 using Learnix.Commons.Application.Messaging;
 using Learnix.Commons.Contracts.Users.Protos;
@@ -18,6 +20,11 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
+using MongoDB.Bson;
+using MongoDB.Bson.Serialization;
+using MongoDB.Bson.Serialization.Serializers;
+using MongoDB.Driver;
+using MongoDB.Driver.Core.Extensions.DiagnosticSources;
 using OpenTelemetry.Resources;
 using OpenTelemetry.Trace;
 
@@ -28,18 +35,18 @@ namespace Learning.Infrastructure
         public static IServiceCollection AddInfrastructureModule(this IServiceCollection services, IConfiguration configuration)
         {
             var dbConnectionString = configuration.GetConnectionString("Database") ?? string.Empty;
+            var mongoConnectionString = configuration.GetConnectionString("Mongo") ?? string.Empty;
 
             services
                 .AddApplication(AssemblyReference.Assembly)
                 .AddGrpcServices(configuration)
-                .AddHandlerDecorators()
                 .AddData(configuration)
                 .AddCacheService(configuration)
                 .AddOutboxPattern(configuration)
                 .AddInboxPattern(configuration)
                 .AddKafkaMessageBus(configuration)
                 .AddBackgroundJobs()
-                .AddDataAccess(dbConnectionString)
+                .AddDataAccess(dbConnectionString, mongoConnectionString)
                 .AddTracing();
 
             return services;
@@ -47,7 +54,8 @@ namespace Learning.Infrastructure
 
         private static IServiceCollection AddDataAccess(
             this IServiceCollection services,
-            string dbConnectionString)
+            string dbConnectionString,
+            string mongoConnectionString)
         {
             services.AddDbContext<LearningDbContext>((scope, options) =>
             {
@@ -56,9 +64,29 @@ namespace Learning.Infrastructure
                 options.AddInterceptors(outboxInterceptor);
             });
 
+            services.AddMongo(mongoConnectionString);
+
             services.AddScoped<IStudentRepository, StudentRepository>();
             services.AddScoped<IEnrollmentRepository, EnrollmentRepository>();
+            services.AddScoped<ICourseProgressRepository, CourseProgressRepository>();
             services.AddScoped<IUnitOfWork>(scope => scope.GetRequiredService<LearningDbContext>());
+
+            return services;
+        }
+
+        private static IServiceCollection AddMongo(this IServiceCollection services, string mongoConnectionString)
+        {
+            var mongoClientSettings = MongoClientSettings.FromConnectionString(mongoConnectionString);
+            mongoClientSettings.ClusterConfigurator = c => c.Subscribe(
+                new DiagnosticsActivityEventSubscriber(
+                    new InstrumentationOptions()
+                    {
+                        CaptureCommandText = true
+                    }));
+
+            services.AddSingleton<IMongoClient>(new MongoClient(mongoClientSettings));
+
+            BsonSerializer.RegisterSerializer(new GuidSerializer(GuidRepresentation.Standard));
 
             return services;
         }

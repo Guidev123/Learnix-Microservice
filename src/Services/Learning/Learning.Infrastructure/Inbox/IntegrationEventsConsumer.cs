@@ -10,11 +10,14 @@ using Newtonsoft.Json;
 
 namespace Learning.Infrastructure.Inbox
 {
-    internal sealed class IntegrationEventsConsumer(IMessageBus messageBus, ISqlConnectionFactory sqlConnectionFactory) : BackgroundService
+    internal sealed class IntegrationEventsConsumer(
+        IMessageBus messageBus,
+        ISqlConnectionFactory sqlConnectionFactory) : BackgroundService
     {
         protected override Task ExecuteAsync(CancellationToken stoppingToken)
         {
-            messageBus.ConsumeAsync<UserCreatedIntegrationEvent>("users.user-created", StoreInboxMessageAsync, stoppingToken);
+            messageBus.ConsumeAsync<UserCreatedIntegrationEvent>(Topics.UserCreated, StoreInboxMessageAsync, stoppingToken);
+            messageBus.ConsumeAsync<UserCreatedIntegrationEvent>(Topics.CourseAttached, StoreInboxMessageAsync, stoppingToken);
 
             return Task.CompletedTask;
         }

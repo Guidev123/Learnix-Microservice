@@ -4,18 +4,22 @@ namespace Learning.Domain.Enrollments.DomainEvents
 {
     public sealed record LessonCompletedDomainEvent : DomainEvent
     {
-        private LessonCompletedDomainEvent()
-        { }
-
-        public LessonCompletedDomainEvent(Guid lessonId, Guid moduleId, Guid enrollmentId)
+        public LessonCompletedDomainEvent(Guid enrollmentId, Guid studentId, Guid lessonId, Guid courseId)
         {
             AggregateId = enrollmentId;
+            EnrollmentId = enrollmentId;
+            StudentId = studentId;
             LessonId = lessonId;
-            ModuleId = moduleId;
+            CourseId = courseId;
             Messagetype = GetType().Name;
         }
 
+        private LessonCompletedDomainEvent()
+        { }
+
+        public Guid EnrollmentId { get; init; }
+        public Guid StudentId { get; init; }
         public Guid LessonId { get; init; }
-        public Guid ModuleId { get; init; }
+        public Guid CourseId { get; init; }
     }
 }
