@@ -1,6 +1,6 @@
 ﻿using Learning.Domain.Enrollments.Entities;
 
-namespace Learning.Application.Enrollments.UseCases.GetCourseContent
+namespace Learning.Application.Features.GetCourseContent
 {
     internal static class GetCourseContentMappers
     {

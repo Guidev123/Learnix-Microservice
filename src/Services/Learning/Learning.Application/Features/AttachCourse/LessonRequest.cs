@@ -1,6 +1,6 @@
-﻿namespace Learning.Application.Enrollments.UseCases.GetCourseContent
+﻿namespace Learning.Application.Features.AttachCourse
 {
-    public sealed record LessonResponse(
+    public sealed record LessonRequest(
         Guid Id,
         string Title,
         string VideoUrl,

@@ -5,6 +5,7 @@ using Learnix.Commons.WebApi.Middlewares;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Hosting;
@@ -56,7 +57,7 @@ namespace Learnix.Commons.WebApi.Configurations
             return builder;
         }
 
-        public static WebApplication UseCommonPipeline(this WebApplication app, WebApplicationBuilder builder)
+        public static WebApplication UseCommonPipeline(this WebApplication app)
         {
             app.UseExceptionHandler();
 

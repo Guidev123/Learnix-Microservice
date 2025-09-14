@@ -20,9 +20,9 @@ namespace Courses.WebApi.Configurations
             return builder;
         }
 
-        public static WebApplication UsePipeline(this WebApplication app, WebApplicationBuilder builder)
+        public static WebApplication UsePipeline(this WebApplication app)
         {
-            app.UseCommonPipeline(builder);
+            app.UseCommonPipeline();
             app.MapEndpoints();
 
             return app;

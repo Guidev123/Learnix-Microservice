@@ -1,4 +1,4 @@
-﻿namespace Learning.Application.Enrollments.UseCases.Enroll
+﻿namespace Learning.Application.Features.Enroll
 {
     public sealed record EnrollResponse(Guid EnrollmentId);
 }

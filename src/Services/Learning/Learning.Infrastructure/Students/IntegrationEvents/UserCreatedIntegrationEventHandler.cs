@@ -1,4 +1,4 @@
-﻿using Learning.Application.Students.UseCases.Create;
+﻿using Learning.Application.Features.CreateStudent;
 using Learnix.Commons.Application.Exceptions;
 using Learnix.Commons.Application.Messaging;
 using Learnix.Commons.Contracts.Users.IntegrationEvents;

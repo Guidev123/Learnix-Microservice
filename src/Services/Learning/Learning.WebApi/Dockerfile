@@ -7,15 +7,21 @@ EXPOSE 8081
 FROM mcr.microsoft.com/dotnet/sdk:9.0 AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
+
 COPY ["src/Services/Learning/Learning.WebApi/Learning.WebApi.csproj", "src/Services/Learning/Learning.WebApi/"]
-RUN dotnet restore "./src/Services/Learning/Learning.WebApi/Learning.WebApi.csproj"
+COPY ["src/Services/Learning/Learning.Infrastructure/Learning.Infrastructure.csproj", "src/Services/Learning/Learning.Infrastructure/"]
+COPY ["src/Building Blocks/Learnix.Commons.WebApi/Learnix.Commons.WebApi.csproj", "src/Building Blocks/Learnix.Commons.WebApi/"]
+
+RUN dotnet restore "src/Services/Learning/Learning.WebApi/Learning.WebApi.csproj"
+
 COPY . .
+
 WORKDIR "/src/src/Services/Learning/Learning.WebApi"
-RUN dotnet build "./Learning.WebApi.csproj" -c $BUILD_CONFIGURATION -o /app/build
+RUN dotnet build "Learning.WebApi.csproj" -c $BUILD_CONFIGURATION -o /app/build
 
 FROM build AS publish
 ARG BUILD_CONFIGURATION=Release
-RUN dotnet publish "./Learning.WebApi.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
+RUN dotnet publish "Learning.WebApi.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
 
 FROM base AS final
 WORKDIR /app

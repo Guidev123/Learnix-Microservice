@@ -7,6 +7,8 @@ namespace Learning.Domain.Enrollments.Interfaces
     {
         Task<Enrollment?> GetByIdAsync(Guid enrollmentId, CancellationToken cancellationToken = default);
 
+        Task<Enrollment?> GetByStudentAndCourseIdAsync(Guid studentId, Guid courseId, CancellationToken cancellationToken = default);
+
         Task<bool> AlreadyEnrolledAsync(Guid enrollmentId, Guid studentId, CancellationToken cancellationToken = default);
 
         void Insert(Enrollment enrollment);

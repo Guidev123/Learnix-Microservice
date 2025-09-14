@@ -1,4 +1,4 @@
-﻿namespace Learning.Application.Enrollments.UseCases.GetCourseContent
+﻿namespace Learning.Application.Features.GetCourseContent
 {
     public sealed record CourseContentResponse(
         Guid Id,

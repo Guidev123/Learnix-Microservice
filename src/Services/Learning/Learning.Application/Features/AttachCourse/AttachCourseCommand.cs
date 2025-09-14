@@ -1,6 +1,6 @@
 ﻿using Learnix.Commons.Application.Messaging;
 
-namespace Learning.Application.Enrollments.UseCases.AttachCourse
+namespace Learning.Application.Features.AttachCourse
 {
     public sealed record AttachCourseCommand(
         Guid Id,

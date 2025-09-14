@@ -1,6 +1,6 @@
 ﻿using Learnix.Commons.Application.Messaging;
 
-namespace Learning.Application.Enrollments.UseCases.Enroll
+namespace Learning.Application.Features.Enroll
 {
     public sealed record EnrollCommand : ICommand<EnrollResponse>
     {

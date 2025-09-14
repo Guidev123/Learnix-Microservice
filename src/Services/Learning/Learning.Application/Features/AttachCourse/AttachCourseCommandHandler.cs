@@ -2,7 +2,7 @@
 using Learnix.Commons.Application.Messaging;
 using Learnix.Commons.Domain.Results;
 
-namespace Learning.Application.Enrollments.UseCases.AttachCourse
+namespace Learning.Application.Features.AttachCourse
 {
     internal sealed class AttachCourseCommandHandler(IEnrollmentRepository enrollmentRepository) : ICommandHandler<AttachCourseCommand>
     {

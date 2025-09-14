@@ -1,6 +1,6 @@
 ﻿using FluentValidation;
 
-namespace Learning.Application.Enrollments.UseCases.AttachCourse
+namespace Learning.Application.Features.AttachCourse
 {
     internal sealed class AttachCourseCommandValidator : AbstractValidator<AttachCourseCommand>
     {

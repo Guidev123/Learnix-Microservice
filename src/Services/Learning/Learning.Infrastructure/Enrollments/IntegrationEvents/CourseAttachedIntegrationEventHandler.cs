@@ -1,4 +1,4 @@
-﻿using Learning.Application.Enrollments.UseCases.AttachCourse;
+﻿using Learning.Application.Features.AttachCourse;
 using Learnix.Commons.Application.Exceptions;
 using Learnix.Commons.Application.Messaging;
 using Learnix.Commons.Contracts.Courses.IntegrationEvents;

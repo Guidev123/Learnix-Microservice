@@ -1,4 +1,4 @@
-﻿namespace Learning.Application.Enrollments.UseCases.AttachCourse
+﻿namespace Learning.Application.Features.AttachCourse
 {
     public sealed record ModuleRequest(
         Guid Id,

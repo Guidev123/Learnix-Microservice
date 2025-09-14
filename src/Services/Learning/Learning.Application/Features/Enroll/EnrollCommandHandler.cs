@@ -9,7 +9,7 @@ using Learnix.Commons.Application.Messaging;
 using Learnix.Commons.Domain.Abstractions;
 using Learnix.Commons.Domain.Results;
 
-namespace Learning.Application.Enrollments.UseCases.Enroll
+namespace Learning.Application.Features.Enroll
 {
     internal sealed class EnrollCommandHandler(
         IEnrollmentRepository enrollmentRepository,

@@ -1,6 +1,6 @@
 ﻿using Learning.Domain.Enrollments.Entities;
 
-namespace Learning.Application.Enrollments.UseCases.AttachCourse
+namespace Learning.Application.Features.AttachCourse
 {
     internal static class AttachCourseMappers
     {

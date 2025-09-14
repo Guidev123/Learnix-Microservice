@@ -5,7 +5,7 @@ using Learnix.Commons.Application.Messaging;
 using Learnix.Commons.Domain.Abstractions;
 using Learnix.Commons.Domain.Results;
 
-namespace Learning.Application.Students.UseCases.Create
+namespace Learning.Application.Features.CreateStudent
 {
     internal sealed class CreateStudentCommandHandler(IStudentRepository studentRepository, IUnitOfWork unitOfWork) : ICommandHandler<CreateStudentCommand>
     {

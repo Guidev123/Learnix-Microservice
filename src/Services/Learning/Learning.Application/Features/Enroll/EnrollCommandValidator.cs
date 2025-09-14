@@ -2,7 +2,7 @@
 using Learning.Domain.Enrollments.Errors;
 using Learning.Domain.Progress.Errors;
 
-namespace Learning.Application.Enrollments.UseCases.Enroll
+namespace Learning.Application.Features.Enroll
 {
     internal sealed class EnrollCommandValidator : AbstractValidator<EnrollCommand>
     {

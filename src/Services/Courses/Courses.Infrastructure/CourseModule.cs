@@ -48,7 +48,7 @@ namespace Courses.Infrastructure
             this IServiceCollection services,
             string dbConnectionString)
         {
-            services.AddDbContext<CourseDbContext>((scope, options) =>
+            services.AddDbContext<CoursesDbContext>((scope, options) =>
             {
                 options.UseSqlServer(dbConnectionString);
                 var outboxInterceptor = scope.GetRequiredService<InsertOutboxMessagesInterceptor>();
@@ -56,7 +56,7 @@ namespace Courses.Infrastructure
             });
 
             services.AddScoped<ICourseRepository, CourseRepository>();
-            services.AddScoped<IUnitOfWork>(scope => scope.GetRequiredService<CourseDbContext>());
+            services.AddScoped<IUnitOfWork>(scope => scope.GetRequiredService<CoursesDbContext>());
 
             return services;
         }

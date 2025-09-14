@@ -1,7 +1,7 @@
 ﻿using FluentValidation;
 using Learning.Domain.Students.Errors;
 
-namespace Learning.Application.Students.UseCases.Create
+namespace Learning.Application.Features.CreateStudent
 {
     internal sealed class CreateStudentCommandValidator : AbstractValidator<CreateStudentCommand>
     {

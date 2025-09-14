@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Courses.Infrastructure.Courses.Repositories
 {
-    internal sealed class CourseRepository(CourseDbContext context) : ICourseRepository
+    internal sealed class CourseRepository(CoursesDbContext context) : ICourseRepository
     {
         public async Task<Course?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default)
             => await context.Courses.AsNoTracking().FirstOrDefaultAsync(c => c.Id == id, cancellationToken);

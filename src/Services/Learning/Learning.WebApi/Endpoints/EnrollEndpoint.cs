@@ -1,11 +1,11 @@
-﻿using Learning.Application.Enrollments.UseCases.Enroll;
+﻿using Learning.Application.Features.Enroll;
 using Learnix.Commons.Domain.Results;
 using Learnix.Commons.WebApi.Endpoints;
 using Learnix.Commons.WebApi.Extensions;
 using MidR.Interfaces;
 using System.Security.Claims;
 
-namespace Learning.WebApi.Endpoints.Enrollments
+namespace Learning.WebApi.Endpoints
 {
     internal sealed class EnrollEndpoint : IEndpoint
     {

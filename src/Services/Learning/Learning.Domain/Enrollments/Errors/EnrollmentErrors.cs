@@ -32,12 +32,16 @@ namespace Learning.Domain.Enrollments.Errors
             "Enrollments.CourseMustBeNotNull",
             "CourseProgress must be not null");
 
-        public static Error CourseProgressStudentIdDoesNotMatchEnrollmentStudentId = Error.Problem(
+        public static readonly Error CourseProgressStudentIdDoesNotMatchEnrollmentStudentId = Error.Problem(
             "Enrollments.CourseProgressStudentIdDoesNotMatchEnrollmentStudentId",
             "CourseProgress student ID does not match Enrollment student ID");
 
-        public static Error CourseProgressCourseIdDoesNotMatchEnrollmentCourseId = Error.Problem(
+        public static readonly Error CourseProgressCourseIdDoesNotMatchEnrollmentCourseId = Error.Problem(
             "Enrollments.CourseProgressCourseIdDoesNotMatchEnrollmentCourseId",
             "CourseProgress course ID does not match Enrollment course ID");
+
+        public static Error EnrollmentNotFoundForGivenStudentAndCourse(Guid studentId, Guid courseId) => Error.NotFound(
+            "Enrollments.EnrollmentNotFoundForGivenStudentAndCourse",
+            $"Enrollment not found for student with ID {studentId} and course with ID {courseId}");
     }
 }

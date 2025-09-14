@@ -49,6 +49,9 @@ namespace Learning.Infrastructure.Enrollments.Repositories
         public async Task<Enrollment?> GetByIdAsync(Guid enrollmentId, CancellationToken cancellationToken = default)
             => await _context.Enrollments.AsNoTracking().FirstOrDefaultAsync(e => e.Id == enrollmentId, cancellationToken);
 
+        public async Task<Enrollment?> GetByStudentAndCourseIdAsync(Guid studentId, Guid courseId, CancellationToken cancellationToken = default)
+            => await _context.Enrollments.AsNoTracking().FirstOrDefaultAsync(e => e.StudentId == studentId && e.CourseId == courseId, cancellationToken);
+
         public void Insert(Enrollment enrollment) => _context.Enrollments.Add(enrollment);
 
         public void Update(Enrollment enrollment) => _context.Update(enrollment);
