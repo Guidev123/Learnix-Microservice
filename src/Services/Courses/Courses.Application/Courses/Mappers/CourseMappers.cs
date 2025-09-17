@@ -14,7 +14,6 @@ namespace Courses.Application.Courses.Mappers
                 module.Title,
                 module.OrderIndex,
                 module.CourseId,
-                [.. module.Lessons.Select(x => x.MapFromEntity(course))],
                 course.GetNextModule(module)?.Id,
                 course.GetPreviousModule(module)?.Id);
         }
@@ -42,7 +41,6 @@ namespace Courses.Application.Courses.Mappers
                 module.Title,
                 module.OrderIndex,
                 module.CourseId,
-                [.. module.Lessons.Select(x => x.MapFromEntityToIntegrationEvent(course))],
                 course.GetNextModule(module)?.Id,
                 course.GetPreviousModule(module)?.Id);
         }

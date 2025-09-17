@@ -21,7 +21,7 @@ namespace Users.WebApi.Configurations
             return builder;
         }
 
-        public static WebApplication UsePipeline(this WebApplication app)
+        public static WebApplication UsePipeline(this WebApplication app, WebApplicationBuilder builder)
         {
             app.UseCommonPipeline();
             app.MapEndpoints();

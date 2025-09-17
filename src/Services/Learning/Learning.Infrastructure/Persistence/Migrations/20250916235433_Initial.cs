@@ -34,7 +34,7 @@ namespace Learning.Infrastructure.Persistence.Migrations
                 {
                     CorrelationId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Type = table.Column<string>(type: "VARCHAR(200)", nullable: false),
-                    Content = table.Column<string>(type: "VARCHAR(3000)", nullable: false),
+                    Content = table.Column<string>(type: "VARCHAR(MAX)", nullable: false),
                     OccurredOn = table.Column<DateTime>(type: "datetime2", nullable: false),
                     ProcessedOn = table.Column<DateTime>(type: "datetime2", nullable: true),
                     Error = table.Column<string>(type: "VARCHAR(256)", nullable: true)
@@ -64,7 +64,7 @@ namespace Learning.Infrastructure.Persistence.Migrations
                 {
                     CorrelationId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Type = table.Column<string>(type: "VARCHAR(200)", nullable: false),
-                    Content = table.Column<string>(type: "VARCHAR(3000)", nullable: false),
+                    Content = table.Column<string>(type: "VARCHAR(MAX)", nullable: false),
                     OccurredOn = table.Column<DateTime>(type: "datetime2", nullable: false),
                     ProcessedOn = table.Column<DateTime>(type: "datetime2", nullable: true),
                     Error = table.Column<string>(type: "VARCHAR(256)", nullable: true)

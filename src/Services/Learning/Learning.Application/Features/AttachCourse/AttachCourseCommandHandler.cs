@@ -9,14 +9,17 @@ namespace Learning.Application.Features.AttachCourse
         public async Task<Result> ExecuteAsync(AttachCourseCommand request, CancellationToken cancellationToken = default)
         {
             var course = await enrollmentRepository.GetCourseByIdAsync(request.Id, cancellationToken);
+
+            var courseEntity = request.MapToEntity();
+
             if (course is null)
             {
-                await enrollmentRepository.InsertCourseAsync(request.MapToEntity(), cancellationToken);
+                await enrollmentRepository.InsertCourseAsync(courseEntity, cancellationToken);
 
                 return Result.Success();
             }
 
-            await enrollmentRepository.ReplaceCourseAsync(course, cancellationToken);
+            await enrollmentRepository.ReplaceCourseAsync(courseEntity, cancellationToken);
             return Result.Success();
         }
     }

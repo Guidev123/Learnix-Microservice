@@ -22,7 +22,7 @@ namespace Learnix.Commons.Infrastructure.MessageBus
                 BootstrapServers = _messageBusOptions.BootstrapServer
             };
 
-            var producerBuilder = new ProducerBuilder<string, TIntegrationEvent>(config)
+            using var producerBuilder = new ProducerBuilder<string, TIntegrationEvent>(config)
                 .SetValueSerializer(new KafkaSerializerExtensions<TIntegrationEvent>())
                 .Build();
 
@@ -33,10 +33,10 @@ namespace Learnix.Commons.Infrastructure.MessageBus
             }, cancellationToken).ConfigureAwait(false);
         }
 
-        public async Task ConsumeAsync<TIntegrationEvent>(string topic, Func<TIntegrationEvent, Task> onMessage, CancellationToken cancellationToken = default)
+        public Task ConsumeAsync<TIntegrationEvent>(string topic, Func<TIntegrationEvent, Task> onMessage, CancellationToken cancellationToken = default)
             where TIntegrationEvent : IIntegrationEvent
         {
-            _ = Task.Factory.StartNew(async () =>
+            return Task.Run(async () =>
             {
                 var config = new ConsumerConfig
                 {
@@ -64,9 +64,7 @@ namespace Learnix.Commons.Infrastructure.MessageBus
 
                     consumerBuilder.Commit(result);
                 }
-            }, cancellationToken, TaskCreationOptions.LongRunning, TaskScheduler.Default);
-
-            await Task.CompletedTask.ConfigureAwait(false);
+            }, cancellationToken);
         }
     }
 }

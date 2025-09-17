@@ -18,15 +18,18 @@ namespace Courses.Application.Courses.DomainEvents
             var course = await courseRepository.GetWithModulesAndLessonsAsync(domainEvent.CourseId, cancellationToken: cancellationToken)
                 ?? throw new LearnixException(nameof(CourseCreatedDomainEvent), CourseErrors.NotFound(domainEvent.CourseId));
 
+            var lessons = course.Modules.SelectMany(m => m.Lessons).ToList();
+
             await messageBus.ProduceAsync(Topics.CourseAttached, new CourseAttachedIntegrationEvent(
                     domainEvent.CorrelationId,
                     domainEvent.OccurredOn,
                     course.Id,
                     course.Specification.Title,
                     course.Specification.Description,
-                    nameof(course.DificultLevel),
-                    nameof(course.Status),
-                    [.. course.Modules.Select(x => x.MapFromEntityToIntegrationEvent(course))]
+                    course.DificultLevel.ToString(),
+                    course.Status.ToString(),
+                    [.. course.Modules.Select(x => x.MapFromEntityToIntegrationEvent(course))],
+                    [.. lessons.Select(x => x.MapFromEntityToIntegrationEvent(course))]
                     ), cancellationToken);
         }
     }

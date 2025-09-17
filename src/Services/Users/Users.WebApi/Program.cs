@@ -6,6 +6,6 @@ var builder = WebApplication
 
 var app = builder
     .Build()
-    .UsePipeline();
+    .UsePipeline(builder);
 
 app.Run();

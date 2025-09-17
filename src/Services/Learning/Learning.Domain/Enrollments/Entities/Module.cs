@@ -5,8 +5,6 @@ namespace Learning.Domain.Enrollments.Entities
 {
     public sealed class Module : Entity
     {
-        private readonly List<Lesson> _lessons = [];
-
         private Module(Guid id, string title, uint orderIndex, Guid courseId, Guid? nextModuleId, Guid? previousModuleId)
         {
             Id = id;
@@ -26,13 +24,20 @@ namespace Learning.Domain.Enrollments.Entities
         public Guid CourseId { get; private set; }
         public Guid? NextModuleId { get; private set; }
         public Guid? PreviousModuleId { get; private set; }
-        public IReadOnlyCollection<Lesson> Lessons => _lessons.AsReadOnly();
+        public List<Lesson> Lessons { get; private set; } = [];
 
-        public static Module Create(Guid id, string title, uint orderIndex, Guid courseId, Guid? nextModuleId, Guid? previousModuleId)
+        public static Module Create(Guid id, string title, uint orderIndex, Guid courseId, Guid? nextModuleId, Guid? previousModuleId, List<Lesson> lessons)
         {
             var module = new Module(id, title, orderIndex, courseId, nextModuleId, previousModuleId);
 
+            module.AddLessonsRange(lessons);
+
             return module;
+        }
+
+        private void AddLessonsRange(List<Lesson> lessons)
+        {
+            Lessons.AddRange(lessons);
         }
 
         protected override void Validate()

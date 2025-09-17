@@ -8,7 +8,7 @@ using Users.Infrastructure.Persistence;
 
 #nullable disable
 
-namespace Users.Infrastructure.Persistence.Migrations
+namespace Users.Infrastructure.Migrations
 {
     [DbContext(typeof(UsersDbContext))]
     partial class UsersDbContextModelSnapshot : ModelSnapshot
@@ -31,7 +31,7 @@ namespace Users.Infrastructure.Persistence.Migrations
 
                     b.Property<string>("Content")
                         .IsRequired()
-                        .HasColumnType("VARCHAR(3000)");
+                        .HasColumnType("VARCHAR(MAX)");
 
                     b.Property<string>("Error")
                         .HasColumnType("VARCHAR(256)");
@@ -72,7 +72,7 @@ namespace Users.Infrastructure.Persistence.Migrations
 
                     b.Property<string>("Content")
                         .IsRequired()
-                        .HasColumnType("VARCHAR(3000)");
+                        .HasColumnType("VARCHAR(MAX)");
 
                     b.Property<string>("Error")
                         .HasColumnType("VARCHAR(256)");
@@ -136,7 +136,7 @@ namespace Users.Infrastructure.Persistence.Migrations
                     b.ToTable("UserRoles", "users");
                 });
 
-            modelBuilder.Entity("Users.Domain.Entities.User", b =>
+            modelBuilder.Entity("Users.Domain.Users.Entities.User", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -153,7 +153,7 @@ namespace Users.Infrastructure.Persistence.Migrations
                     b.ToTable("Users", "users");
                 });
 
-            modelBuilder.Entity("Users.Domain.Models.Permission", b =>
+            modelBuilder.Entity("Users.Domain.Users.Models.Permission", b =>
                 {
                     b.Property<string>("Code")
                         .HasColumnType("VARCHAR(100)");
@@ -163,7 +163,7 @@ namespace Users.Infrastructure.Persistence.Migrations
                     b.ToTable("Permissions", "users");
                 });
 
-            modelBuilder.Entity("Users.Domain.Models.Role", b =>
+            modelBuilder.Entity("Users.Domain.Users.Models.Role", b =>
                 {
                     b.Property<string>("Name")
                         .HasColumnType("VARCHAR(50)");
@@ -175,13 +175,13 @@ namespace Users.Infrastructure.Persistence.Migrations
 
             modelBuilder.Entity("PermissionRole", b =>
                 {
-                    b.HasOne("Users.Domain.Models.Permission", null)
+                    b.HasOne("Users.Domain.Users.Models.Permission", null)
                         .WithMany()
                         .HasForeignKey("PermissionCode")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Users.Domain.Models.Role", null)
+                    b.HasOne("Users.Domain.Users.Models.Role", null)
                         .WithMany()
                         .HasForeignKey("RoleName")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -190,20 +190,20 @@ namespace Users.Infrastructure.Persistence.Migrations
 
             modelBuilder.Entity("RoleUser", b =>
                 {
-                    b.HasOne("Users.Domain.Models.Role", null)
+                    b.HasOne("Users.Domain.Users.Models.Role", null)
                         .WithMany()
                         .HasForeignKey("RolesName")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Users.Domain.Entities.User", null)
+                    b.HasOne("Users.Domain.Users.Entities.User", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Users.Domain.Entities.User", b =>
+            modelBuilder.Entity("Users.Domain.Users.Entities.User", b =>
                 {
                     b.OwnsOne("Learnix.Commons.Domain.ValueObjects.Age", "Age", b1 =>
                         {

@@ -181,7 +181,7 @@ namespace Learning.Infrastructure.Persistence.Migrations
 
                     b.Property<string>("Content")
                         .IsRequired()
-                        .HasColumnType("VARCHAR(3000)");
+                        .HasColumnType("VARCHAR(MAX)");
 
                     b.Property<string>("Error")
                         .HasColumnType("VARCHAR(256)");
@@ -222,7 +222,7 @@ namespace Learning.Infrastructure.Persistence.Migrations
 
                     b.Property<string>("Content")
                         .IsRequired()
-                        .HasColumnType("VARCHAR(3000)");
+                        .HasColumnType("VARCHAR(MAX)");
 
                     b.Property<string>("Error")
                         .HasColumnType("VARCHAR(256)");

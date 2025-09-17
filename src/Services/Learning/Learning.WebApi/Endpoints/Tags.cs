@@ -3,6 +3,6 @@
     internal static class Tags
     {
         public const string Enrollments = "Enrollments";
-        public const string Courses = "Students";
+        public const string Courses = "Courses";
     }
 }

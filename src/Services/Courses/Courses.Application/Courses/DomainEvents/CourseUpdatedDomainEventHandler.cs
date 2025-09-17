@@ -6,6 +6,7 @@ using Learnix.Commons.Application.Exceptions;
 using Learnix.Commons.Application.MessageBus;
 using Learnix.Commons.Application.Messaging;
 using Learnix.Commons.Contracts.Courses.IntegrationEvents;
+using System.Linq;
 
 namespace Courses.Application.Courses.DomainEvents
 {
@@ -19,16 +20,21 @@ namespace Courses.Application.Courses.DomainEvents
             var course = await courseRepository.GetWithModulesAndLessonsAsync(domainEvent.CourseId, cancellationToken: cancellationToken)
                 ?? throw new LearnixException(nameof(CourseCreatedDomainEvent), CourseErrors.NotFound(domainEvent.CourseId));
 
-            await messageBus.ProduceAsync(Topics.CourseAttached, new CourseAttachedIntegrationEvent(
+            var lessons = course.Modules.SelectMany(m => m.Lessons).ToList();
+            var lessonsResponse = lessons.Select(x => x.MapFromEntityToIntegrationEvent(course)).ToList();
+
+            var integrationEvent = new CourseAttachedIntegrationEvent(
                     domainEvent.CorrelationId,
                     domainEvent.OccurredOn,
                     course.Id,
                     course.Specification.Title,
                     course.Specification.Description,
-                    nameof(course.DificultLevel),
-                    nameof(course.Status),
-                    [.. course.Modules.Select(x => x.MapFromEntityToIntegrationEvent(course))]
-                    ), cancellationToken);
+                    course.DificultLevel.ToString(),
+                    course.Status.ToString(),
+                    [.. course.Modules.Select(x => x.MapFromEntityToIntegrationEvent(course))],
+                    lessonsResponse
+                    );
+            await messageBus.ProduceAsync(Topics.CourseAttached, integrationEvent, cancellationToken);
         }
     }
 }

@@ -4,6 +4,7 @@ using Courses.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Courses.Infrastructure.Persistence.Migrations
 {
     [DbContext(typeof(CoursesDbContext))]
-    partial class CourseDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250916235552_Initial")]
+    partial class Initial
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -125,7 +128,7 @@ namespace Courses.Infrastructure.Persistence.Migrations
 
                     b.Property<string>("Content")
                         .IsRequired()
-                        .HasColumnType("VARCHAR(3000)");
+                        .HasColumnType("VARCHAR(MAX)");
 
                     b.Property<string>("Error")
                         .HasColumnType("VARCHAR(256)");
@@ -166,7 +169,7 @@ namespace Courses.Infrastructure.Persistence.Migrations
 
                     b.Property<string>("Content")
                         .IsRequired()
-                        .HasColumnType("VARCHAR(3000)");
+                        .HasColumnType("VARCHAR(MAX)");
 
                     b.Property<string>("Error")
                         .HasColumnType("VARCHAR(256)");

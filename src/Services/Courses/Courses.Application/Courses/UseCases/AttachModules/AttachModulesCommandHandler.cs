@@ -25,13 +25,10 @@ namespace Courses.Application.Courses.UseCases.AttachModules
                 return Result.Failure(CourseErrors.StatusMustBeNotPublished(request.CourseId));
             }
 
-            var index = GetLastOrderIndex(course);
-
             var modules = request.Modules.Select(m => Module.Create(m.Title, course.Id));
             course.AddModules(modules);
 
-            var orderedModules = course.Modules.Where(x => x.OrderIndex > index);
-            courseRepository.InsertModulesRange(orderedModules);
+            courseRepository.InsertModulesRange(course.Modules);
 
             var wasSaved = await unitOfWork.CommitAsync(cancellationToken);
 
@@ -39,8 +36,5 @@ namespace Courses.Application.Courses.UseCases.AttachModules
                 ? Result.Success()
                 : Result.Failure(ModuleErrors.FailToPersistModules);
         }
-
-        private static uint GetLastOrderIndex(Course course)
-            => course.GetModulesInOrder().Select(x => x.OrderIndex).LastOrDefault();
     }
 }

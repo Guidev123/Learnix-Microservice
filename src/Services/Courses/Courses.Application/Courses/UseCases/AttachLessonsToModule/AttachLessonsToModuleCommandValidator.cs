@@ -26,7 +26,7 @@ namespace Courses.Application.Courses.UseCases.AttachLessonsToModule
                         .WithMessage(LessonErrors.TitleMustBeNotEmpty.Description);
 
                     lesson.RuleFor(x => x.DurationInMinutes)
-                        .GreaterThan(0)
+                        .GreaterThan((int)decimal.Zero)
                         .WithMessage(LessonErrors.DurationInMinutesShouldBeGreaterThanZero.Description);
 
                     lesson.RuleFor(x => x.VideoUrl)

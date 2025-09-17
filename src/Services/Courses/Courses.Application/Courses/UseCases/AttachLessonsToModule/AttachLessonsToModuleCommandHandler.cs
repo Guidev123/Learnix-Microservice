@@ -39,11 +39,9 @@ namespace Courses.Application.Courses.UseCases.AttachLessonsToModule
                 return Result.Failure(ModuleErrors.NotFound(request.ModuleId));
             }
 
-            var index = GetLastOrderIndex(module);
             course.AddLessonsToModule(module.Id, lessons);
 
-            var orderedLessons = module.Lessons.Where(x => x.OrderIndex > index);
-            courseRepository.InsertLessonsToModuleRange(orderedLessons);
+            courseRepository.InsertLessonsToModuleRange(module.Lessons);
 
             var wasSaved = await unitOfWork.CommitAsync(cancellationToken);
 
@@ -51,8 +49,5 @@ namespace Courses.Application.Courses.UseCases.AttachLessonsToModule
                 ? Result.Success()
                 : Result.Failure(LessonErrors.FailToPersistLessons);
         }
-
-        private static uint GetLastOrderIndex(Module module)
-             => module.Lessons.Select(x => x.OrderIndex).LastOrDefault();
     }
 }

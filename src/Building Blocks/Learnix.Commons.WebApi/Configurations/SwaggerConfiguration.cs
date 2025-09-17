@@ -54,7 +54,7 @@ namespace Learnix.Commons.WebApi.Configurations
                             Name = "Bearer",
                             Scheme = "Bearer"
                         },
-                        Array.Empty<string>()
+                        []
                     }
                 };
                 c.AddSecurityRequirement(securityRequirement);
