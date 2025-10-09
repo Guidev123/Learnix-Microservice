@@ -1,4 +1,4 @@
-﻿using Courses.Application.Courses.UseCases.Create;
+﻿using Courses.Application.Features.Create;
 using Learnix.Commons.Domain.Results;
 using Learnix.Commons.WebApi.Endpoints;
 using Learnix.Commons.WebApi.Extensions;

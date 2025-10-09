@@ -18,24 +18,22 @@ namespace Courses.Infrastructure.Courses.Repositories
 
         public async Task<Course?> GetWithModulesByIdAsync(Guid id, bool asNoTrackingEnabled = true, CancellationToken cancellationToken = default)
         {
-            var query = context.Courses;
-            if (asNoTrackingEnabled)
-            {
-                query.AsNoTrackingWithIdentityResolution();
-            }
+            var query = BuildBaseQuery(asNoTrackingEnabled);
 
-            return await query.Include(c => c.Modules).FirstOrDefaultAsync(c => c.Id == id, cancellationToken);
+            return await query
+                .Include(c => c.Modules.OrderBy(m => m.OrderIndex))
+                .FirstOrDefaultAsync(c => c.Id == id, cancellationToken);
         }
 
         public async Task<Course?> GetWithModulesAndLessonsAsync(Guid id, bool asNoTrackingEnabled = true, CancellationToken cancellationToken = default)
         {
-            var query = context.Courses;
-            if (asNoTrackingEnabled)
-            {
-                query.AsNoTrackingWithIdentityResolution();
-            }
+            var query = BuildBaseQuery(asNoTrackingEnabled);
 
-            return await query.Include(c => c.Modules.OrderBy(x => x.OrderIndex)).ThenInclude(c => c.Lessons.OrderBy(x => x.OrderIndex)).FirstOrDefaultAsync(x => x.Id == id, cancellationToken);
+            return await query
+                .AsSplitQuery()
+                .Include(c => c.Modules.OrderBy(m => m.OrderIndex))
+                .ThenInclude(m => m.Lessons.OrderBy(l => l.OrderIndex))
+                .FirstOrDefaultAsync(c => c.Id == id, cancellationToken);
         }
 
         public void Insert(Course course) => context.Courses.Add(course);
@@ -47,5 +45,14 @@ namespace Courses.Infrastructure.Courses.Repositories
         public void Update(Course course) => context.Courses.Update(course);
 
         public void Dispose() => context.Dispose();
+
+        private IQueryable<Course> BuildBaseQuery(bool asNoTrackingEnabled)
+        {
+            var query = context.Courses.AsQueryable();
+
+            return asNoTrackingEnabled
+                ? query.AsNoTrackingWithIdentityResolution()
+                : query;
+        }
     }
 }

@@ -41,6 +41,6 @@ namespace Learning.Infrastructure.Authorization
             => await permissionsServiceClient.GetUserPermissionsAsync(
                     new GetUserPermissionsRequest { IdentityId = identityId },
                     cancellationToken: cancellationToken
-                ).ExecuteGrpcCallAsync(nameof(GetUserPermissionsRequest), cancellationToken).ConfigureAwait(false);
+                ).ExecuteGrpcCallAsync(nameof(GetUserPermissionsRequest), cancellationToken);
     }
 }

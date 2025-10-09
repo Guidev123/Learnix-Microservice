@@ -2,28 +2,39 @@
 using Learnix.Commons.Application.MessageBus;
 using Learnix.Commons.Application.Messaging;
 using Learnix.Commons.Infrastructure.Extensions;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
 namespace Learnix.Commons.Infrastructure.MessageBus
 {
-    internal sealed class MessageBus : IMessageBus
+    internal sealed class MessageBus(
+        IOptions<MessageBusOptions> options,
+        ILogger<MessageBus> logger
+        ) : IMessageBus
     {
-        private readonly MessageBusOptions _messageBusOptions;
+        private readonly MessageBusOptions _messageBusOptions = options.Value;
 
-        public MessageBus(IOptions<MessageBusOptions> options)
-        {
-            _messageBusOptions = options.Value;
-        }
-
-        public async Task ProduceAsync<TIntegrationEvent>(string topic, TIntegrationEvent integrationEvent, CancellationToken cancellationToken = default) where TIntegrationEvent : IIntegrationEvent
+        public async Task ProduceAsync<TIntegrationEvent>(
+            string topic,
+            TIntegrationEvent integrationEvent,
+            CancellationToken cancellationToken = default
+            ) where TIntegrationEvent : IIntegrationEvent
         {
             var config = new ProducerConfig
             {
-                BootstrapServers = _messageBusOptions.BootstrapServer
+                BootstrapServers = _messageBusOptions.BootstrapServer,
+                SecurityProtocol = SecurityProtocol.SaslSsl,
+                SaslMechanism = SaslMechanism.Plain,
+                SaslUsername = _messageBusOptions.SaslUsername,
+                SaslPassword = _messageBusOptions.SaslPassword
             };
 
             using var producerBuilder = new ProducerBuilder<string, TIntegrationEvent>(config)
                 .SetValueSerializer(new KafkaSerializerExtensions<TIntegrationEvent>())
+                .SetErrorHandler((_, e) =>
+                {
+                    logger.LogError("Kafka producer error: {Error}", e.Reason);
+                })
                 .Build();
 
             await producerBuilder.ProduceAsync(topic, new Message<string, TIntegrationEvent>
@@ -33,23 +44,34 @@ namespace Learnix.Commons.Infrastructure.MessageBus
             }, cancellationToken).ConfigureAwait(false);
         }
 
-        public Task ConsumeAsync<TIntegrationEvent>(string topic, Func<TIntegrationEvent, Task> onMessage, CancellationToken cancellationToken = default)
-            where TIntegrationEvent : IIntegrationEvent
+        public async Task ConsumeAsync<TIntegrationEvent>(
+            string topic,
+            Func<TIntegrationEvent, Task> onMessage,
+            CancellationToken cancellationToken = default
+            ) where TIntegrationEvent : IIntegrationEvent
         {
-            return Task.Run(async () =>
+            var config = new ConsumerConfig
             {
-                var config = new ConsumerConfig
+                SecurityProtocol = SecurityProtocol.SaslSsl,
+                SaslMechanism = SaslMechanism.Plain,
+                SaslUsername = _messageBusOptions.SaslUsername,
+                SaslPassword = _messageBusOptions.SaslPassword,
+                GroupId = _messageBusOptions.GroupId,
+                BootstrapServers = _messageBusOptions.BootstrapServer,
+                EnableAutoCommit = false,
+                EnablePartitionEof = true
+            };
+
+            using var consumerBuilder = new ConsumerBuilder<string, TIntegrationEvent>(config)
+                .SetValueDeserializer(new KafkaDeserializerExtensions<TIntegrationEvent>())
+                .SetErrorHandler((_, e) =>
                 {
-                    GroupId = _messageBusOptions.GroupId,
-                    BootstrapServers = _messageBusOptions.BootstrapServer,
-                    EnableAutoCommit = false,
-                    EnablePartitionEof = true
-                };
+                    logger.LogError("Kafka consumer error: {Error}", e.Reason);
+                })
+                .Build();
 
-                using var consumerBuilder = new ConsumerBuilder<string, TIntegrationEvent>(config)
-                    .SetValueDeserializer(new KafkaDeserializerExtensions<TIntegrationEvent>())
-                    .Build();
-
+            try
+            {
                 consumerBuilder.Subscribe(topic);
 
                 while (!cancellationToken.IsCancellationRequested)
@@ -64,7 +86,11 @@ namespace Learnix.Commons.Infrastructure.MessageBus
 
                     consumerBuilder.Commit(result);
                 }
-            }, cancellationToken);
+            }
+            catch (Exception ex)
+            {
+                logger.LogError(ex, "An error occurred while processing messages from topic {Topic}", topic);
+            }
         }
     }
 }

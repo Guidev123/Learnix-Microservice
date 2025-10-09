@@ -2,7 +2,7 @@
 using Learnix.Commons.WebApi.Endpoints;
 using Learnix.Commons.WebApi.Extensions;
 using MidR.Interfaces;
-using Users.Application.Users.UseCases.Register;
+using Users.Application.Features.Register;
 
 namespace Users.WebApi.Endpoints
 {

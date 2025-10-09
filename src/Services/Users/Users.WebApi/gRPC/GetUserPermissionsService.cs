@@ -1,7 +1,7 @@
 ﻿using Grpc.Core;
 using Learnix.Commons.Contracts.Users.Protos;
 using MidR.Interfaces;
-using Users.Application.Users.UseCases.GetPermissions;
+using Users.Application.Features.GetPermissions;
 
 namespace Users.WebApi.gRPC
 {

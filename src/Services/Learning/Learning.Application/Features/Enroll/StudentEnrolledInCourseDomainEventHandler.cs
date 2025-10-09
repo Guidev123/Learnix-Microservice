@@ -2,7 +2,7 @@
 using Learning.Domain.Students.DomainEvents;
 using Learnix.Commons.Application.Messaging;
 
-namespace Learning.Application.Students.DomainEvents
+namespace Learning.Application.Features.Enroll
 {
     internal sealed class StudentEnrolledInCourseDomainEventHandler : DomainEventHandler<StudentEnrolledInCourseDomainEvent>
     {

@@ -2,7 +2,7 @@
 using Learnix.Commons.Application.Exceptions;
 using Learnix.Commons.Domain.Results;
 using MidR.Interfaces;
-using Users.Application.Users.UseCases.GetPermissions;
+using Users.Application.Features.GetPermissions;
 
 namespace Users.Infrastructure.Authorization
 {

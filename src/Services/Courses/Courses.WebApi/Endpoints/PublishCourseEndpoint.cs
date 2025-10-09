@@ -1,4 +1,4 @@
-﻿using Courses.Application.Courses.UseCases.Publish;
+﻿using Courses.Application.Features.Publish;
 using Learnix.Commons.Domain.Results;
 using Learnix.Commons.WebApi.Endpoints;
 using Learnix.Commons.WebApi.Extensions;

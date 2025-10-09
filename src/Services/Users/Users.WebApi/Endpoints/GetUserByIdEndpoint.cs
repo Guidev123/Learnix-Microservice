@@ -3,7 +3,7 @@ using Learnix.Commons.WebApi.Endpoints;
 using Learnix.Commons.WebApi.Extensions;
 using MidR.Interfaces;
 using System.Security.Claims;
-using Users.Application.Users.UseCases.GetById;
+using Users.Application.Features.GetById;
 
 namespace Users.WebApi.Endpoints
 {

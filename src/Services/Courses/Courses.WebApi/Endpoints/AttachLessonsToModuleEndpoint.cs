@@ -1,4 +1,4 @@
-﻿using Courses.Application.Courses.UseCases.AttachLessonsToModule;
+﻿using Courses.Application.Features.AttachLessonsToModule;
 using Learnix.Commons.Domain.Results;
 using Learnix.Commons.WebApi.Endpoints;
 using Learnix.Commons.WebApi.Extensions;

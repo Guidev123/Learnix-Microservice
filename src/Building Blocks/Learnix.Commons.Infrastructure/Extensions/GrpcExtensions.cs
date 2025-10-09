@@ -9,7 +9,7 @@ namespace Learnix.Commons.Infrastructure.Extensions
         {
             try
             {
-                var result = await grpcCall.ResponseAsync.ConfigureAwait(false);
+                var result = await grpcCall.ResponseAsync.WaitAsync(cancellation);
                 return Result.Success(result);
             }
             catch (RpcException ex)
