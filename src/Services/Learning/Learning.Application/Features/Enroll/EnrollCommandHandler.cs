@@ -33,7 +33,7 @@ namespace Learning.Application.Features.Enroll
             var courseExists = await enrollmentRepository.CourseExistsAsync(enrollment.CourseId, cancellationToken);
             if (courseExists is false)
             {
-                return Result.Failure<EnrollResponse>(CourseProgressErrors.NotFound(request.CourseId));
+                return Result.Failure<EnrollResponse>(CourseErrors.NotFound(request.CourseId));
             }
 
             var alreadyEnrolled = await enrollmentRepository.AlreadyEnrolledAsync(enrollment.Id, enrollment.StudentId, cancellationToken);

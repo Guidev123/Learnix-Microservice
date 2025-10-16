@@ -10,9 +10,12 @@ namespace Courses.WebApi.Endpoints
     {
         public void MapEndpoint(IEndpointRouteBuilder app)
         {
-            app.MapPatch("api/v1/courses/{courseId:guid}/publish", async (Guid courseId, ISender sender) =>
+            app.MapPatch("api/v1/courses/{courseId:guid}/publish", async (
+                Guid courseId,
+                ISender sender,
+                CancellationToken cancellationToken) =>
             {
-                var result = await sender.SendAsync(new PublishCourseCommand(courseId));
+                var result = await sender.SendAsync(new PublishCourseCommand(courseId), cancellationToken);
 
                 return result.Match(Results.NoContent, ApiResults.Problem);
             }

@@ -11,9 +11,13 @@ namespace Learning.WebApi.Endpoints
     {
         public void MapEndpoint(IEndpointRouteBuilder app)
         {
-            app.MapGet("api/v1/learning/courses/{courseId:guid}", async (ClaimsPrincipal claimsPrincipal, Guid courseId, ISender sender) =>
+            app.MapGet("api/v1/learning/courses/{courseId:guid}", async (
+                ClaimsPrincipal claimsPrincipal,
+                Guid courseId,
+                ISender sender,
+                CancellationToken cancellationToken) =>
             {
-                var result = await sender.SendAsync(new GetCourseContentQuery(courseId, claimsPrincipal.GetUserId()));
+                var result = await sender.SendAsync(new GetCourseContentQuery(courseId, claimsPrincipal.GetUserId()), cancellationToken);
 
                 return result.Match(Results.Ok, ApiResults.Problem);
             }).RequireAuthorization(PolicyExtensions.GetCourseContent)

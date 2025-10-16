@@ -14,13 +14,12 @@ namespace Courses.WebApi.Endpoints
                 Guid courseId,
                 Guid moduleId,
                 AttachLessonsToModuleCommand command,
-                ISender sender) =>
+                ISender sender,
+                CancellationToken cancellationToken) =>
             {
                 var result = await sender.SendAsync(
-                    command
-                        .SetCourseId(courseId)
-                        .SetModuleId(moduleId)
-                    ).ConfigureAwait(false);
+                    command.SetCourseId(courseId).SetModuleId(moduleId),
+                    cancellationToken);
 
                 return result.Match(Results.NoContent, ApiResults.Problem);
             }

@@ -11,9 +11,12 @@ namespace Users.WebApi.Endpoints
     {
         public void MapEndpoint(IEndpointRouteBuilder app)
         {
-            app.MapGet("api/v1/users/me", async (ClaimsPrincipal claimsPrincipal, ISender sender) =>
+            app.MapGet("api/v1/users/me", async (
+                ClaimsPrincipal claimsPrincipal,
+                ISender sender,
+                CancellationToken cancellationToken) =>
             {
-                var result = await sender.SendAsync(new GetUserByIdQuery(claimsPrincipal.GetUserId()));
+                var result = await sender.SendAsync(new GetUserByIdQuery(claimsPrincipal.GetUserId()), cancellationToken);
 
                 return result.Match(Results.Ok, ApiResults.Problem);
             }).WithTags(Tags.Users).RequireAuthorization(PolicyExtensions.GetUser);

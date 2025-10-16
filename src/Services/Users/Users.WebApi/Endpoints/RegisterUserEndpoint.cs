@@ -10,9 +10,12 @@ namespace Users.WebApi.Endpoints
     {
         public void MapEndpoint(IEndpointRouteBuilder app)
         {
-            app.MapPost("api/v1/users", async (RegisterUserCommand command, ISender sender) =>
+            app.MapPost("api/v1/users", async (
+                RegisterUserCommand command,
+                ISender sender,
+                CancellationToken cancellationToken) =>
             {
-                var result = await sender.SendAsync(command);
+                var result = await sender.SendAsync(command, cancellationToken);
 
                 return result.Match(response => Results.Created("api/v1/users/me", response), ApiResults.Problem);
             }).WithTags(Tags.Users);

@@ -11,7 +11,7 @@ namespace Learning.WebApi.Endpoints
     {
         public void MapEndpoint(IEndpointRouteBuilder app)
         {
-            app.MapPost("api/v1/enrollments", async (EnrollCommand command, ClaimsPrincipal claimsPrincipal, ISender sender) =>
+            app.MapPost("api/v1/learning/enrollments", async (EnrollCommand command, ClaimsPrincipal claimsPrincipal, ISender sender) =>
             {
                 command.SetStudentId(claimsPrincipal.GetUserId());
                 var result = await sender.SendAsync(command);
