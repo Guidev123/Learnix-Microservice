@@ -4,11 +4,11 @@ namespace Learnix.Commons.Domain.Results
 {
     public record Error
     {
-        public static readonly Error None = new(string.Empty, string.Empty, ErrorTypeEnum.Failure);
+        public static readonly Error None = new(string.Empty, string.Empty, ErrorTypeEnum.Problem);
         public static readonly Error NullValue = new(
             "General.Null",
             "Null value was provided",
-            ErrorTypeEnum.Failure);
+            ErrorTypeEnum.Problem);
 
         public Error(string code, string description, ErrorTypeEnum type)
         {
@@ -23,9 +23,6 @@ namespace Learnix.Commons.Domain.Results
 
         [JsonConverter(typeof(JsonStringEnumConverter))]
         public ErrorTypeEnum Type { get; }
-
-        public static Error Failure(string code, string description) =>
-            new(code, description, ErrorTypeEnum.Failure);
 
         public static Error NotFound(string code, string description) =>
             new(code, description, ErrorTypeEnum.NotFound);

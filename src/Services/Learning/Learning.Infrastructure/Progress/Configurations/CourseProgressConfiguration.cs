@@ -16,9 +16,6 @@ namespace Learning.Infrastructure.Progress.Configurations
             builder.Property(c => c.StudentId)
                 .IsRequired();
 
-            builder.Property(c => c.EnrollmentId)
-                .IsRequired();
-
             builder.Property(c => c.CourseId)
                 .IsRequired();
 
@@ -38,12 +35,13 @@ namespace Learning.Infrastructure.Progress.Configurations
                 .HasConversion<string>()
                 .HasColumnType("VARCHAR(160)");
 
-            builder.HasOne<Enrollment>()
-                .WithOne()
-                .HasForeignKey<CourseProgress>(c => c.EnrollmentId)
-                .OnDelete(DeleteBehavior.Cascade);
+            builder.HasIndex(c => new { c.StudentId, c.CourseId }).IsUnique();
 
-            builder.HasIndex(c => new { c.StudentId, c.EnrollmentId, c.CourseId }).IsUnique();
+            builder.Metadata.FindNavigation(nameof(CourseProgress.ModulesProgress))!
+                .SetField("_moduleProgresses");
+
+            builder.Metadata.FindNavigation(nameof(CourseProgress.ModulesProgress))!
+                .SetPropertyAccessMode(PropertyAccessMode.Field);
         }
     }
 }

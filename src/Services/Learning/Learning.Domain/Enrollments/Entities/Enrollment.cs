@@ -22,6 +22,7 @@ namespace Learning.Domain.Enrollments.Entities
         { }
 
         public Guid StudentId { get; }
+        public Guid CourseProgressId { get; private set; }
         public Guid CourseId { get; }
         public DateTime EnrolledAt { get; }
         public DateTime EndsAt { get; }
@@ -37,6 +38,11 @@ namespace Learning.Domain.Enrollments.Entities
             var enrollment = new Enrollment(student.Id, courseId, enrolledAt, student.Subscription.ExpiresAt);
 
             return enrollment;
+        }
+
+        public void SetCourseProgressId(Guid courseProgressId)
+        {
+            CourseProgressId = courseProgressId;
         }
 
         protected override void Validate()

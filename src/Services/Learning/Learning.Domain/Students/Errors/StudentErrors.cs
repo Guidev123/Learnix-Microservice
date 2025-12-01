@@ -6,7 +6,7 @@ namespace Learning.Domain.Students.Errors
     public static class StudentErrors
     {
         public static Error NotFound(Guid studentId) => Error.NotFound(
-            "Students.NotFound",
+            "Students.NotFoundForEnrollmentId",
             $"Student with ID: {studentId} not found");
 
         public static readonly Error FirstNameMustBeNotEmpty = Error.Problem(
@@ -41,7 +41,7 @@ namespace Learning.Domain.Students.Errors
             "Students.StudentAlreadyExists",
             $"A student with the email '{email}' already exists.");
 
-        public static Error PersistenceError(Guid id) => Error.Failure(
+        public static Error PersistenceError(Guid id) => Error.Problem(
             "Students.PersistenceError",
             $"An error occurred while saving the student with ID '{id}' to the database.");
 

@@ -14,6 +14,9 @@ namespace Learning.Infrastructure.Enrollments.Configurations
 
             builder.HasKey(e => e.Id);
 
+            builder.Property(e => e.CourseId)
+                .IsRequired();
+
             builder
                 .HasOne<Student>()
                 .WithMany(e => e.Enrollments)
@@ -23,8 +26,8 @@ namespace Learning.Infrastructure.Enrollments.Configurations
             builder
                 .HasOne<CourseProgress>()
                 .WithMany()
-                .HasForeignKey(e => e.CourseId)
-                .OnDelete(DeleteBehavior.ClientNoAction);
+                .HasForeignKey(e => e.CourseProgressId)
+                .OnDelete(DeleteBehavior.ClientCascade);
 
             builder.Property(c => c.Status)
                 .HasConversion<string>()

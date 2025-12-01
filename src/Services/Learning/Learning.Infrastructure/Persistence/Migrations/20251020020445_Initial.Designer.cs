@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Learning.Infrastructure.Persistence.Migrations
 {
     [DbContext(typeof(LearningDbContext))]
-    [Migration("20250916235433_Initial")]
+    [Migration("20251020020445_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -35,6 +35,9 @@ namespace Learning.Infrastructure.Persistence.Migrations
                     b.Property<Guid>("CourseId")
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<Guid>("CourseProgressId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<string>("Status")
                         .IsRequired()
                         .HasColumnType("VARCHAR(50)");
@@ -44,7 +47,7 @@ namespace Learning.Infrastructure.Persistence.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CourseId");
+                    b.HasIndex("CourseProgressId");
 
                     b.HasIndex("StudentId");
 
@@ -61,9 +64,6 @@ namespace Learning.Infrastructure.Persistence.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<Guid>("CourseId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("EnrollmentId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<decimal>("OverallCompletionPercentage")
@@ -84,10 +84,7 @@ namespace Learning.Infrastructure.Persistence.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("EnrollmentId")
-                        .IsUnique();
-
-                    b.HasIndex("StudentId", "EnrollmentId", "CourseId")
+                    b.HasIndex("StudentId", "CourseId")
                         .IsUnique();
 
                     b.ToTable("CoursesProgress", "learning");
@@ -262,23 +259,14 @@ namespace Learning.Infrastructure.Persistence.Migrations
                 {
                     b.HasOne("Learning.Domain.Progress.Entities.CourseProgress", null)
                         .WithMany()
-                        .HasForeignKey("CourseId")
-                        .OnDelete(DeleteBehavior.ClientNoAction)
+                        .HasForeignKey("CourseProgressId")
+                        .OnDelete(DeleteBehavior.ClientCascade)
                         .IsRequired();
 
                     b.HasOne("Learning.Domain.Students.Entities.Student", null)
                         .WithMany("Enrollments")
                         .HasForeignKey("StudentId")
                         .OnDelete(DeleteBehavior.ClientCascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("Learning.Domain.Progress.Entities.CourseProgress", b =>
-                {
-                    b.HasOne("Learning.Domain.Enrollments.Entities.Enrollment", null)
-                        .WithOne()
-                        .HasForeignKey("Learning.Domain.Progress.Entities.CourseProgress", "EnrollmentId")
-                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 

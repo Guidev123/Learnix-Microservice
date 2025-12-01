@@ -19,7 +19,7 @@ namespace Learning.Infrastructure.Inbox
         {
             await Task.WhenAll(
                 messageBus.ConsumeAsync<UserCreatedIntegrationEvent>(Topics.UserCreated, StoreInboxMessageAsync, stoppingToken),
-                messageBus.ConsumeAsync<CourseAttachedIntegrationEvent>(Topics.CourseAttached, StoreInboxMessageAsync, stoppingToken)
+                messageBus.ConsumeAsync<CoursePublishedIntegrationEvent>(Topics.CourseAttached, StoreInboxMessageAsync, stoppingToken)
             );
         }
 

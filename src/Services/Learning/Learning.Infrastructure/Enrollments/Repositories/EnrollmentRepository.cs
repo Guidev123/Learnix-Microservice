@@ -27,7 +27,7 @@ namespace Learning.Infrastructure.Enrollments.Repositories
             _sqlConnectionFactory = sqlConnectionFactory;
         }
 
-        public async Task<bool> AlreadyEnrolledAsync(Guid enrollmentId, Guid studentId, CancellationToken cancellationToken = default)
+        public Task<bool> AlreadyEnrolledAsync(Guid courseId, Guid studentId, CancellationToken cancellationToken = default)
         {
             using var connection = _sqlConnectionFactory.Create();
 
@@ -36,34 +36,34 @@ namespace Learning.Infrastructure.Enrollments.Repositories
                     WHEN EXISTS(
                         SELECT 1
                         FROM {Schemas.Learning}.Enrollments
-                        WHERE Id = @enrollmentId
+                        WHERE CourseId = @courseId
                         AND StudentId = @studentId)
                    THEN 1
                    ELSE 0
                 END
                 """;
 
-            return await connection.ExecuteScalarAsync<bool>(sql, new { enrollmentId, studentId });
+            return connection.ExecuteScalarAsync<bool>(sql, new { courseId, studentId });
         }
 
-        public async Task<Enrollment?> GetByIdAsync(Guid enrollmentId, CancellationToken cancellationToken = default)
-            => await _context.Enrollments.AsNoTracking().FirstOrDefaultAsync(e => e.Id == enrollmentId, cancellationToken);
+        public Task<Enrollment?> GetByIdAsync(Guid enrollmentId, CancellationToken cancellationToken = default)
+            => _context.Enrollments.AsNoTracking().FirstOrDefaultAsync(e => e.Id == enrollmentId, cancellationToken);
 
-        public async Task<Enrollment?> GetByStudentAndCourseIdAsync(Guid studentId, Guid courseId, CancellationToken cancellationToken = default)
-            => await _context.Enrollments.AsNoTracking().FirstOrDefaultAsync(e => e.StudentId == studentId && e.CourseId == courseId, cancellationToken);
+        public Task<Enrollment?> GetByStudentAndCourseIdAsync(Guid studentId, Guid courseId, CancellationToken cancellationToken = default)
+            => _context.Enrollments.AsNoTracking().FirstOrDefaultAsync(e => e.StudentId == studentId && e.CourseId == courseId, cancellationToken);
 
         public void Insert(Enrollment enrollment) => _context.Enrollments.Add(enrollment);
 
         public void Update(Enrollment enrollment) => _context.Update(enrollment);
 
-        public async Task<Course> GetCourseByIdAsync(Guid courseId, CancellationToken cancellationToken = default)
-            => await _collection.Find(Builders<Course>.Filter.Eq(c => c.Id, courseId)).FirstOrDefaultAsync(cancellationToken);
+        public Task<Course> GetCourseByIdAsync(Guid courseId, CancellationToken cancellationToken = default)
+            => _collection.Find(Builders<Course>.Filter.Eq(c => c.Id, courseId)).FirstOrDefaultAsync(cancellationToken);
 
-        public async Task InsertCourseAsync(Course course, CancellationToken cancellationToken = default)
-            => await _collection.InsertOneAsync(course, cancellationToken: cancellationToken);
+        public Task InsertCourseAsync(Course course, CancellationToken cancellationToken = default)
+            => _collection.InsertOneAsync(course, cancellationToken: cancellationToken);
 
-        public async Task ReplaceCourseAsync(Course course, CancellationToken cancellationToken = default)
-            => await _collection.ReplaceOneAsync(Builders<Course>.Filter.Eq(c => c.Id, course.Id), course, cancellationToken: cancellationToken);
+        public Task ReplaceCourseAsync(Course course, CancellationToken cancellationToken = default)
+            => _collection.ReplaceOneAsync(Builders<Course>.Filter.Eq(c => c.Id, course.Id), course, cancellationToken: cancellationToken);
 
         public async Task<bool> CourseExistsAsync(Guid courseId, CancellationToken cancellationToken = default)
             => await _collection.CountDocumentsAsync(Builders<Course>.Filter.Eq(c => c.Id, courseId), cancellationToken: cancellationToken) > 0;

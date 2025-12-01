@@ -1,7 +1,7 @@
 ﻿using Courses.Domain.Courses.Entities;
 using Courses.Domain.Courses.Errors;
 using Learnix.Commons.Application.Exceptions;
-using static Learnix.Commons.Contracts.Courses.IntegrationEvents.CourseAttachedIntegrationEvent;
+using static Learnix.Commons.Contracts.Courses.IntegrationEvents.CoursePublishedIntegrationEvent;
 
 namespace Courses.Application.Shared
 {

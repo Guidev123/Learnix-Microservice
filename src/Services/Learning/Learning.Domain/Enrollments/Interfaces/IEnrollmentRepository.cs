@@ -1,4 +1,5 @@
 ﻿using Learning.Domain.Enrollments.Entities;
+using Learning.Domain.Progress.Entities;
 using Learnix.Commons.Domain.Abstractions;
 
 namespace Learning.Domain.Enrollments.Interfaces
@@ -9,7 +10,7 @@ namespace Learning.Domain.Enrollments.Interfaces
 
         Task<Enrollment?> GetByStudentAndCourseIdAsync(Guid studentId, Guid courseId, CancellationToken cancellationToken = default);
 
-        Task<bool> AlreadyEnrolledAsync(Guid enrollmentId, Guid studentId, CancellationToken cancellationToken = default);
+        Task<bool> AlreadyEnrolledAsync(Guid courseId, Guid studentId, CancellationToken cancellationToken = default);
 
         void Insert(Enrollment enrollment);
 

@@ -10,8 +10,8 @@ namespace Learning.Infrastructure.Students.Repositories
         public Task<bool> ExistsAsync(string email, CancellationToken cancellationToken = default)
             => context.Students.AsNoTracking().AnyAsync(s => s.Email.Address == email, cancellationToken);
 
-        public async Task<Student?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default)
-            => await context.Students.AsNoTracking().FirstOrDefaultAsync(s => s.Id == id, cancellationToken);
+        public Task<Student?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default)
+            => context.Students.AsNoTracking().FirstOrDefaultAsync(s => s.Id == id, cancellationToken);
 
         public void Insert(Student student) => context.Students.Add(student);
 

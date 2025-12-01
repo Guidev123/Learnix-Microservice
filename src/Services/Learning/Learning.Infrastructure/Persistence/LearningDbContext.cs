@@ -17,9 +17,6 @@ namespace Learning.Infrastructure.Persistence
 
         internal DbSet<Student> Students { get; set; } = default!;
         internal DbSet<Enrollment> Enrollments { get; set; } = default!;
-        internal DbSet<CourseProgress> Courses { get; set; } = default!;
-        internal DbSet<ModuleProgress> Modules { get; set; } = default!;
-        internal DbSet<LessonProgress> Lessons { get; set; } = default!;
         internal DbSet<CourseProgress> CoursesProgress { get; set; } = default!;
         internal DbSet<ModuleProgress> ModulesProgress { get; set; } = default!;
         internal DbSet<LessonProgress> LessonsProgress { get; set; } = default!;

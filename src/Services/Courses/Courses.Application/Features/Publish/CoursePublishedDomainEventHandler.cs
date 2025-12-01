@@ -20,7 +20,7 @@ namespace Courses.Application.Features.Publish
 
             var lessons = course.Modules.SelectMany(m => m.Lessons).ToList();
 
-            await messageBus.ProduceAsync(Topics.CourseAttached, new CourseAttachedIntegrationEvent(
+            await messageBus.ProduceAsync(Topics.CourseAttached, new CoursePublishedIntegrationEvent(
                     domainEvent.CorrelationId,
                     domainEvent.OccurredOn,
                     course.Id,

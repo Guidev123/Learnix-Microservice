@@ -23,10 +23,6 @@ namespace Learnix.Commons.Infrastructure.MessageBus
             var config = new ProducerConfig
             {
                 BootstrapServers = _messageBusOptions.BootstrapServer,
-                SecurityProtocol = SecurityProtocol.SaslSsl,
-                SaslMechanism = SaslMechanism.Plain,
-                SaslUsername = _messageBusOptions.SaslUsername,
-                SaslPassword = _messageBusOptions.SaslPassword
             };
 
             using var producerBuilder = new ProducerBuilder<string, TIntegrationEvent>(config)
@@ -44,53 +40,52 @@ namespace Learnix.Commons.Infrastructure.MessageBus
             }, cancellationToken).ConfigureAwait(false);
         }
 
-        public async Task ConsumeAsync<TIntegrationEvent>(
+        public Task ConsumeAsync<TIntegrationEvent>(
             string topic,
             Func<TIntegrationEvent, Task> onMessage,
             CancellationToken cancellationToken = default
             ) where TIntegrationEvent : IIntegrationEvent
         {
-            var config = new ConsumerConfig
+            return Task.Run(async () =>
             {
-                SecurityProtocol = SecurityProtocol.SaslSsl,
-                SaslMechanism = SaslMechanism.Plain,
-                SaslUsername = _messageBusOptions.SaslUsername,
-                SaslPassword = _messageBusOptions.SaslPassword,
-                GroupId = _messageBusOptions.GroupId,
-                BootstrapServers = _messageBusOptions.BootstrapServer,
-                EnableAutoCommit = false,
-                EnablePartitionEof = true
-            };
-
-            using var consumerBuilder = new ConsumerBuilder<string, TIntegrationEvent>(config)
-                .SetValueDeserializer(new KafkaDeserializerExtensions<TIntegrationEvent>())
-                .SetErrorHandler((_, e) =>
+                var config = new ConsumerConfig
                 {
-                    logger.LogError("Kafka consumer error: {Error}", e.Reason);
-                })
-                .Build();
+                    GroupId = _messageBusOptions.GroupId,
+                    BootstrapServers = _messageBusOptions.BootstrapServer,
+                    EnableAutoCommit = false,
+                    EnablePartitionEof = true
+                };
 
-            try
-            {
-                consumerBuilder.Subscribe(topic);
-
-                while (!cancellationToken.IsCancellationRequested)
-                {
-                    var result = consumerBuilder.Consume(cancellationToken);
-                    if (result.IsPartitionEOF)
+                using var consumerBuilder = new ConsumerBuilder<string, TIntegrationEvent>(config)
+                    .SetValueDeserializer(new KafkaDeserializerExtensions<TIntegrationEvent>())
+                    .SetErrorHandler((_, e) =>
                     {
-                        continue;
+                        logger.LogError("Kafka consumer error: {Error}", e.Reason);
+                    })
+                    .Build();
+
+                try
+                {
+                    consumerBuilder.Subscribe(topic);
+
+                    while (!cancellationToken.IsCancellationRequested)
+                    {
+                        var result = consumerBuilder.Consume(cancellationToken);
+                        if (result.IsPartitionEOF)
+                        {
+                            continue;
+                        }
+
+                        await onMessage(result.Message.Value);
+
+                        consumerBuilder.Commit(result);
                     }
-
-                    await onMessage(result.Message.Value);
-
-                    consumerBuilder.Commit(result);
                 }
-            }
-            catch (Exception ex)
-            {
-                logger.LogError(ex, "An error occurred while processing messages from topic {Topic}", topic);
-            }
+                catch (Exception ex)
+                {
+                    logger.LogError(ex, "An error occurred while processing messages from topic {Topic}", topic);
+                }
+            }, cancellationToken);
         }
     }
 }

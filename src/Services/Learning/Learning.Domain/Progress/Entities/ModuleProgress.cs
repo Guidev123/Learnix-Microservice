@@ -35,7 +35,7 @@ namespace Learning.Domain.Progress.Entities
             return moduleProgress;
         }
 
-        public void UpdateProgress(List<LessonProgress> moduleLessons)
+        internal void UpdateProgress(List<LessonProgress> moduleLessons)
         {
             if (moduleLessons.Count == 0)
             {
@@ -59,11 +59,12 @@ namespace Learning.Domain.Progress.Entities
             }
         }
 
-        public void AddLessonProgress(LessonProgress lessonProgress)
+        internal void Start()
         {
-            if (!_lessonsProgress.Any(lp => lp.LessonId == lessonProgress.LessonId))
+            if (Status == ModuleStatusEnum.NotStarted)
             {
-                _lessonsProgress.Add(lessonProgress);
+                Status = ModuleStatusEnum.InProgress;
+                StartedAt = DateTime.UtcNow;
             }
         }
 

@@ -4,6 +4,10 @@ namespace Learning.Domain.Enrollments.Errors
 {
     public static class EnrollmentErrors
     {
+        public static Error NotFound(Guid studentId) => Error.NotFound(
+            "Enrollments.NotFoundForEnrollmentId",
+            $"Enrollment for student with ID {studentId} was not found");
+
         public static readonly Error EnrollmentCouldNotBeSaved = Error.Problem(
             "Enrollments.EnrollmentCouldNotBeSaved",
             "Enrollment could not be saved");

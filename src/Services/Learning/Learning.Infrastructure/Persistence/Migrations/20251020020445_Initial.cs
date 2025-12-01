@@ -15,6 +15,25 @@ namespace Learning.Infrastructure.Persistence.Migrations
                 name: "learning");
 
             migrationBuilder.CreateTable(
+                name: "CoursesProgress",
+                schema: "learning",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    StudentId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    CourseId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    StartedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    CompletedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    Status = table.Column<string>(type: "VARCHAR(160)", nullable: false),
+                    OverallCompletionPercentage = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    TotalMinutesWatched = table.Column<long>(type: "bigint", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_CoursesProgress", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "InboxMessageConsumers",
                 schema: "learning",
                 columns: table => new
@@ -92,53 +111,6 @@ namespace Learning.Infrastructure.Persistence.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "CoursesProgress",
-                schema: "learning",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    StudentId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    EnrollmentId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    CourseId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    StartedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    CompletedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    Status = table.Column<string>(type: "VARCHAR(160)", nullable: false),
-                    OverallCompletionPercentage = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
-                    TotalMinutesWatched = table.Column<long>(type: "bigint", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_CoursesProgress", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Enrollments",
-                schema: "learning",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    StudentId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    CourseId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Status = table.Column<string>(type: "VARCHAR(50)", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Enrollments", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Enrollments_CoursesProgress_CourseId",
-                        column: x => x.CourseId,
-                        principalSchema: "learning",
-                        principalTable: "CoursesProgress",
-                        principalColumn: "Id");
-                    table.ForeignKey(
-                        name: "FK_Enrollments_Students_StudentId",
-                        column: x => x.StudentId,
-                        principalSchema: "learning",
-                        principalTable: "Students",
-                        principalColumn: "Id");
-                });
-
-            migrationBuilder.CreateTable(
                 name: "ModulesProgress",
                 schema: "learning",
                 columns: table => new
@@ -161,6 +133,34 @@ namespace Learning.Infrastructure.Persistence.Migrations
                         principalTable: "CoursesProgress",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Enrollments",
+                schema: "learning",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    StudentId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    CourseProgressId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    CourseId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Status = table.Column<string>(type: "VARCHAR(50)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Enrollments", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Enrollments_CoursesProgress_CourseProgressId",
+                        column: x => x.CourseProgressId,
+                        principalSchema: "learning",
+                        principalTable: "CoursesProgress",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_Enrollments_Students_StudentId",
+                        column: x => x.StudentId,
+                        principalSchema: "learning",
+                        principalTable: "Students",
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -191,24 +191,17 @@ namespace Learning.Infrastructure.Persistence.Migrations
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_CoursesProgress_EnrollmentId",
+                name: "IX_CoursesProgress_StudentId_CourseId",
                 schema: "learning",
                 table: "CoursesProgress",
-                column: "EnrollmentId",
+                columns: new[] { "StudentId", "CourseId" },
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_CoursesProgress_StudentId_EnrollmentId_CourseId",
-                schema: "learning",
-                table: "CoursesProgress",
-                columns: new[] { "StudentId", "EnrollmentId", "CourseId" },
-                unique: true);
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Enrollments_CourseId",
+                name: "IX_Enrollments_CourseProgressId",
                 schema: "learning",
                 table: "Enrollments",
-                column: "CourseId");
+                column: "CourseProgressId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Enrollments_StudentId",
@@ -236,25 +229,14 @@ namespace Learning.Infrastructure.Persistence.Migrations
                 table: "Students",
                 column: "Email",
                 unique: true);
-
-            migrationBuilder.AddForeignKey(
-                name: "FK_CoursesProgress_Enrollments_EnrollmentId",
-                schema: "learning",
-                table: "CoursesProgress",
-                column: "EnrollmentId",
-                principalSchema: "learning",
-                principalTable: "Enrollments",
-                principalColumn: "Id",
-                onDelete: ReferentialAction.Cascade);
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropForeignKey(
-                name: "FK_CoursesProgress_Enrollments_EnrollmentId",
-                schema: "learning",
-                table: "CoursesProgress");
+            migrationBuilder.DropTable(
+                name: "Enrollments",
+                schema: "learning");
 
             migrationBuilder.DropTable(
                 name: "InboxMessageConsumers",
@@ -277,19 +259,15 @@ namespace Learning.Infrastructure.Persistence.Migrations
                 schema: "learning");
 
             migrationBuilder.DropTable(
+                name: "Students",
+                schema: "learning");
+
+            migrationBuilder.DropTable(
                 name: "ModulesProgress",
                 schema: "learning");
 
             migrationBuilder.DropTable(
-                name: "Enrollments",
-                schema: "learning");
-
-            migrationBuilder.DropTable(
                 name: "CoursesProgress",
-                schema: "learning");
-
-            migrationBuilder.DropTable(
-                name: "Students",
                 schema: "learning");
         }
     }

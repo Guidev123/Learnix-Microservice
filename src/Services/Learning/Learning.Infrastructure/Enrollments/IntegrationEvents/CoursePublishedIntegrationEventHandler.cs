@@ -6,9 +6,9 @@ using MidR.Interfaces;
 
 namespace Learning.Infrastructure.Enrollments.IntegrationEvents
 {
-    internal sealed class CourseAttachedIntegrationEventHandler(ISender sender) : IntegrationEventHandler<CourseAttachedIntegrationEvent>
+    internal sealed class CoursePublishedIntegrationEventHandler(ISender sender) : IntegrationEventHandler<CoursePublishedIntegrationEvent>
     {
-        public override async Task ExecuteAsync(CourseAttachedIntegrationEvent integrationEvent, CancellationToken cancellationToken = default)
+        public override async Task ExecuteAsync(CoursePublishedIntegrationEvent integrationEvent, CancellationToken cancellationToken = default)
         {
             var command = new AttachCourseCommand(
                     integrationEvent.CourseId,

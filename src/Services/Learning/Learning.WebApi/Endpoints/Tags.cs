@@ -4,5 +4,6 @@
     {
         public const string Enrollments = "Enrollments";
         public const string Courses = "Courses";
+        public const string Progress = "Progress";
     }
 }

@@ -4,12 +4,11 @@ namespace Learning.Domain.Enrollments.DomainEvents
 {
     public sealed record CourseCompletedDomainEvent : DomainEvent
     {
-        public CourseCompletedDomainEvent(Guid studentId, Guid courseId, Guid enrollmentId, DateTime completedAt)
+        public CourseCompletedDomainEvent(Guid studentId, Guid courseId, DateTime completedAt)
         {
-            AggregateId = enrollmentId;
+            AggregateId = studentId;
             StudentId = studentId;
             CourseId = courseId;
-            EnrollmentId = enrollmentId;
             CompletedAt = completedAt;
             Messagetype = GetType().Name;
         }
@@ -19,7 +18,6 @@ namespace Learning.Domain.Enrollments.DomainEvents
 
         public Guid StudentId { get; init; }
         public Guid CourseId { get; init; }
-        public Guid EnrollmentId { get; init; }
         public DateTime CompletedAt { get; init; }
     }
 }

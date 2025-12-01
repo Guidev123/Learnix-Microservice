@@ -2,7 +2,6 @@
 {
     public enum ErrorTypeEnum
     {
-        Failure,
         Validation,
         Problem,
         NotFound,

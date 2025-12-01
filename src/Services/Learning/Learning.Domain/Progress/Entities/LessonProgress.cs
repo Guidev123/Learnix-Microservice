@@ -34,7 +34,7 @@ namespace Learning.Domain.Progress.Entities
             return lessonProgress;
         }
 
-        public void Start()
+        internal void Start()
         {
             if (Status == LessonStatusEnum.NotStarted)
             {
@@ -43,7 +43,7 @@ namespace Learning.Domain.Progress.Entities
             }
         }
 
-        public void UpdateProgress(uint minutesWatched, uint totalLessonDuration)
+        internal void UpdateProgress(uint minutesWatched, uint totalLessonDuration)
         {
             MinutesWatched = minutesWatched;
 
@@ -64,7 +64,7 @@ namespace Learning.Domain.Progress.Entities
             }
         }
 
-        public void Complete()
+        internal void Complete()
         {
             Status = LessonStatusEnum.Completed;
             CompletionPercentage = 100;

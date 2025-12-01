@@ -4,7 +4,7 @@
     {
         public string BootstrapServer { get; set; } = null!;
         public string GroupId { get; set; } = null!;
-        public string SaslUsername { get; set; } = null!;
-        public string SaslPassword { get; set; } = null!;
+        public string SaslUsername { get; set; } = string.Empty;
+        public string SaslPassword { get; set; } = string.Empty;
     }
 }

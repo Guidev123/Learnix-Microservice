@@ -9,10 +9,9 @@ namespace Learning.Domain.Progress.Entities
     {
         private readonly List<ModuleProgress> _moduleProgresses = [];
 
-        private CourseProgress(Guid studentId, Guid enrollmentId, Guid courseId, DateTime startedAt)
+        private CourseProgress(Guid studentId, Guid courseId, DateTime startedAt)
         {
             StudentId = studentId;
-            EnrollmentId = enrollmentId;
             CourseId = courseId;
             StartedAt = startedAt;
             Status = ProgressStatusEnum.NotStarted;
@@ -23,7 +22,6 @@ namespace Learning.Domain.Progress.Entities
         { }
 
         public Guid StudentId { get; private set; }
-        public Guid EnrollmentId { get; private set; }
         public Guid CourseId { get; private set; }
         public DateTime StartedAt { get; private set; }
         public DateTime? CompletedAt { get; private set; }
@@ -33,24 +31,15 @@ namespace Learning.Domain.Progress.Entities
 
         public IReadOnlyCollection<ModuleProgress> ModulesProgress => _moduleProgresses.AsReadOnly();
 
-        public static CourseProgress Create(Guid studentId, Guid enrollmentId, Guid courseId, DateTime startedAt)
+        public static CourseProgress Create(Guid studentId, Guid courseId, DateTime startedAt)
         {
-            var progress = new CourseProgress(studentId, enrollmentId, courseId, startedAt);
+            var progress = new CourseProgress(studentId, courseId, startedAt);
 
             return progress;
         }
 
-        public void StartLesson(Guid lessonId, Guid moduleId)
+        public void StartLesson(LessonProgress lessonProgress, Guid moduleId)
         {
-            var moduleProgress = GetModuleProgress(moduleId);
-            var lessonProgress = GetLessonProgressOrDefault(moduleProgress, lessonId);
-
-            if (lessonProgress is null)
-            {
-                lessonProgress = LessonProgress.Create(lessonId, moduleId, moduleProgress.Id);
-                moduleProgress.AddLessonProgress(lessonProgress);
-            }
-
             lessonProgress.Start();
 
             if (Status == ProgressStatusEnum.NotStarted)
@@ -61,7 +50,12 @@ namespace Learning.Domain.Progress.Entities
             UpdateModuleProgress(moduleId);
             UpdateOverallProgress();
 
-            AddDomainEvent(new LessonStartedDomainEvent(Id, StudentId, lessonId, moduleId, CourseId));
+            AddDomainEvent(new LessonStartedDomainEvent(Id, StudentId, lessonProgress.Id, moduleId, CourseId));
+        }
+
+        public void UpdateModuleProgress(ModuleProgress moduleProgress)
+        {
+            moduleProgress.Start();
         }
 
         public void CompleteLesson(Guid lessonId, Guid moduleId, uint lessonDurationInMinutes)
@@ -80,13 +74,8 @@ namespace Learning.Domain.Progress.Entities
         public void UpdateLessonProgress(Guid lessonId, Guid moduleId, uint minutesWatched, uint totalLessonDuration)
         {
             var moduleProgress = GetModuleProgress(moduleId);
-            var lessonProgress = GetLessonProgressOrDefault(moduleProgress, lessonId);
-
-            if (lessonProgress is null)
-            {
-                lessonProgress = LessonProgress.Create(lessonId, moduleId, moduleProgress.Id);
-                moduleProgress.AddLessonProgress(lessonProgress);
-            }
+            var lessonProgress = GetLessonProgressOrDefault(moduleProgress, lessonId)
+                ?? throw new DomainException(LessonProgressErrors.LessonProgressNotFound.Description);
 
             var previousMinutes = lessonProgress.MinutesWatched;
             lessonProgress.UpdateProgress(minutesWatched, totalLessonDuration);
@@ -101,13 +90,8 @@ namespace Learning.Domain.Progress.Entities
 
         private void UpdateModuleProgress(Guid moduleId)
         {
-            var moduleProgress = GetModuleProgressOrDefault(moduleId);
-
-            if (moduleProgress is null)
-            {
-                moduleProgress = ModuleProgress.Create(moduleId, Id);
-                _moduleProgresses.Add(moduleProgress);
-            }
+            var moduleProgress = GetModuleProgressOrDefault(moduleId)
+                ?? throw new DomainException(ModuleProgressErrors.NotFound(moduleId).Description);
 
             var moduleLessons = moduleProgress.LessonsProgress.Where(lp => lp.ModuleId == moduleId).ToList();
             moduleProgress.UpdateProgress(moduleLessons);
@@ -115,7 +99,7 @@ namespace Learning.Domain.Progress.Entities
 
         private void UpdateOverallProgress()
         {
-            if (!_moduleProgresses.Any())
+            if (_moduleProgresses.Count == 0)
             {
                 OverallCompletionPercentage = 0;
                 return;
@@ -127,7 +111,7 @@ namespace Learning.Domain.Progress.Entities
             {
                 Status = ProgressStatusEnum.Completed;
                 CompletedAt = DateTime.UtcNow;
-                AddDomainEvent(new CourseCompletedDomainEvent(StudentId, CourseId, EnrollmentId, CompletedAt.Value));
+                AddDomainEvent(new CourseCompletedDomainEvent(StudentId, CourseId, CompletedAt.Value));
             }
         }
 
@@ -155,24 +139,23 @@ namespace Learning.Domain.Progress.Entities
             return moduleProgress?.Status == ModuleStatusEnum.Completed;
         }
 
-        private ModuleProgress GetModuleProgress(Guid moduleId)
+        public ModuleProgress GetModuleProgress(Guid moduleId)
             => _moduleProgresses.FirstOrDefault(m => m.ModuleId == moduleId)
                 ?? throw new DomainException(ModuleProgressErrors.ModuleProgressNotFound.Description);
 
-        private ModuleProgress? GetModuleProgressOrDefault(Guid moduleId)
+        public LessonProgress? GetLessonProgressOrDefault(ModuleProgress moduleProgress, Guid lessonId)
+            => moduleProgress.LessonsProgress.FirstOrDefault(l => l.LessonId == lessonId);
+
+        public ModuleProgress? GetModuleProgressOrDefault(Guid moduleId)
             => _moduleProgresses.FirstOrDefault(m => m.ModuleId == moduleId);
 
         private static LessonProgress GetLessonProgress(ModuleProgress moduleProgress, Guid lessonId)
             => moduleProgress.LessonsProgress.FirstOrDefault(l => l.LessonId == lessonId)
                 ?? throw new DomainException(LessonProgressErrors.LessonProgressNotFound.Description);
 
-        private static LessonProgress? GetLessonProgressOrDefault(ModuleProgress moduleProgress, Guid lessonId)
-            => moduleProgress.LessonsProgress.FirstOrDefault(l => l.LessonId == lessonId);
-
         protected override void Validate()
         {
             AssertionConcern.EnsureDifferent(StudentId, Guid.Empty, CourseProgressErrors.StudentIdMustBeNotEmpty.Description);
-            AssertionConcern.EnsureDifferent(EnrollmentId, Guid.Empty, CourseProgressErrors.EnrollmentIdMustBeNotEmpty.Description);
             AssertionConcern.EnsureDifferent(CourseId, Guid.Empty, CourseProgressErrors.CourseIdMustBeNotEmpty.Description);
         }
     }
