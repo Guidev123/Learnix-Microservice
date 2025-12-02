@@ -7,15 +7,17 @@ namespace Learning.Domain.Students.DomainEvents
         private StudentEnrolledInCourseDomainEvent()
         { }
 
-        public StudentEnrolledInCourseDomainEvent(Guid studentId, Guid enrollmentId)
+        public StudentEnrolledInCourseDomainEvent(Guid studentId, Guid enrollmentId, Guid courseId)
         {
             AggregateId = studentId;
             StudentId = studentId;
             EnrollmentId = enrollmentId;
+            CourseId = courseId;
             Messagetype = GetType().Name;
         }
 
         public Guid StudentId { get; init; }
         public Guid EnrollmentId { get; init; }
+        public Guid CourseId { get; init; }
     }
 }

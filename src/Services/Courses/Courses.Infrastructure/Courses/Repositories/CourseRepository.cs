@@ -44,8 +44,6 @@ namespace Courses.Infrastructure.Courses.Repositories
 
         public void Update(Course course) => context.Courses.Update(course);
 
-        public void Dispose() => context.Dispose();
-
         private IQueryable<Course> BuildBaseQuery(bool asNoTrackingEnabled)
         {
             var query = context.Courses.AsQueryable();

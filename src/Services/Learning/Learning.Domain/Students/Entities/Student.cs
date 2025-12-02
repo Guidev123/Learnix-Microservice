@@ -48,7 +48,7 @@ namespace Learning.Domain.Students.Entities
             }
 
             _enrollments.Add(enrollment);
-            AddDomainEvent(new StudentEnrolledInCourseDomainEvent(Id, enrollment.Id));
+            AddDomainEvent(new StudentEnrolledInCourseDomainEvent(Id, enrollment.Id, enrollment.CourseId));
         }
 
         public bool HasActiveSubscription(DateTime currentDate)

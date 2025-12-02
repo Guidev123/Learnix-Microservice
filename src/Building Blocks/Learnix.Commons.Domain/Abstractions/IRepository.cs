@@ -2,7 +2,7 @@
 
 namespace Learnix.Commons.Domain.Abstractions
 {
-    public interface IRepository<TAggregateRoot> : IDisposable
+    public interface IRepository<TAggregateRoot>
         where TAggregateRoot : IAggregateRoot
     {
     }

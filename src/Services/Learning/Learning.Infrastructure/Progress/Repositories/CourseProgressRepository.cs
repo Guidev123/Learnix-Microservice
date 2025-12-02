@@ -28,7 +28,5 @@ namespace Learning.Infrastructure.Progress.Repositories
 
         public void InsertLessonProgress(LessonProgress lessonProgress)
             => context.LessonsProgress.Add(lessonProgress);
-
-        public void Dispose() => context.Dispose();
     }
 }

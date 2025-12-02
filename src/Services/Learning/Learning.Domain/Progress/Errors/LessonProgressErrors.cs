@@ -27,5 +27,9 @@ namespace Learning.Domain.Progress.Errors
         public static readonly Error FailToPersist = Error.Problem(
             "LessonProgress.FailToPersist",
             "Fail to persist Lesson Progress");
+
+        public static readonly Error CourseIdMustBeNotEmpty = Error.Problem(
+            "LessonProgress.CourseIdMustBeNotEmpty",
+            "Course ID must be not empty");
     }
 }

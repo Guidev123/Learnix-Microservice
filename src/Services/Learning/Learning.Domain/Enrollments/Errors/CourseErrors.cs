@@ -19,5 +19,13 @@ namespace Learning.Domain.Enrollments.Errors
         public static readonly Error CourseDescriptionMustBeProvided = Error.Problem
             ("Courses.CourseDescriptionMustBeProvided",
             "Course description must be provided");
+
+        public static readonly Error CourseStatusMustBeProvided = Error.Problem
+            ("Courses.CourseStatusMustBeProvided",
+            "Course status must be provided");
+
+        public static readonly Error CourseDifficultLevelMustBeProvided = Error.Problem
+            ("Courses.CourseDifficultLevelMustBeProvided",
+            "Course difficult level must be provided");
     }
 }

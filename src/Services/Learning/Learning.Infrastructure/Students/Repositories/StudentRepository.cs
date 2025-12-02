@@ -18,7 +18,5 @@ namespace Learning.Infrastructure.Students.Repositories
         public void Update(Student student) => context.Students.Update(student);
 
         public void Delete(Student student) => context.Students.Remove(student);
-
-        public void Dispose() => context.Dispose();
     }
 }

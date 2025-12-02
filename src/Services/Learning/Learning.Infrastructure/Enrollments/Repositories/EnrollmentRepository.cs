@@ -11,39 +11,24 @@ namespace Learning.Infrastructure.Enrollments.Repositories
     internal sealed class EnrollmentRepository : IEnrollmentRepository
     {
         private readonly LearningDbContext _context;
-        private readonly ISqlConnectionFactory _sqlConnectionFactory;
         private readonly IMongoCollection<Course> _collection;
 
         public EnrollmentRepository(
             IMongoClient mongoClient,
-            LearningDbContext context,
-            ISqlConnectionFactory sqlConnectionFactory
+            LearningDbContext context
         )
         {
             var mongoDatabase = mongoClient.GetDatabase(DocumentDbSettings.Database);
 
             _collection = mongoDatabase.GetCollection<Course>(DocumentDbSettings.CoursesContent);
             _context = context;
-            _sqlConnectionFactory = sqlConnectionFactory;
         }
 
         public Task<bool> AlreadyEnrolledAsync(Guid courseId, Guid studentId, CancellationToken cancellationToken = default)
         {
-            using var connection = _sqlConnectionFactory.Create();
-
-            const string sql = $"""
-                SELECT CASE
-                    WHEN EXISTS(
-                        SELECT 1
-                        FROM {Schemas.Learning}.Enrollments
-                        WHERE CourseId = @courseId
-                        AND StudentId = @studentId)
-                   THEN 1
-                   ELSE 0
-                END
-                """;
-
-            return connection.ExecuteScalarAsync<bool>(sql, new { courseId, studentId });
+            return _context.Enrollments
+                .AsNoTracking()
+                .AnyAsync(e => e.CourseId == courseId && e.StudentId == studentId, cancellationToken);
         }
 
         public Task<Enrollment?> GetByIdAsync(Guid enrollmentId, CancellationToken cancellationToken = default)
@@ -67,10 +52,5 @@ namespace Learning.Infrastructure.Enrollments.Repositories
 
         public async Task<bool> CourseExistsAsync(Guid courseId, CancellationToken cancellationToken = default)
             => await _collection.CountDocumentsAsync(Builders<Course>.Filter.Eq(c => c.Id, courseId), cancellationToken: cancellationToken) > 0;
-
-        public void Dispose()
-        {
-            _context.Dispose();
-        }
     }
 }

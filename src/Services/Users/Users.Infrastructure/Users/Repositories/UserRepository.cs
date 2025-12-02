@@ -38,10 +38,5 @@ namespace Users.Infrastructure.Users.Repositories
         {
             context.Users.Remove(user);
         }
-
-        public void Dispose()
-        {
-            context.Dispose();
-        }
     }
 }
